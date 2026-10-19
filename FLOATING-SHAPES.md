@@ -30,3 +30,5 @@ The section block uses your chosen preset. You can also use `mode="background"` 
 Fixed floating scenes use a dedicated renderer of about 30 KB, or about 11 KB with gzip. It generates particles on the GPU, with no model/image downloads and no particle position uploads per frame. Density and the global quality setting control count: low/medium/high allow up to 6,000/16,000/26,000 particles before kaleidoscope copies. It uses the existing 30 FPS scheduling, adaptive resolution, offscreen/tab pausing and reduced-motion/Save-Data fallback. Random styles and mixed slideshows use the complete renderer, including the floating particle pass.
 
 This version creates procedural shapes; variation comes from the shape, seed, lobes and twist controls.
+
+Local explosion, cursor attraction and repulsion are available in the shared Sculpture panel. Radius, force strength and Outside influence control whether nearby points or the whole sculpture respond. See [Local particle mouse effects](PARTICLE-MOUSE.md).

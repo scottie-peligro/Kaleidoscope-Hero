@@ -7,8 +7,8 @@
   var PALETTES = {"Electric blue":[[0.12,0.42,1],[0.35,0.8,1]],"Cyan":[[0.08,0.8,1],[0.55,1,0.92]],"Violet":[[0.45,0.3,1],[0.9,0.45,1]],"Amber":[[1,0.5,0.12],[1,0.82,0.45]],"Fiber":[[1,0.14,0.08],[0.15,0.35,1]],"Neon":[[1,0.12,0.7],[0.25,0.35,1]],"Aurora":[[0.1,1,0.55],[0.55,0.25,1]],"Ember":[[1,0.25,0.05],[1,0.75,0.2]],"Ice":[[0.55,0.85,1],[0.9,0.97,1]],"Matrix":[[0.1,1,0.3],[0.6,1,0.5]],"Rose gold":[[1,0.5,0.55],[1,0.82,0.6]],"Ocean":[[0,0.55,1],[0,1,0.85]],"Vapor":[[1,0.4,0.85],[0.3,0.95,1]],"Mono":[[0.85,0.88,0.95],[1,1,1]],"Sunset":[[1,0.58,0.22],[1,0.8,0.5]],"Gold and blue":[[1,0.65,0.2],[0.2,0.6,1]]};
   var WORDS = [];
   var STYLES = ["Digital grid","Fiber optics","Particle waves","Wireframe tunnel","Data rings","Voronoi crystal","Constellation","Fractal flythrough","Word rain","Digital fabric","Blueprint city","Dot matrix structures","LED globe","Digital disco ball","Floating shape","Morphing sculptures"];
-  var NUM = ['opacity', 'density', 'flow', 'glow', 'brightness', 'multicolor', 'warp', 'bloom', 'vortex', 'vortexRamp', 'lookRange', 'gradientAngle', 'autoVortexStrength', 'autoVortexSpeed', 'autoVortexRamp', 'shapeSize', 'shapeFloat', 'shapeLobes', 'shapeTwist', 'shapeExplode', 'shapeSensitivity', 'shapeRecovery', 'shapeScrollDistance', 'morphDuration', 'morphHold', 'morphProgress', 'morphStagger', 'morphScrollDistance'];
-  var DEF = { style: 'Digital grid', palette: 'Electric blue', ledPattern: 'Cycle', opacity: 1, density: 0.55, flow: 2.5, glow: 1, brightness: 1, multicolor: 0.35, kaleidoscope: 0, kaleidoscopeMode: 'Forward elements', randomize: false, randomInterval: 15, bgColor1: '#140a2e', bgColor2: '#000000', gradient: 'Radial', gradientAngle: 90, warp: 1, bloom: 1, vortex: 1, vortexRamp: 2, lookRange: 1, discoMouseControl: true, shape: 'Torus knot', shapeSeed: 17, shapeSize: 1, shapeFloat: 1, shapeLobes: 5, shapeTwist: 1.5, shapeTrigger: 'Mouse and scroll', shapeExplode: 1, shapeSensitivity: 1, shapeRecovery: 1.2, shapeScrollDistance: .75, morphMode: 'Cycle shapes', morphFrom: 'Orb', morphTo: 'Torus knot', morphDuration: 4, morphHold: 1, morphProgress: 0, morphStagger: .15, morphScrollDistance: 1, morphExplode: false, autoVortex: false, autoVortexStrength: 0.5, autoVortexSpeed: 0.5, autoVortexDirection: 'Clockwise', autoVortexRamp: 2 };
+  var NUM = ['opacity', 'density', 'flow', 'glow', 'brightness', 'multicolor', 'warp', 'bloom', 'vortex', 'vortexRamp', 'lookRange', 'gradientAngle', 'autoVortexStrength', 'autoVortexSpeed', 'autoVortexRamp', 'shapeSize', 'shapeFloat', 'shapeLobes', 'shapeTwist', 'shapeExplode', 'shapeSensitivity', 'shapeRecovery', 'shapeScrollDistance', 'morphDuration', 'morphHold', 'morphProgress', 'morphStagger', 'morphScrollDistance', 'shapeMouseRadius', 'shapeMouseStrength', 'shapeMouseGlobal'];
+  var DEF = { style: 'Digital grid', palette: 'Electric blue', ledPattern: 'Cycle', opacity: 1, density: 0.55, flow: 2.5, glow: 1, brightness: 1, multicolor: 0.35, kaleidoscope: 0, kaleidoscopeMode: 'Forward elements', randomize: false, randomInterval: 15, bgColor1: '#140a2e', bgColor2: '#000000', gradient: 'Radial', gradientAngle: 90, warp: 1, bloom: 1, vortex: 1, vortexRamp: 2, lookRange: 1, discoMouseControl: true, shape: 'Torus knot', shapeSeed: 17, shapeSize: 1, shapeFloat: 1, shapeLobes: 5, shapeTwist: 1.5, shapeTrigger: 'Mouse and scroll', shapeMouseEffect: 'Whole sculpture explosion', shapeMouseRadius: .18, shapeMouseStrength: 1, shapeMouseGlobal: 0, shapeExplode: 1, shapeSensitivity: 1, shapeRecovery: 1.2, shapeScrollDistance: .75, morphMode: 'Cycle shapes', morphFrom: 'Orb', morphTo: 'Torus knot', morphDuration: 4, morphHold: 1, morphProgress: 0, morphStagger: .15, morphScrollDistance: 1, morphExplode: false, autoVortex: false, autoVortexStrength: 0.5, autoVortexSpeed: 0.5, autoVortexDirection: 'Clockwise', autoVortexRamp: 2 };
   var motion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)');
   var connection = navigator.connection;
   function staticMode() { return !!((motion && motion.matches) || (connection && connection.saveData)); }
@@ -44,12 +44,13 @@
     o.autoVortex = truthy(o.autoVortex);
     o.discoMouseControl = truthy(o.discoMouseControl);
     o.morphExplode = truthy(o.morphExplode);
+    if (['Whole sculpture explosion','Local explosion','Attract','Repel','Off'].indexOf(o.shapeMouseEffect) < 0) o.shapeMouseEffect = DEF.shapeMouseEffect;
     if (['Cycle shapes','Back and forth','Scroll','Manual'].indexOf(o.morphMode) < 0) o.morphMode = DEF.morphMode;
     ['morphFrom','morphTo'].forEach(function(key){if (['Torus knot','Ring','Orb','Twisted ribbon','Helix','Star','Crystal','Seeded sculpture'].indexOf(o[key]) < 0) o[key] = DEF[key];});
     if (['Torus knot','Ring','Orb','Twisted ribbon','Helix','Star','Crystal','Seeded sculpture'].indexOf(o.shape) < 0) o.shape = DEF.shape;
     if (['Off','Mouse movement','Scroll','Mouse and scroll'].indexOf(o.shapeTrigger) < 0) o.shapeTrigger = DEF.shapeTrigger;
     o.shapeSeed = Math.max(1,Math.min(999,Math.round(Number(o.shapeSeed)||17)));
-    var shapeBounds = {shapeSize:[.3,2],shapeFloat:[0,2],shapeLobes:[2,10],shapeTwist:[0,4],shapeExplode:[0,3],shapeSensitivity:[.1,3],shapeRecovery:[.2,5],shapeScrollDistance:[.25,2],morphDuration:[1,15],morphHold:[0,8],morphProgress:[0,1],morphStagger:[0,.8],morphScrollDistance:[.25,4]};
+    var shapeBounds = {shapeSize:[.3,2],shapeFloat:[0,2],shapeLobes:[2,10],shapeTwist:[0,4],shapeExplode:[0,3],shapeSensitivity:[.1,3],shapeRecovery:[.2,5],shapeScrollDistance:[.25,2],morphDuration:[1,15],morphHold:[0,8],morphProgress:[0,1],morphStagger:[0,.8],morphScrollDistance:[.25,4],shapeMouseRadius:[.05,.8],shapeMouseStrength:[0,3],shapeMouseGlobal:[0,1]};
     Object.keys(shapeBounds).forEach(function(key){o[key]=Math.max(shapeBounds[key][0],Math.min(shapeBounds[key][1],o[key]));});
     if (['Cycle', 'Fireworks', 'Waves', 'Shapes'].indexOf(o.ledPattern) < 0) o.ledPattern = DEF.ledPattern;
     if (['Forward elements', 'Whole screen', 'Both'].indexOf(o.kaleidoscopeMode) < 0) o.kaleidoscopeMode = DEF.kaleidoscopeMode;
@@ -77,7 +78,7 @@
     this.base = this.slides[0];
     this.tgt = Object.assign({}, this.base);
     this.cur = Object.assign({}, this.base);
-    this.disc = { style: this.base.style, shape: this.base.shape, shapeSeed: this.base.shapeSeed, morphMode: this.base.morphMode, morphFrom: this.base.morphFrom, morphTo: this.base.morphTo, morphExplode: this.base.morphExplode, ledPattern: this.base.ledPattern, kaleidoscope: this.base.kaleidoscope, kaleidoscopeMode: this.base.kaleidoscopeMode, gradient: this.base.gradient };
+    this.disc = { style: this.base.style, shape: this.base.shape, shapeSeed: this.base.shapeSeed, shapeMouseEffect: this.base.shapeMouseEffect, morphMode: this.base.morphMode, morphFrom: this.base.morphFrom, morphTo: this.base.morphTo, morphExplode: this.base.morphExplode, ledPattern: this.base.ledPattern, kaleidoscope: this.base.kaleidoscope, kaleidoscopeMode: this.base.kaleidoscopeMode, gradient: this.base.gradient };
     this.bg1 = hex(this.base.bgColor1);
     this.bg2 = hex(this.base.bgColor2);
     this.fade = 0;
@@ -145,8 +146,8 @@
   Hero.prototype.setTarget = function (c) {
     var d = this.disc;
     this.tgt = Object.assign({}, c);
-    if (c.style !== d.style || c.shape !== d.shape || c.shapeSeed !== d.shapeSeed || c.morphMode !== d.morphMode || c.morphFrom !== d.morphFrom || c.morphTo !== d.morphTo || c.morphExplode !== d.morphExplode || c.ledPattern !== d.ledPattern || c.kaleidoscope !== d.kaleidoscope || c.kaleidoscopeMode !== d.kaleidoscopeMode || c.gradient !== d.gradient) {
-      this.pending = { style: c.style, shape: c.shape, shapeSeed: c.shapeSeed, morphMode: c.morphMode, morphFrom: c.morphFrom, morphTo: c.morphTo, morphExplode: c.morphExplode, ledPattern: c.ledPattern, kaleidoscope: c.kaleidoscope, kaleidoscopeMode: c.kaleidoscopeMode, gradient: c.gradient };
+    if (c.style !== d.style || c.shape !== d.shape || c.shapeSeed !== d.shapeSeed || c.shapeMouseEffect !== d.shapeMouseEffect || c.morphMode !== d.morphMode || c.morphFrom !== d.morphFrom || c.morphTo !== d.morphTo || c.morphExplode !== d.morphExplode || c.ledPattern !== d.ledPattern || c.kaleidoscope !== d.kaleidoscope || c.kaleidoscopeMode !== d.kaleidoscopeMode || c.gradient !== d.gradient) {
+      this.pending = { style: c.style, shape: c.shape, shapeSeed: c.shapeSeed, shapeMouseEffect: c.shapeMouseEffect, morphMode: c.morphMode, morphFrom: c.morphFrom, morphTo: c.morphTo, morphExplode: c.morphExplode, ledPattern: c.ledPattern, kaleidoscope: c.kaleidoscope, kaleidoscopeMode: c.kaleidoscopeMode, gradient: c.gradient };
     } else {
       this.pending = null;
     }
@@ -389,26 +390,39 @@
     this.on(window, 'resize', function () { needsResize = true; });
 
     var look = { tx: 0, ty: 0, x: 0, y: 0 }, zoom = { t: 0, v: 0 };
-    var shapeImpulse = 0, shapeAmount = 0, lastPointer = null, scrollPosition = window.scrollY || 0;
+    var shapeImpulse = 0, shapeAmount = 0, localAmount = 0, lastPointer = null, scrollPosition = window.scrollY || 0;
+    var particlePointer = {x:0,y:0,presence:0,explosion:0,known:false,active:false,dirty:false,clientX:0,clientY:0};
+    function refreshParticlePointer() {
+      particlePointer.dirty=false;if(!particlePointer.known)return;
+      var bounds=el.getBoundingClientRect(),input=c.getBoundingClientRect();
+      particlePointer.active=particlePointer.clientX>=bounds.left&&particlePointer.clientX<=bounds.right&&particlePointer.clientY>=bounds.top&&particlePointer.clientY<=bounds.bottom;
+      particlePointer.x=(particlePointer.clientX-input.left)/Math.max(1,input.width)*2-1;particlePointer.y=1-(particlePointer.clientY-input.top)/Math.max(1,input.height)*2;
+    }
     var shapeAnchor = scrollPosition + this.surface.getBoundingClientRect().top;
-    this.on(window, 'scroll', function () { scrollPosition = window.scrollY || 0; if(!self.nativeView){viewDirty=true;if(self.viewported)placeView();} }, { passive: true });
-    this.on(window, 'resize', function () { shapeAnchor = (window.scrollY || 0) + self.surface.getBoundingClientRect().top; });
+    this.on(window, 'scroll', function () { scrollPosition = window.scrollY || 0; particlePointer.dirty=true; if(!self.nativeView){viewDirty=true;if(self.viewported)placeView();} }, { passive: true });
+    this.on(window, 'resize', function () { shapeAnchor = (window.scrollY || 0) + self.surface.getBoundingClientRect().top; particlePointer.dirty=true; });
     this.on(this.surface, 'pointermove', function (e) {
       var b = el.getBoundingClientRect();
       self.inside = e.clientX >= b.left && e.clientX <= b.right && e.clientY >= b.top && e.clientY <= b.bottom;
-      if (!self.inside) { look.tx = 0; look.ty = 0; return; }
+      if (!self.inside) { look.tx = 0; look.ty = 0; particlePointer.active=false;particlePointer.known=false; return; }
       var inputBounds = self.viewported ? c.getBoundingClientRect() : b;
       look.tx = ((e.clientX - inputBounds.left) / inputBounds.width) * 2 - 1;
       look.ty = -(((e.clientY - inputBounds.top) / inputBounds.height) * 2 - 1);
+      var pointerBounds=self.viewported?inputBounds:c.getBoundingClientRect();
+      particlePointer.x=(e.clientX-pointerBounds.left)/Math.max(1,pointerBounds.width)*2-1;particlePointer.y=1-(e.clientY-pointerBounds.top)/Math.max(1,pointerBounds.height)*2;particlePointer.clientX=e.clientX;particlePointer.clientY=e.clientY;particlePointer.known=e.pointerType!=='touch';particlePointer.active=particlePointer.known;particlePointer.dirty=false;
       var stamp = performance.now();
       if (lastPointer && (self.disc.style === 'Floating shape' || self.disc.style === 'Morphing sculptures')) {
         var movement = Math.hypot(look.tx-lastPointer.x,look.ty-lastPointer.y),elapsed = Math.max(16,stamp-lastPointer.time);
-        var proximity = Math.exp(-(look.tx*look.tx+look.ty*look.ty)*.9);
+        var proximity = self.disc.shapeMouseEffect==='Local explosion'?1:Math.exp(-(look.tx*look.tx+look.ty*look.ty)*.9);
         shapeImpulse = Math.max(shapeImpulse,Math.min(2,movement/elapsed*220*self.cur.shapeSensitivity)*proximity);
       }
       lastPointer = {x:look.tx,y:look.ty,time:stamp};
     }, { passive: true });
-    this.on(this.surface, 'pointerleave', function () { look.tx = 0; look.ty = 0; self.inside = false; lastPointer = null; });
+    function leaveParticles(){particlePointer.active=false;particlePointer.known=false;lastPointer=null;}
+    this.on(this.surface, 'pointerleave', function () { look.tx = 0; look.ty = 0; self.inside = false; leaveParticles(); });
+    this.on(this.surface, 'pointercancel', leaveParticles);
+    this.on(window, 'blur', leaveParticles);
+    this.on(document, 'visibilitychange', function(){if(document.hidden)leaveParticles();});
     this.on(el, 'pointerdown', function (e) {
       if (!self.background && e.button === 0 && !(e.target.closest && e.target.closest('a,button,input,select,textarea,label,[data-dh-ui]'))) zoom.t = 1;
     });
@@ -468,7 +482,12 @@
       shapeImpulse *= Math.exp(-dt / cur.shapeRecovery);
       var trigger = self.tgt.shapeTrigger, mouseShape = trigger === 'Mouse movement' || trigger === 'Mouse and scroll', scrollShape = trigger === 'Scroll' || trigger === 'Mouse and scroll';
       var scrollAmount = Math.max(0,Math.min(1,(scrollPosition-shapeAnchor)/Math.max(1,window.innerHeight*cur.shapeScrollDistance)));
-      var shapeTarget = Math.max(mouseShape ? shapeImpulse : 0,scrollShape ? scrollAmount : 0);
+      var localExplosion=d.shapeMouseEffect==='Local explosion';
+      var shapeTarget = Math.max(mouseShape && d.shapeMouseEffect==='Whole sculpture explosion' ? shapeImpulse : 0,scrollShape ? scrollAmount : 0);
+      localAmount += ((localExplosion&&mouseShape?shapeImpulse:0)-localAmount)*(1-Math.exp(-dt*8));
+      if(particlePointer.dirty)refreshParticlePointer();
+      particlePointer.presence+=((particlePointer.active?1:0)-particlePointer.presence)*(1-Math.exp(-dt/(particlePointer.active?.15:cur.shapeRecovery)));
+      particlePointer.explosion=localAmount;
       shapeAmount += (shapeTarget-shapeAmount)*(1-Math.exp(-dt*8));
       var target = PALETTES[self.tgt.palette] || PALETTES['Electric blue'];
       for (j = 0; j < 2; j++) for (k = 0; k < 3; k++) tint[j][k] += (target[j][k] - tint[j][k]) * kc;
@@ -514,7 +533,8 @@
       gl.viewport(0, 0, c.width, c.height);
       if ((d.style === 'Floating shape' || d.style === 'Morphing sculptures')) {
         if (!self.floating) { try { self.floating = makeFloating(gl); } catch (e) { self.error = String(e); self.pause(); el.classList.add('dh-nogl'); return; } }
-        self.floating.draw(cur,d,flowPos,shapeAmount,c.width,c.height,look,tint,self.quality,Math.max(0,Math.min(1,(scrollPosition-shapeAnchor)/Math.max(1,window.innerHeight*cur.morphScrollDistance))));
+        particlePointer.fullKal=d.kaleidoscopeMode==='Forward elements'?0:d.kaleidoscope;particlePointer.autoVortex=autoAmount*autoDirection;particlePointer.autoSpin=autoSpin;particlePointer.time=t;
+        self.floating.draw(cur,d,flowPos,shapeAmount,c.width,c.height,look,tint,self.quality,Math.max(0,Math.min(1,(scrollPosition-shapeAnchor)/Math.max(1,window.innerHeight*cur.morphScrollDistance))),particlePointer);
       } else gl.drawArrays(gl.TRIANGLES, 0, 3);
       gl.bindFramebuffer(gl.FRAMEBUFFER, null);
       gl.activeTexture(gl.TEXTURE3); gl.bindTexture(gl.TEXTURE_2D, stex); gl.generateMipmap(gl.TEXTURE_2D);

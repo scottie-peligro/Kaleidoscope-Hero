@@ -6,9 +6,19 @@ function makeFloating(gl) {
   if(!gl.getProgramParameter(p,gl.LINK_STATUS)){var error=gl.getShaderInfoLog(v)||gl.getShaderInfoLog(f)||gl.getProgramInfoLog(p);gl.deleteShader(v);gl.deleteShader(f);gl.deleteProgram(p);throw Error(error);}
   gl.detachShader(p,v);gl.detachShader(p,f);gl.deleteShader(v);gl.deleteShader(f);
   var vao=gl.createVertexArray(),u={};
-  ['uTime','uSeed','uShape','uShapeB','uMorph','uStagger','uSize','uFloat','uExplosion','uStrength','uLobes','uTwist','uPointSize','uMulti','uBright','uGlow','uForward','uResolution','uLook','uTint','uTint2'].forEach(function(k){u[k]=gl.getUniformLocation(p,k);});
+  ['uTime','uSeed','uShape','uShapeB','uMorph','uStagger','uSize','uFloat','uExplosion','uStrength','uLobes','uTwist','uPointSize','uMulti','uBright','uGlow','uForward','uResolution','uLook','uPointer','uMouseRadius','uMouseStrength','uMouseGlobal','uMouseForce','uTint','uTint2'].forEach(function(k){u[k]=gl.getUniformLocation(p,k);});
   var shapes=['Torus knot','Ring','Orb','Twisted ribbon','Helix','Star','Crystal','Seeded sculpture'];
-  return {program:p,count:0,draw:function(cur,disc,time,amount,width,height,look,tints,quality,morphScroll){
+  function pointerInScene(pointer,width,height){
+    var x=pointer.x||0,y=pointer.y||0,kal=pointer.fullKal||0,vortex=pointer.autoVortex||0,spin=pointer.autoSpin||0;
+    if(kal<1.5&&Math.abs(vortex)<.001&&Math.abs(spin)<.001)return [x,y];
+    // Match the compositor's primary sample, including mirror-repeat at the edges.
+    var aspect=width/height,px=x*.5*aspect,py=y*.5,radius=Math.hypot(px,py),angle=spin+vortex*Math.abs(vortex)*3.2*Math.exp(-radius*2.2),cs=Math.cos(angle),sn=Math.sin(angle);
+    var rotated=px*cs+py*sn;py=-px*sn+py*cs;px=rotated;
+    if(kal>1.5){var sector=Math.PI*2/Math.floor(kal);angle=((Math.atan2(py,px)+(pointer.time||0)*.04)%sector+sector)%sector;angle=Math.PI/2-sector*.5+Math.abs(angle-sector*.5);px=radius*Math.cos(angle);py=radius*Math.sin(angle);}
+    function repeat(n){return 1-Math.abs(((n%2)+2)%2-1);}
+    return [repeat(.5+px/aspect)*2-1,repeat(.5+py)*2-1];
+  }
+  return {program:p,count:0,draw:function(cur,disc,time,amount,width,height,look,tints,quality,morphScroll,pointer){
     this.count=Math.floor(({low:6000,medium:16000,high:26000}[quality]||16000)*cur.density);
     var mirrors=disc.kaleidoscopeMode==='Whole screen'?0:disc.kaleidoscope;
     gl.useProgram(p);gl.bindVertexArray(vao);gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE);gl.disable(gl.DEPTH_TEST);gl.clearColor(0,0,0,1);gl.clear(gl.COLOR_BUFFER_BIT);
@@ -25,9 +35,11 @@ function makeFloating(gl) {
         else if(leg%2){var swap=from;from=to;to=swap;}
       }
     }
-    var values={uTime:time*.35,uSeed:disc.shapeSeed,uShape:from,uShapeB:to,uMorph:progress,uStagger:morphing?cur.morphStagger:0,uSize:cur.shapeSize,uFloat:cur.shapeFloat,uExplosion:morphing&&!disc.morphExplode?0:amount,uStrength:cur.shapeExplode,uLobes:cur.shapeLobes,uTwist:cur.shapeTwist,uPointSize:Math.max(1.8,height/230),uMulti:cur.multicolor,uBright:cur.brightness,uGlow:cur.glow,uForward:mirrors};
+    pointer=pointer||{};var mouse=pointerInScene(pointer,width,height),effect=disc.shapeMouseEffect||'Whole sculpture explosion';
+    var values={uTime:time*.35,uSeed:disc.shapeSeed,uShape:from,uShapeB:to,uMorph:progress,uStagger:morphing?cur.morphStagger:0,uSize:cur.shapeSize,uFloat:cur.shapeFloat,uExplosion:morphing&&!disc.morphExplode?0:amount,uStrength:cur.shapeExplode,uLobes:cur.shapeLobes,uTwist:cur.shapeTwist,uPointSize:Math.max(1.8,height/230),uMulti:cur.multicolor,uBright:cur.brightness,uGlow:cur.glow,uForward:mirrors,uMouseRadius:cur.shapeMouseRadius||.18,uMouseStrength:cur.shapeMouseStrength===undefined?1:cur.shapeMouseStrength,uMouseGlobal:cur.shapeMouseGlobal||0,uMouseForce:effect==='Attract'?-1:effect==='Repel'?1:0};
     Object.keys(values).forEach(function(k){gl.uniform1f(u[k],values[k]);});
     gl.uniform2f(u.uResolution,width,height);gl.uniform2f(u.uLook,look.x*cur.lookRange,look.y*cur.lookRange);gl.uniform3fv(u.uTint,tints[0]);gl.uniform3fv(u.uTint2,tints[1]);
+    gl.uniform4f(u.uPointer,mouse[0],mouse[1],pointer.presence||0,effect==='Local explosion'?pointer.explosion||0:0);
     gl.drawArraysInstanced(gl.POINTS,0,this.count,mirrors>=2?1+Math.floor(mirrors):1);gl.disable(gl.BLEND);
   },dispose:function(){gl.deleteVertexArray(vao);gl.deleteProgram(p);}};
 }

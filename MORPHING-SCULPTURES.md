@@ -32,3 +32,5 @@ Use a preset or override its settings:
 ## Performance
 
 Morphing shares the small Floating shape renderer. Fixed scenes and slideshows containing only these two styles load that renderer; mixed effects and randomized styles use the complete renderer. Geometry and interpolation are calculated on the GPU. There are no model/image downloads, per-frame point uploads, additional render targets or additional animation loops. During a transition, each point evaluates two procedural shapes, so morphing has additional geometry work compared with holding one shape. Existing density/quality limits, visibility pausing, long-section canvas placement, reduced-motion and Save-Data fallbacks still apply.
+
+Local explosion, cursor attraction and repulsion are available in the shared Sculpture panel. Radius, force strength and Outside influence control whether nearby points or the whole sculpture respond. See [Local particle mouse effects](PARTICLE-MOUSE.md).

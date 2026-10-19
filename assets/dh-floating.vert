@@ -2,6 +2,8 @@
 precision highp float;
 uniform float uTime,uSeed,uShape,uShapeB,uMorph,uStagger,uSize,uFloat,uExplosion,uStrength,uLobes,uTwist,uPointSize,uMulti,uBright,uGlow,uForward;
 uniform vec2 uResolution,uLook;
+uniform vec4 uPointer;
+uniform float uMouseRadius,uMouseStrength,uMouseGlobal,uMouseForce;
 uniform vec3 uTint,uTint2;
 out vec3 vColor;
 out float vAlpha;
@@ -46,6 +48,21 @@ void main(){
  float depth=4.8+p.z;vec2 screen=p.xy*2.4/max(depth,.5);screen.x*=uResolution.y/uResolution.x;
  // Repeat a folded particle wedge for the forward kaleidoscope mode.
  if(gl_InstanceID>0){vec2 q=screen*vec2(uResolution.x/uResolution.y,1.);float sector=TAU/max(uForward,2.),angle=mod(atan(q.y,q.x),sector);angle=abs(angle-sector*.5)+float(gl_InstanceID-1)*sector;q=length(q)*vec2(cos(angle),sin(angle));screen=q*vec2(uResolution.y/uResolution.x,1.);}
+ // Cursor distance uses the canvas's shorter side, independent of camera following.
+ if(uPointer.w>.00001||(uPointer.z>.00001&&abs(uMouseForce)>.5)){
+  vec2 aspect=uResolution/min(uResolution.x,uResolution.y),delta=(screen-uPointer.xy)*aspect*.5;
+  float radius=max(.01,uMouseRadius),distance=length(delta);
+  float influence=mix(1.-smoothstep(0.,radius,distance),1.,uMouseGlobal);
+  vec2 offset=vec2(0.);
+  if(uPointer.w>.00001){
+   vec2 scatter=delta+vec2(cos(h.x*TAU),sin(h.x*TAU))*.025;
+   offset+=scatter/max(length(scatter),.000001)*min(radius*.8,.25)*uPointer.w*uStrength*(.4+h.z*1.6)*influence;
+  }
+  float pull=(1.-exp(-uMouseStrength*uPointer.z*1.4))*influence;
+  if(uMouseForce<-.5)offset-=delta*pull;
+  else if(uMouseForce>.5)offset+=(distance>.000001?delta/distance:vec2(cos(h.x*TAU),sin(h.x*TAU)))*radius*.65*pull;
+  screen+=offset*2./aspect;
+ }
  gl_Position=vec4(screen,clamp(depth/12.,0.,1.),1.);
  gl_PointSize=clamp(uPointSize*(.65+h.z*.9)*4.8/max(depth,.5),1.,7.);
  vec3 light=normalize(vec3(-.65,.7,-.8));float lit=max(dot(normal,light),0.),rim=pow(1.-abs(normal.z),3.);

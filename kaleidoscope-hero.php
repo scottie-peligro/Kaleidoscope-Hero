@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Kaleidoscope Hero
  * Description:       Animated WebGL hero backgrounds with admin presets, per-page shortcodes, slideshows and seamless black-wipe page transitions.
- * Version:           1.12.0
+ * Version:           1.13.0
  * Requires at least: 5.8
  * Requires PHP:      7.4
  * Author:            Next Level Exchange
@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'DH_VERSION', '1.12.0' );
+define( 'DH_VERSION', '1.13.0' );
 define( 'DH_URL', plugin_dir_url( __FILE__ ) );
 
 /* ------------------------------------------------------------------ *
@@ -63,7 +63,11 @@ function dh_schema() {
 			'shapeFloat' => $r( __( 'Floating motion', 'kaleidoscope-hero' ), 0, 2, 0.05, 1 ),
 			'shapeLobes' => $r( __( 'Lobes / star points', 'kaleidoscope-hero' ), 2, 10, 1, 5, __( 'Used by Star and Seeded sculpture.', 'kaleidoscope-hero' ) ),
 			'shapeTwist' => $r( __( 'Shape twist', 'kaleidoscope-hero' ), 0, 4, 0.1, 1.5, __( 'Used by Twisted ribbon and Seeded sculpture.', 'kaleidoscope-hero' ) ),
-			'shapeTrigger' => array( 'label' => __( 'Explode with', 'kaleidoscope-hero' ), 'type' => 'enum', 'options' => array( 'Off', 'Mouse movement', 'Scroll', 'Mouse and scroll' ), 'default' => 'Mouse and scroll', 'help' => __( 'Mouse movement scatters nearby particles; they reform when movement stops. Scroll pulls the shape apart as you pass its section and rebuilds it when scrolling back.', 'kaleidoscope-hero' ) ),
+			'shapeMouseEffect' => array( 'label' => __( 'Mouse particle effect', 'kaleidoscope-hero' ), 'type' => 'enum', 'options' => array( 'Whole sculpture explosion', 'Local explosion', 'Attract', 'Repel', 'Off' ), 'default' => 'Whole sculpture explosion', 'help' => __( 'Local explosion scatters points near a moving pointer. Attract and Repel follow the pointer while hovering and replace the movement-triggered explosion. Scroll explosion is controlled separately below.', 'kaleidoscope-hero' ) ),
+			'shapeMouseRadius' => $r( __( 'Mouse influence radius', 'kaleidoscope-hero' ), 0.05, 0.8, 0.01, 0.18, __( 'Fraction of the visible canvas shorter side. Only particles inside this radius respond to the mouse when Outside influence is 0.', 'kaleidoscope-hero' ) ),
+			'shapeMouseStrength' => $r( __( 'Mouse force strength', 'kaleidoscope-hero' ), 0, 3, 0.05, 1, __( 'Strength of attraction or repulsion. 0 disables the force. Local explosion uses Explosion strength instead.', 'kaleidoscope-hero' ) ),
+			'shapeMouseGlobal' => $r( __( 'Outside influence', 'kaleidoscope-hero' ), 0, 1, 0.05, 0, __( '0 affects nearby particles only. Increase to involve the rest of the sculpture; 1 gives every point full influence.', 'kaleidoscope-hero' ) ),
+			'shapeTrigger' => array( 'label' => __( 'Explode with', 'kaleidoscope-hero' ), 'type' => 'enum', 'options' => array( 'Off', 'Mouse movement', 'Scroll', 'Mouse and scroll' ), 'default' => 'Mouse and scroll', 'help' => __( 'Whole sculpture explosion scatters all points on mouse movement. Local explosion affects the selected mouse radius. Scroll pulls the whole shape apart and reverses when scrolling back.', 'kaleidoscope-hero' ) ),
 			'shapeExplode' => $r( __( 'Explosion strength', 'kaleidoscope-hero' ), 0, 3, 0.05, 1 ),
 			'shapeSensitivity' => $r( __( 'Mouse sensitivity', 'kaleidoscope-hero' ), 0.1, 3, 0.1, 1 ),
 			'shapeRecovery' => $r( __( 'Reform time (seconds)', 'kaleidoscope-hero' ), 0.2, 5, 0.1, 1.2 ),
@@ -78,7 +82,7 @@ function dh_schema() {
 			'morphProgress' => $r( __( 'Morph progress', 'kaleidoscope-hero' ), 0, 1, 0.01, 0, __( '0 is From shape; 1 is To shape. Used by Manual control.', 'kaleidoscope-hero' ) ),
 			'morphStagger' => $r( __( 'Particle stagger', 'kaleidoscope-hero' ), 0, 0.8, 0.05, 0.15, __( '0 moves the points together. Higher values let different points begin at different times.', 'kaleidoscope-hero' ) ),
 			'morphScrollDistance' => $r( __( 'Morph scroll distance (screens)', 'kaleidoscope-hero' ), 0.25, 4, 0.25, 1, __( 'Distance from the section top to complete the transformation. Works with Flow 0.', 'kaleidoscope-hero' ) ),
-			'morphExplode' => array( 'label' => __( 'Also allow explosion', 'kaleidoscope-hero' ), 'type' => 'bool', 'default' => false, 'help' => __( 'Enables the sculpture explosion controls as an additional interaction. Morphing works on its own when this is off.', 'kaleidoscope-hero' ) ),
+			'morphExplode' => array( 'label' => __( 'Also allow explosion', 'kaleidoscope-hero' ), 'type' => 'bool', 'default' => false, 'help' => __( 'Enables whole-sculpture explosion as an additional interaction. Local mouse effects work independently of this option.', 'kaleidoscope-hero' ) ),
 		),
 		'Background'  => array(
 			'bgColor1'      => array( 'label' => 'Colour 1', 'type' => 'color', 'default' => '#140a2e' ),

@@ -62,7 +62,14 @@ jQuery(function ($) {
     ['morphDuration','morphHold'].forEach(function(key){form.find('#dh-'+key).closest('.dh-field').toggle(automaticMorph);});
     form.find('#dh-morphProgress').closest('.dh-field').toggle(morphMode === 'Manual');
     form.find('#dh-morphScrollDistance').closest('.dh-field').toggle(morphMode === 'Scroll');
-    ['shapeTrigger','shapeExplode','shapeSensitivity','shapeRecovery','shapeScrollDistance'].forEach(function(key){form.find('#dh-'+key).closest('.dh-field').toggle(!morphing || !!form.find('#dh-morphExplode').prop('checked'));});
+    var mouseEffect=form.find('#dh-shapeMouseEffect').val(),localExplosion=mouseEffect==='Local explosion',force=mouseEffect==='Attract'||mouseEffect==='Repel',localMouse=localExplosion||force;
+    ['shapeMouseRadius','shapeMouseGlobal'].forEach(function(key){form.find('#dh-'+key).closest('.dh-field').toggle(localMouse);});
+    form.find('#dh-shapeMouseStrength').closest('.dh-field').toggle(force);
+    var wholeExplosion=!morphing||!!form.find('#dh-morphExplode').prop('checked');
+    ['shapeTrigger','shapeExplode'].forEach(function(key){form.find('#dh-'+key).closest('.dh-field').toggle(wholeExplosion||localExplosion);});
+    form.find('#dh-shapeSensitivity').closest('.dh-field').toggle(localExplosion||(wholeExplosion&&mouseEffect==='Whole sculpture explosion'));
+    form.find('#dh-shapeRecovery').closest('.dh-field').toggle(wholeExplosion||localMouse);
+    form.find('#dh-shapeScrollDistance').closest('.dh-field').toggle(wholeExplosion);
     var automatic = !!form.find('#dh-autoVortex').prop('checked');
     ['autoVortexStrength','autoVortexSpeed','autoVortexDirection','autoVortexRamp'].forEach(function (key) { form.find('#dh-' + key).closest('.dh-field').toggle(automatic); });
   }

@@ -3,7 +3,7 @@ Contributors: nextlevelexchange
 Requires at least: 5.8
 Tested up to: 6.6
 Requires PHP: 7.4
-Stable tag: 1.12.0
+Stable tag: 1.13.0
 License: GPLv2 or later
 
 Animated WebGL hero backgrounds with admin presets, per-page shortcodes, slideshows and seamless black-wipe page transitions.
@@ -54,3 +54,7 @@ Scrolling is independent of the scene's 30 FPS rendering: supported browsers pin
 == Morphing sculptures ==
 
 Choose Animation > Style > Morphing sculptures. Cycle through all eight procedural shapes, move back and forth between a selected pair, transform with scroll, or hold a manual blend. Adjust duration, hold time and particle stagger. The shared Sculpture panel controls size, seed, float, lobes and twist. Optional explosion is disabled by default. Flow 0 pauses automatic motion while scroll/manual morphing remains available. See MORPHING-SCULPTURES.md for controls and shortcode examples.
+
+== Local particle mouse effects ==
+
+Floating shape and Morphing sculptures now offer Whole sculpture explosion, Local explosion, Attract, Repel and Off under Sculpture > Mouse particle effect. Adjust Mouse influence radius, Mouse force strength and Outside influence. Outside influence 0 limits the mouse response to nearby points; higher values bring the rest along. Attract/Repel follow hovering and replace the mouse movement explosion. Scroll explosion remains separately configurable. See PARTICLE-MOUSE.md for examples and controls.

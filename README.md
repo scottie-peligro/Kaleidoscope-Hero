@@ -1,14 +1,14 @@
 # Kaleidoscope Hero
 
-WordPress plugin for animated WebGL heroes and section backgrounds. Current version: **1.12.0**.
+WordPress plugin for animated WebGL heroes and section backgrounds. Current version: **1.13.0**.
 
-Includes 16 animated styles, saved presets, shortcodes, a native section block, slideshows, kaleidoscope/vortex controls, page transitions and floating particle sculptures. Long sections render a viewport-sized background within a bounded pixel budget. Version 1.12.0 adds Morphing sculptures with automatic, scroll and manual control. Stable long-page scrolling and filtered Particle Waves remain included.
+Includes 16 animated styles, saved presets, shortcodes, a native section block, slideshows, kaleidoscope/vortex controls, page transitions and floating particle sculptures. Long sections render a viewport-sized background within a bounded pixel budget. Version 1.13.0 adds local particle explosions, mouse attraction/repulsion and adjustable outside influence. Morphing sculptures retain automatic, scroll and manual control. Stable long-page scrolling and filtered Particle Waves remain included.
 
 ## Install
 
 Copy this directory to `wp-content/plugins/kaleidoscope-hero`, then activate Kaleidoscope Hero in WordPress. For an update, replace the plugin files; saved presets and global settings remain in WordPress. Requires WordPress 5.8+, PHP 7.4+, and WebGL 2 for animation. Reduced motion, Save-Data and unsupported browsers use the static background.
 
-See [readme.txt](readme.txt), [Section backgrounds](SECTION-BACKGROUNDS.md), [Animated elements](ANIMATED-ELEMENTS.md), [Floating shapes](FLOATING-SHAPES.md), [Morphing sculptures](MORPHING-SCULPTURES.md) and [Performance](PERFORMANCE.md).
+See [readme.txt](readme.txt), [Section backgrounds](SECTION-BACKGROUNDS.md), [Animated elements](ANIMATED-ELEMENTS.md), [Floating shapes](FLOATING-SHAPES.md), [Morphing sculptures](MORPHING-SCULPTURES.md), [Particle mouse effects](PARTICLE-MOUSE.md) and [Performance](PERFORMANCE.md).
 
 ## Build
 
