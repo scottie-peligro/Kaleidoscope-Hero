@@ -1,0 +1,29 @@
+.dh-admin .dh-chips{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0}
+.dh-admin .dh-chip{display:inline-flex;gap:8px;align-items:center;padding:6px 14px;border:1px solid #c3c4c7;border-radius:999px;background:#fff;text-decoration:none;color:#1d2327;font-weight:500}
+.dh-admin .dh-chip:hover{border-color:#2271b1;color:#2271b1}
+.dh-admin .dh-chip.is-active{background:#1d2327;color:#fff;border-color:#1d2327}
+.dh-admin .dh-chip code{background:transparent;padding:0;font-size:11px;opacity:.7;color:inherit}
+.dh-admin .dh-chip--add{border-style:dashed}
+.dh-admin .dh-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(340px,560px);gap:24px;align-items:start}
+@media (max-width:1280px){.dh-admin .dh-layout{grid-template-columns:minmax(0,1fr)}.dh-admin .dh-aside{position:static;order:-1}}
+.dh-admin .dh-form--narrow{max-width:900px;margin-top:18px}
+.dh-admin .dh-panel{background:#fff;border:1px solid #dcdcde;border-radius:8px;padding:4px 20px 12px;margin-bottom:16px}
+.dh-admin .dh-panel h2{font-size:14px;margin:16px 0 8px}
+.dh-admin .dh-field{display:grid;grid-template-columns:190px minmax(0,1fr);gap:6px 16px;align-items:center;padding:10px 0;border-top:1px solid #f0f0f1}
+.dh-admin .dh-panel h2+.dh-field{border-top:0}
+.dh-admin .dh-field>label{font-weight:500}
+.dh-admin .dh-control .description{margin:6px 0 0}
+.dh-admin .dh-range{display:flex;gap:12px;align-items:center}
+.dh-admin .dh-range input[type=range]{flex:1;min-width:0}
+.dh-admin .dh-range input[type=number]{width:84px}
+.dh-admin .dh-control input[type=text],.dh-admin .dh-control input[type=url],.dh-admin .dh-control textarea,.dh-admin .dh-control select{width:100%;max-width:520px}
+.dh-admin .dh-toggle{display:inline-flex;align-items:center;gap:6px}
+.dh-admin .dh-aside{position:sticky;top:46px;display:flex;flex-direction:column;gap:12px}
+.dh-admin .dh-preview{border-radius:10px;overflow:hidden;border:1px solid #1d2327;background:#02040a}
+.dh-admin .dh-preview .dh-hero{min-height:0}
+.dh-admin .dh-shortcode{display:flex;gap:8px;align-items:center;background:#fff;border:1px solid #dcdcde;border-radius:8px;padding:10px 12px}
+.dh-admin .dh-shortcode code{flex:1;font-size:13px;-webkit-user-select:all;user-select:all;background:transparent}
+.dh-admin .dh-actions{display:flex;gap:8px;align-items:center}
+.dh-admin .dh-help{max-width:900px;margin-top:18px}
+.dh-admin .dh-help code{word-break:break-word}
+@media (max-width:782px){.dh-admin .dh-field{grid-template-columns:1fr}}
