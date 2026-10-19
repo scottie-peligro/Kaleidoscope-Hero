@@ -77,8 +77,18 @@ vec2 effectUV(vec2 uv){
     angle=1.5707963-sector*.5+abs(angle-sector*.5);
     p=length(p)*vec2(cos(angle),sin(angle));
   }
-  // Mirror-repeat the source at the edges, avoiding clamped bands while turning.
-  return 1.-abs(mod(.5+p/aspect,2.)-1.);
+  // A vortex moves one scene beyond the frame; it must not reflect it back.
+  // Deliberate tile repeats and angular kaleidoscope folds happen above.
+  return .5+p/aspect;
+}
+float sourceCoverage(vec2 uv){
+  if(uFullKal<1.5&&abs(uAutoVort)<.001&&abs(uAutoSpin)<.001)return 1.;
+  float turning=clamp(abs(uAutoVort)*2.+abs(sin(uAutoSpin))*2.+step(1.5,uFullKal),0.,1.);
+  vec2 edge=min(uv,1.-uv),feather=max(2./uRes+vec2(.16)*turning,fwidth(uv)*1.25);
+  return smoothstep(0.,feather.x,edge.x)*smoothstep(0.,feather.y,edge.y);
+}
+vec3 sceneSample(vec2 uv,float lod){
+  return textureLod(uScene,uv,lod).rgb*sourceCoverage(uv);
 }
 void main(){
   vec2 baseUV=gl_FragCoord.xy/uRes,uv=effectUV(baseUV),cen=vec2(.5,.52),dv=uv-cen;
@@ -86,14 +96,14 @@ void main(){
   // Reuse existing mip levels when many tiles shrink the source image.
   float detailLOD=uTessMode>0?max(0.,log2(max(1.,uTessDensity/max(.5,uTessZoom)))):0.;
   float w=clamp(uWarp,0.,2.5),ws=0.;
-  if(w<.001){col=textureLod(uScene,uv,detailLOD).rgb;ws=1.;}else for(int i=0;i<WARP_TAPS;i++){float f=float(i)/float(WARP_TAPS-1);float k=1.-w*.16*f*f;float wt=1.-f*.6;col+=textureLod(uScene,cen+dv*k,detailLOD).rgb*wt;ws+=wt;}
+  if(w<.001){col=sceneSample(uv,detailLOD);ws=1.;}else for(int i=0;i<WARP_TAPS;i++){float f=float(i)/float(WARP_TAPS-1);float k=1.-w*.16*f*f;float wt=1.-f*.6;col+=sceneSample(cen+dv*k,detailLOD)*wt;ws+=wt;}
   col/=ws;
   if(uBloom>.001){
   float th=mix(.95,.42,uNight);
-  vec3 b=br(textureLod(uScene,uv,2.+detailLOD).rgb,th)*.5+br(textureLod(uScene,uv,3.+detailLOD).rgb,th)*.7+br(textureLod(uScene,uv,4.+detailLOD).rgb,th)*.9+br(textureLod(uScene,uv,5.+detailLOD).rgb,th)*1.1;
+  vec3 b=br(sceneSample(uv,2.+detailLOD),th)*.5+br(sceneSample(uv,3.+detailLOD),th)*.7+br(sceneSample(uv,4.+detailLOD),th)*.9+br(sceneSample(uv,5.+detailLOD),th)*1.1;
   vec3 st=vec3(0.);
-  for(int i=-7;i<=7;i++){float fi=float(i);st+=br(textureLod(uScene,uv+vec2(fi*.022,0.),3.+detailLOD).rgb,th+.12)*exp(-abs(fi)*.32);}
-  vec2 gu=cen-dv*.55;vec3 gh=br(textureLod(uScene,gu,4.+detailLOD).rgb,th+.1)*.35+br(textureLod(uScene,cen-dv*1.3,5.+detailLOD).rgb,th+.1)*.2;
+  for(int i=-7;i<=7;i++){float fi=float(i);st+=br(sceneSample(uv+vec2(fi*.022,0.),3.+detailLOD),th+.12)*exp(-abs(fi)*.32);}
+  vec2 gu=cen-dv*.55;vec3 gh=br(sceneSample(gu,4.+detailLOD),th+.1)*.35+br(sceneSample(cen-dv*1.3,5.+detailLOD),th+.1)*.2;
   float vg=smoothstep(.8,.1,length(dv));
   col+=uBloom*mix(.2,1.,uNight)*(b*.32+st*uNight*mix(vec3(.5,.7,1.),uTint2,.5)*.09+gh*uTint2*vg*.6);
   }
@@ -102,7 +112,7 @@ void main(){
   vec2 ac=(baseUV-.5)*vec2(uRes.x/uRes.y,1.);
   float gt=uGT>.5?clamp(dot(ac,vec2(cos(uAng),sin(uAng)))/(.5*(abs(cos(uAng))*uRes.x/uRes.y+abs(sin(uAng))))*.5+.5,0.,1.):clamp(length(ac)/(.5*length(vec2(uRes.x/uRes.y,1.))),0.,1.);
   vec3 bg=mix(uBg1,uBg2,smoothstep(0.,1.,gt));
-  col*=uOp;
+  col*=uOp*sourceCoverage(uv);
   vec3 elements=clamp(col,0.,1.);
   col=1.-(1.-bg)*(1.-elements);
   if(uBlendMode>0&&uBlendAmount>0.){

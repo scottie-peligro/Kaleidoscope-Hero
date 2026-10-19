@@ -1,6 +1,6 @@
 # Kaleidoscope Hero
 
-WordPress plugin for animated WebGL heroes and section backgrounds. Current version: **1.17.0**.
+WordPress plugin for animated WebGL heroes and section backgrounds. Current version: **1.17.1**.
 
 Includes 17 animated styles, saved presets, shortcodes, a native section block, slideshows, kaleidoscope/vortex controls, page transitions and floating particle sculptures. Long sections render a viewport-sized background within a bounded pixel budget. Version 1.14.0 adds reusable look/full-setting templates, preview/undo, and portable JSON import/export. Local particle explosions and cursor forces remain available. Morphing sculptures retain automatic, scroll and manual control. Stable long-page scrolling and filtered Particle Waves remain included.
 
@@ -42,3 +42,5 @@ Version 1.16.0 adds Squares, Mirrored squares, Triangles and Hexagons with repea
 ## Iridescent ribbons
 
 Version 1.17.0 adds broad translucent ribbon surfaces with changing thin-film colors, shiny edges, cursor bending and reversible scroll twist/unwrap. Dedicated controls cover geometry, material and input strength/radius. It shares the compact mesh renderer, with no model/image downloads; total mesh detail is capped for high mirror counts. Works with tessellation, kaleidoscope, vortex, blending, presets and templates. See [IRIDESCENT-RIBBONS.md](IRIDESCENT-RIBBONS.md).
+
+Version 1.17.1 removes unintended frame reflections during vortex rotation. Artwork beyond the captured source fades into the background, including bloom/warp, and mouse mapping follows the unwrapped coordinates. Intentional kaleidoscope/tessellation transforms remain available.

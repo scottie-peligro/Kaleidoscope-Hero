@@ -39,6 +39,8 @@ Set mirrors to 2–12. Zero or one bypasses both modes. Existing presets default
 
 Under Interaction, enable **Automatic vortex** to start the full-animation twist as soon as the visible animation loads. Adjust strength, speed, direction (Clockwise or Counterclockwise), and startup time. Zero startup time begins immediately; a longer value builds strength gradually. Strength 0 removes the twist/rotation. Speed 0 holds a static twist. Turning the option off eases the animation back to neutral.
 
+As the vortex turns, artwork leaving the captured frame fades into the background instead of mirror-repeating back as another design. Intentional kaleidoscope folds and tessellation are separate controls.
+
 The automatic vortex works with Mouse look at 0, Flow speed at 0, every animated style and every kaleidoscope mode. Edge vortex retains its separate mouse-edge behavior. Automatic vortex defaults to off. Offscreen/hidden-tab pausing and reduced-motion/Save-Data fallback still apply.
 
 ```text

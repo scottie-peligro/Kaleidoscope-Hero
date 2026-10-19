@@ -4,6 +4,10 @@ Version 1.2.0 also supports [backgrounds behind normal section content](SECTION-
 
 The foreground content is server-rendered. Animation starts only after an intersection notification and an animation frame. Unsupported WebGL, reduced-motion, and Save-Data preferences use the CSS gradient and retain the text and navigation.
 
+## Vortex frame edges (1.17.1)
+
+The compositor leaves transformed UVs unwrapped after vortex/whole-screen kaleidoscope instead of mirror-repeating the entire source frame. Outside samples fade to the existing gradient; bloom and warp taps use the same coverage guard to avoid reflected copies or clamped edge bands. A broad edge fade ramps with the turning amount, preventing a hard rotated rectangle. Intentional tessellation cells and angular kaleidoscope folding stay in their own transforms. Particle/ribbon cursor mapping now returns the same raw source coordinates, including positions outside the frame. No extra images, targets or passes. Off/no whole-screen transforms retain exact previous pixels.
+
 ## Iridescent ribbons (1.17.0)
 
 Ribbon surfaces use procedural instanced triangle grids, with positions, bend deformation and normals generated in the vertex shader. They share the mesh-only compact renderer, without noise textures, image/model downloads or per-frame geometry uploads. Translucent analytic shading uses the existing scene framebuffer and compositor. Low/medium/high topology budgets cap all ribbons and forward mirrors together at 90k/180k/300k submitted vertices by reducing the lengthwise subdivisions. Cursor mapping reuses the same compositor transform as particle sculptures. Existing lifecycle, long-page viewport, pixel, frame and motion-preference limits apply. See IRIDESCENT-RIBBONS.md.

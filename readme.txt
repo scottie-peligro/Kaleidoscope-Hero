@@ -3,7 +3,7 @@ Contributors: nextlevelexchange
 Requires at least: 5.8
 Tested up to: 6.6
 Requires PHP: 7.4
-Stable tag: 1.17.0
+Stable tag: 1.17.1
 License: GPLv2 or later
 
 Animated WebGL hero backgrounds with admin presets, per-page shortcodes, slideshows and seamless black-wipe page transitions.
@@ -49,7 +49,7 @@ Color blending adds Multiply, Screen, Overlay, Color, Luminosity and other stand
 
 Animation > Style includes Digital fabric, Blueprint city, Dot matrix structures, LED globe and Digital disco ball. LED globe offers Cycle, Fireworks, Waves and Shapes patterns. Use them with the Kaleidoscope scene. Density and Flow speed control detail and motion. Scene > Off removes the effect. See ANIMATED-ELEMENTS.md for examples and controls.
 
-Animation > Kaleidoscope mode offers Forward elements, Whole screen, and Both. Set mirrors to 2 or more. Interaction > Automatic vortex starts a full-animation twist on load, with strength, speed, direction and startup controls.
+Animation > Kaleidoscope mode offers Forward elements, Whole screen, and Both. Set mirrors to 2 or more. Interaction > Automatic vortex starts a full-animation twist on load, with strength, speed, direction and startup controls. Transformed artwork now fades beyond the captured frame instead of reflecting back as duplicate designs. Deliberate kaleidoscope folds and tessellation remain available.
 
 Digital disco ball uses round mirror tiles, colorful silver reflections, white star glints, soft wall lights and radial light rays. Interaction > Mouse controls disco rotation turns it toward the pointer, slows it at the center and returns to automatic rotation outside the scene. This works with Mouse look at 0. Disable the option for continuous automatic rotation; Flow speed controls rotation speed, and Glow increases sparkle and rays. Choose Neon or Violet for purple/pink lighting; Warp at 0 keeps the tiles crisp.
 
