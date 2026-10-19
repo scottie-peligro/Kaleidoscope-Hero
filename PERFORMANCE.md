@@ -4,6 +4,10 @@ Version 1.2.0 also supports [backgrounds behind normal section content](SECTION-
 
 The foreground content is server-rendered. Animation starts only after an intersection notification and an animation frame. Unsupported WebGL, reduced-motion, and Save-Data preferences use the CSS gradient and retain the text and navigation.
 
+## Color blending (1.15.0)
+
+Fifteen optional color blend modes run in the existing final shader pass after bloom. No additional draw calls, textures, image assets or framebuffer allocations are added. Off skips blend math and preserves previous output. The compressed renderer increase is 905–986 bytes with Node gzip; actual transfer size depends on server encoding. All three engines use the same functions. A 3,000-sample GPU comparison against browser Canvas 2D blend operations differed by at most 2 of 255 per channel (including existing dither and browser rounding). This is correctness validation, not a GPU timing benchmark.
+
 ## Rendering budget
 
 Version 1.11.1 prevents a long section from spending its entire pixel budget on page height. Above 1.6 viewport heights, the renderer moves a viewport-sized canvas inside the clipped section, with an overscan margin for scroll motion. The scene stays viewport-relative rather than stretching down the document. It reuses the existing framebuffer and pixel caps, with no additional render passes or animation loops. Canvas placement is updated on scroll/layout changes, and short sections retain normal rendering. A 1,905px-wide, 9,000px-tall test improved buffer width from 384 to 974 pixels under the same 700,000-pixel cap. These are local fixture measurements, not device performance guarantees.

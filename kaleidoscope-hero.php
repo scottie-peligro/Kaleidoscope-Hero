@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Kaleidoscope Hero
  * Description:       Animated WebGL hero backgrounds with admin presets, per-page shortcodes, slideshows and seamless black-wipe page transitions.
- * Version:           1.14.0
+ * Version:           1.15.0
  * Requires at least: 5.8
  * Requires PHP:      7.4
  * Author:            Next Level Exchange
@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'DH_VERSION', '1.14.0' );
+define( 'DH_VERSION', '1.15.0' );
 define( 'DH_URL', plugin_dir_url( __FILE__ ) );
 
 /* ------------------------------------------------------------------ *
@@ -102,6 +102,11 @@ function dh_schema() {
 			'autoVortexSpeed' => $r( __( 'Automatic vortex speed', 'kaleidoscope-hero' ), 0, 3, 0.05, 0.5, __( '0 holds the twist still.', 'kaleidoscope-hero' ) ),
 			'autoVortexDirection' => array( 'label' => __( 'Automatic vortex direction', 'kaleidoscope-hero' ), 'type' => 'enum', 'options' => array( 'Clockwise', 'Counterclockwise' ), 'default' => 'Clockwise' ),
 			'autoVortexRamp' => $r( __( 'Automatic vortex startup (seconds)', 'kaleidoscope-hero' ), 0, 10, 0.1, 2, __( 'Time to reach full strength after loading or enabling. 0 starts immediately.', 'kaleidoscope-hero' ) ),
+		),
+		'Color blending' => array(
+			'blendMode' => array( 'label' => __( 'Blend mode', 'kaleidoscope-hero' ), 'type' => 'enum', 'options' => array( 'Off', 'Multiply', 'Screen', 'Overlay', 'Darken', 'Lighten', 'Color dodge', 'Color burn', 'Hard light', 'Soft light', 'Difference', 'Exclusion', 'Hue', 'Saturation', 'Color', 'Luminosity' ), 'default' => 'Off', 'help' => __( 'Blends the color below over the finished animation and its background, after bloom. Multiply colors bright white highlights; Color preserves their brightness. Text and page content keep their own colors. Off keeps the original look.', 'kaleidoscope-hero' ) ),
+			'blendColor' => array( 'label' => __( 'Blend color', 'kaleidoscope-hero' ), 'type' => 'color', 'default' => '#8866ff', 'help' => __( 'The color layer mixed with the animation. Try violet or cyan with Multiply, or change this color to explore the other modes.', 'kaleidoscope-hero' ) ),
+			'blendAmount' => $r( __( 'Blend strength', 'kaleidoscope-hero' ), 0, 1, 0.01, 1, __( '0 keeps the original animation; 1 applies the full blend. Works with all animation styles, presets and templates.', 'kaleidoscope-hero' ) ),
 		),
 		'Content'     => array(
 			'overlay'    => array( 'label' => 'Show text overlay', 'type' => 'bool', 'default' => true ),
@@ -627,7 +632,7 @@ function dh_admin_help() {
 		<h2>Shortcodes</h2>
 		<p><code>[kaleidoscope_hero preset="home"]</code> shows one preset.</p>
 		<p><code>[kaleidoscope_hero presets="home,ocean,rings" interval="20"]</code> plays a slideshow, fading between presets every 20 seconds.</p>
-		<p><code>[kaleidoscope_hero preset="work" height="60vh" opacity="0.5" overlay="no"]</code> overrides any setting for that page only. Setting names: <code>style, palette, opacity, density, flow, glow, brightness, multicolor, kaleidoscope, randomize, randominterval, bgcolor1, bgcolor2, gradient, gradientangle, lookrange, warp, bloom, vortex, vortexramp, overlay, headingtag, heading, subheading, buttontext, buttonurl, abouttext, abouturl, worktext, workurl, moretext, moreurl, brackets, height</code>.</p>
+		<p><code>[kaleidoscope_hero preset="work" height="60vh" opacity="0.5" overlay="no"]</code> overrides any setting for that page only. Setting names: <code>style, palette, opacity, density, flow, glow, brightness, multicolor, kaleidoscope, randomize, randominterval, bgcolor1, bgcolor2, gradient, gradientangle, lookrange, warp, bloom, blendmode, blendcolor, blendamount, vortex, vortexramp, overlay, headingtag, heading, subheading, buttontext, buttonurl, abouttext, abouturl, worktext, workurl, moretext, moreurl, brackets, height</code>.</p>
 		<p><?php esc_html_e( 'Kaleidoscope mode supports Forward elements, Whole screen, or Both. Automatic vortex starts the full-animation twist on load, with strength, speed, direction and startup controls under Interaction.', 'kaleidoscope-hero' ); ?></p>
 		<p><code>[kaleidoscope_hero preset="home" kaleidoscope="6" kaleidoscopemode="Whole screen" autovortex="true" autovortexstrength="0.5" autovortexspeed="0.6" autovortexdirection="Clockwise" autovortexramp="2"]</code></p>
 		<p><?php esc_html_e( 'LED globe offers Cycle, Fireworks, Waves and Shapes under LED globe pattern. Digital disco ball casts moving mirror-tile light onto the surrounding wall. Density adjusts the LED or tile spacing; Flow speed animates the show.', 'kaleidoscope-hero' ); ?></p>

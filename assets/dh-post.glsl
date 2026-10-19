@@ -3,6 +3,41 @@ precision highp float;
 uniform float uOp;uniform vec3 uBg1;uniform vec3 uBg2;uniform float uGT;uniform float uAng;uniform sampler2D uScene;uniform vec2 uRes;uniform float uWarp;uniform float uBloom;uniform vec3 uTint2;uniform float uNight;uniform float uTime;
 out vec4 o;
 uniform float uFullKal,uAutoVort,uAutoSpin;
+uniform int uBlendMode;
+uniform float uBlendAmount;
+uniform vec3 uBlendColor;
+// W3C compositing blend functions. The animation is the backdrop; the chosen
+// color is the source layer. Run after bloom, in this existing compositor pass.
+float blendLum(vec3 c){return dot(c,vec3(.3,.59,.11));}
+float blendSat(vec3 c){return max(c.r,max(c.g,c.b))-min(c.r,min(c.g,c.b));}
+vec3 blendClip(vec3 c){
+  float l=blendLum(c),n=min(c.r,min(c.g,c.b)),x=max(c.r,max(c.g,c.b));
+  if(n<0.)c=vec3(l)+(c-l)*l/max(l-n,.000001);
+  if(x>1.)c=vec3(l)+(c-l)*(1.-l)/max(x-l,.000001);
+  return c;
+}
+vec3 blendSetLum(vec3 c,float l){return blendClip(c+(l-blendLum(c)));}
+vec3 blendSetSat(vec3 c,float s){float n=min(c.r,min(c.g,c.b)),d=blendSat(c);return d>.000001?(c-n)*s/d:vec3(0.);}
+float blendChannel(float b,float s,int mode){
+  if(mode==1)return b*s;
+  if(mode==2)return b+s-b*s;
+  if(mode==3)return b<=.5?2.*b*s:1.-2.*(1.-b)*(1.-s);
+  if(mode==4)return min(b,s);
+  if(mode==5)return max(b,s);
+  if(mode==6)return b==0.?0.:s==1.?1.:min(1.,b/(1.-s));
+  if(mode==7)return b==1.?1.:s==0.?0.:1.-min(1.,(1.-b)/s);
+  if(mode==8)return s<=.5?2.*b*s:1.-2.*(1.-b)*(1.-s);
+  if(mode==9){float d=b<=.25?((16.*b-12.)*b+4.)*b:sqrt(b);return s<=.5?b-(1.-2.*s)*b*(1.-b):b+(2.*s-1.)*(d-b);}
+  if(mode==10)return abs(b-s);
+  return b+s-2.*b*s;
+}
+vec3 blendGrade(vec3 b,vec3 s,int mode){
+  if(mode==12)return blendSetLum(blendSetSat(s,blendSat(b)),blendLum(b));
+  if(mode==13)return blendSetLum(blendSetSat(b,blendSat(s)),blendLum(b));
+  if(mode==14)return blendSetLum(s,blendLum(b));
+  if(mode==15)return blendSetLum(b,blendLum(s));
+  return vec3(blendChannel(b.r,s.r,mode),blendChannel(b.g,s.g,mode),blendChannel(b.b,s.b,mode));
+}
 vec3 br(vec3 c,float th){return max(c-th,0.)/(1.-th);}
 vec2 effectUV(vec2 uv){
   if(uFullKal<1.5&&abs(uAutoVort)<.001&&abs(uAutoSpin)<.001)return uv;
@@ -41,6 +76,7 @@ void main(){
   vec3 bg=mix(uBg1,uBg2,smoothstep(0.,1.,gt));
   col*=uOp;
   col=1.-(1.-bg)*(1.-clamp(col,0.,1.));
+  if(uBlendMode>0&&uBlendAmount>0.)col=mix(col,clamp(blendGrade(col,uBlendColor,uBlendMode),0.,1.),uBlendAmount);
   col+=(fract(sin(dot(gl_FragCoord.xy,vec2(12.9898,78.233)))*43758.5453)-.5)/255.;
   o=vec4(col,1.);
 }

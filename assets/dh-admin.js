@@ -50,7 +50,9 @@ jQuery(function ($) {
 
   function sceneFields() {
     var enabled = (form.find('#dh-scene').val() || 'Kaleidoscope') !== 'Off';
-    form.find('[data-dh-group="Animation"], [data-dh-group="Interaction"]').toggle(enabled);
+    form.find('[data-dh-group="Animation"], [data-dh-group="Interaction"], [data-dh-group="Color blending"]').toggle(enabled);
+    var blending = form.find('#dh-blendMode').val() !== 'Off';
+    ['blendColor','blendAmount'].forEach(function(key){form.find('#dh-'+key).closest('.dh-field').toggle(blending);});
     form.find('#dh-ledPattern').closest('.dh-field').toggle(form.find('#dh-style').val() === 'LED globe');
     form.find('#dh-discoMouseControl').closest('.dh-field').toggle(form.find('#dh-style').val() === 'Digital disco ball');
     var style = form.find('#dh-style').val(), morphing = style === 'Morphing sculptures', sculpting = style === 'Floating shape' || morphing;

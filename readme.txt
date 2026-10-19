@@ -3,7 +3,7 @@ Contributors: nextlevelexchange
 Requires at least: 5.8
 Tested up to: 6.6
 Requires PHP: 7.4
-Stable tag: 1.14.0
+Stable tag: 1.15.0
 License: GPLv2 or later
 
 Animated WebGL hero backgrounds with admin presets, per-page shortcodes, slideshows and seamless black-wipe page transitions.
@@ -28,6 +28,10 @@ Hero links use the black wipe automatically. Add the class dh-transition to any 
 == Requirements ==
 
 WebGL 2 (all current desktop and mobile browsers). Older browsers show a static gradient in the background colours.
+
+== Color blending ==
+
+Color blending adds Multiply, Screen, Overlay, Color, Luminosity and other standard blend modes, with a color picker and strength slider. The chosen color blends over the finished animation after bloom. Multiply tints white highlights; Color preserves luminosity. Text retains its colors. Off is the default. Works across every renderer, shortcodes and portable templates. See COLOR-BLENDING.md for examples.
 
 == Digital structures ==
 
