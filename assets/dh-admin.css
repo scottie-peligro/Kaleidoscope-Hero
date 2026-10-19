@@ -27,3 +27,10 @@
 .dh-admin .dh-help{max-width:900px;margin-top:18px}
 .dh-admin .dh-help code{word-break:break-word}
 @media (max-width:782px){.dh-admin .dh-field{grid-template-columns:1fr}}
+.dh-admin .dh-template-tools #dh-template-scope{margin-top:8px}
+.dh-admin .dh-template-buttons{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.dh-admin #dh-template-status{min-height:20px;color:#135e32}
+.dh-admin #dh-template-status.is-error{color:#b32d2e}
+.dh-admin .dh-template-library{max-width:1100px;margin-top:18px}
+.dh-admin .dh-template-row-actions{display:flex;flex-wrap:wrap;gap:8px}
+.dh-admin .dh-export-all{margin:16px 0}

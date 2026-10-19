@@ -3,7 +3,7 @@ Contributors: nextlevelexchange
 Requires at least: 5.8
 Tested up to: 6.6
 Requires PHP: 7.4
-Stable tag: 1.13.0
+Stable tag: 1.14.0
 License: GPLv2 or later
 
 Animated WebGL hero backgrounds with admin presets, per-page shortcodes, slideshows and seamless black-wipe page transitions.
@@ -58,3 +58,7 @@ Choose Animation > Style > Morphing sculptures. Cycle through all eight procedur
 == Local particle mouse effects ==
 
 Floating shape and Morphing sculptures now offer Whole sculpture explosion, Local explosion, Attract, Repel and Off under Sculpture > Mouse particle effect. Adjust Mouse influence radius, Mouse force strength and Outside influence. Outside influence 0 limits the mouse response to nearby points; higher values bring the rest along. Attract/Repel follow hovering and replace the mouse movement explosion. Scroll explosion remains separately configurable. See PARTICLE-MOUSE.md for examples and controls.
+
+== Reusable templates ==
+
+Save current preset controls as a named template, including unsaved edits. Choose Look only to preserve destination content/layout, or Full settings to include them. Apply to preview, Undo apply if needed, then Save preset. The Templates tab exports/imports JSON files for other websites. Import adds copies and never changes presets automatically. Template actions require administrator permissions and valid nonces. See TEMPLATES.md.

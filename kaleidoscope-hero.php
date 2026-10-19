@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Kaleidoscope Hero
  * Description:       Animated WebGL hero backgrounds with admin presets, per-page shortcodes, slideshows and seamless black-wipe page transitions.
- * Version:           1.13.0
+ * Version:           1.14.0
  * Requires at least: 5.8
  * Requires PHP:      7.4
  * Author:            Next Level Exchange
@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'DH_VERSION', '1.13.0' );
+define( 'DH_VERSION', '1.14.0' );
 define( 'DH_URL', plugin_dir_url( __FILE__ ) );
 
 /* ------------------------------------------------------------------ *
@@ -396,6 +396,8 @@ function dh_render( $slides, $interval = 20, $content = null, $preview = false )
  * Admin
  * ------------------------------------------------------------------ */
 
+require_once __DIR__ . '/includes/templates.php';
+
 function dh_admin_url( $args = array() ) {
 	return add_query_arg( array_merge( array( 'page' => 'kaleidoscope-hero' ), $args ), admin_url( 'admin.php' ) );
 }
@@ -406,7 +408,7 @@ function dh_admin_menu() {
 add_action( 'admin_menu', 'dh_admin_menu' );
 
 function dh_admin_assets( $hook ) {
-	if ( 'toplevel_page_kaleidoscope-hero' !== $hook ) {
+	if ( 'toplevel_page_kaleidoscope-hero' !== $hook || ! current_user_can( 'manage_options' ) ) {
 		return;
 	}
 	wp_enqueue_style( 'wp-color-picker' );
@@ -417,6 +419,8 @@ function dh_admin_assets( $hook ) {
 	wp_enqueue_style( 'dh-admin', DH_URL . 'assets/dh-admin.css', array(), DH_VERSION );
 	wp_enqueue_script( 'dh-scenes' );
 	wp_enqueue_script( 'dh-admin', DH_URL . 'assets/dh-admin.js', array( 'jquery', 'wp-color-picker', 'dh-scenes' ), DH_VERSION, true );
+	wp_enqueue_script( 'dh-templates', DH_URL . 'assets/dh-templates.js', array( 'jquery', 'dh-admin' ), DH_VERSION, true );
+	wp_localize_script( 'dh-templates', 'DH_TEMPLATES', array( 'ajaxUrl' => admin_url( 'admin-ajax.php' ), 'nonce' => wp_create_nonce( 'dh_templates' ), 'templates' => array_values( dh_get_templates() ), 'messages' => array( 'choose' => __( 'Choose a template first.', 'kaleidoscope-hero' ), 'name' => __( 'Give the template a name.', 'kaleidoscope-hero' ), 'error' => __( 'The template could not be saved. Refresh and try again.', 'kaleidoscope-hero' ), 'applied' => __( 'Template applied to the preview. Review, then Save preset to keep it.', 'kaleidoscope-hero' ), 'undone' => __( 'Previous settings restored. Preset changes are still unsaved.', 'kaleidoscope-hero' ), 'delete' => __( 'Delete this template from the library? Presets that used it will stay unchanged.', 'kaleidoscope-hero' ), 'look' => __( 'Look only', 'kaleidoscope-hero' ), 'full' => __( 'Full settings', 'kaleidoscope-hero' ) ) ) );
 }
 add_action( 'admin_enqueue_scripts', 'dh_admin_assets' );
 
@@ -476,7 +480,7 @@ function dh_admin_page() {
 	}
 	$current = $is_new ? array( 'name' => '', 'settings' => dh_defaults() ) : $presets[ $edit ];
 	$notice  = isset( $_GET['dh_notice'] ) ? sanitize_key( wp_unslash( $_GET['dh_notice'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification
-	$notices = array( 'saved' => 'Preset saved.', 'deleted' => 'Preset deleted.', 'duplicated' => 'Preset duplicated.', 'global' => 'Settings saved.', 'last' => 'You need at least one preset.' );
+	$notices = array( 'saved' => 'Preset saved.', 'deleted' => 'Preset deleted.', 'duplicated' => 'Preset duplicated.', 'global' => 'Settings saved.', 'last' => 'You need at least one preset.', 'templates_imported' => __( 'Templates imported. Existing templates and presets were preserved.', 'kaleidoscope-hero' ), 'template_deleted' => __( 'Template deleted. Existing presets were preserved.', 'kaleidoscope-hero' ) );
 	?>
 	<div class="wrap dh-admin">
 		<h1>Kaleidoscope Hero</h1>
@@ -485,11 +489,14 @@ function dh_admin_page() {
 		<?php endif; ?>
 		<nav class="nav-tab-wrapper">
 			<a href="<?php echo esc_url( dh_admin_url() ); ?>" class="nav-tab<?php echo 'presets' === $tab ? ' nav-tab-active' : ''; ?>">Presets</a>
+			<a href="<?php echo esc_url( dh_admin_url( array( 'tab' => 'templates' ) ) ); ?>" class="nav-tab<?php echo 'templates' === $tab ? ' nav-tab-active' : ''; ?>">Templates</a>
 			<a href="<?php echo esc_url( dh_admin_url( array( 'tab' => 'global' ) ) ); ?>" class="nav-tab<?php echo 'global' === $tab ? ' nav-tab-active' : ''; ?>">Transitions &amp; performance</a>
 			<a href="<?php echo esc_url( dh_admin_url( array( 'tab' => 'help' ) ) ); ?>" class="nav-tab<?php echo 'help' === $tab ? ' nav-tab-active' : ''; ?>">How to use</a>
 		</nav>
 		<?php
-		if ( 'global' === $tab ) {
+		if ( 'templates' === $tab ) {
+			dh_admin_templates();
+		} elseif ( 'global' === $tab ) {
 			dh_admin_global( $g );
 		} elseif ( 'help' === $tab ) {
 			dh_admin_help();
@@ -521,6 +528,7 @@ function dh_admin_presets( $presets, $edit, $is_new, $current ) {
 				<div class="dh-field"><label for="dh-name">Name</label><div class="dh-control"><input type="text" id="dh-name" name="dh_name" value="<?php echo esc_attr( $current['name'] ); ?>" required placeholder="e.g. Work page"></div></div>
 				<div class="dh-field"><label for="dh-new-slug">Shortcode ID</label><div class="dh-control"><input type="text" id="dh-new-slug" name="dh_new_slug" value="<?php echo esc_attr( $is_new ? '' : $edit ); ?>" pattern="[a-z0-9\-]*" placeholder="Generated from the name"><p class="description">Lowercase letters, numbers and dashes. Changing it breaks shortcodes that use the old ID.</p></div></div>
 			</div>
+			<?php dh_template_editor_panel(); ?>
 			<?php foreach ( dh_schema() as $group => $fields ) : ?>
 				<div class="dh-panel" data-dh-group="<?php echo esc_attr( $group ); ?>">
 					<h2><?php echo esc_html( $group ); ?></h2>
@@ -604,6 +612,8 @@ function dh_admin_global( $g ) {
 function dh_admin_help() {
 	?>
 	<div class="dh-panel dh-help">
+		<h2><?php esc_html_e( 'Save and reuse templates', 'kaleidoscope-hero' ); ?></h2>
+		<p><?php esc_html_e( 'In a preset, use Reusable templates → Save as template to capture the current controls, including unsaved changes. Look only preserves destination content and layout; Full settings includes them. Apply a template to the preview, use Undo apply if needed, then Save preset. The Templates tab exports and imports JSON files for other websites with Kaleidoscope Hero installed.', 'kaleidoscope-hero' ); ?></p>
 		<h2><?php esc_html_e( 'A background behind your own content', 'kaleidoscope-hero' ); ?></h2>
 		<ol>
 			<li><?php esc_html_e( 'In the WordPress editor, add a Kaleidoscope Section block.', 'kaleidoscope-hero' ); ?></li>

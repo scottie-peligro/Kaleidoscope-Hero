@@ -4,3 +4,4 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 }
 delete_option( 'dh_presets' );
 delete_option( 'dh_global' );
+delete_option( 'dh_templates' );
