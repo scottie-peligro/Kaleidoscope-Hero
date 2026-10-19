@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Kaleidoscope Hero
  * Description:       Animated WebGL hero backgrounds with admin presets, per-page shortcodes, slideshows and seamless black-wipe page transitions.
- * Version:           1.15.1
+ * Version:           1.15.2
  * Requires at least: 5.8
  * Requires PHP:      7.4
  * Author:            Next Level Exchange
@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'DH_VERSION', '1.15.1' );
+define( 'DH_VERSION', '1.15.2' );
 define( 'DH_URL', plugin_dir_url( __FILE__ ) );
 
 /* ------------------------------------------------------------------ *
@@ -525,7 +525,7 @@ function dh_admin_presets( $presets, $edit, $is_new, $current ) {
 		<a class="dh-chip dh-chip--add<?php echo $is_new ? ' is-active' : ''; ?>" href="<?php echo esc_url( dh_admin_url( array( 'new' => 1 ) ) ); ?>">+ New preset</a>
 	</div>
 	<div class="dh-layout">
-		<form id="dh-preset-form" class="dh-form" method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
+		<form id="dh-preset-form" class="dh-form dh-form--savebar" method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
 			<?php wp_nonce_field( 'dh_save_preset' ); ?>
 			<input type="hidden" name="action" value="dh_save_preset">
 			<input type="hidden" name="dh_slug" value="<?php echo esc_attr( $is_new ? '' : $edit ); ?>">
@@ -545,7 +545,7 @@ function dh_admin_presets( $presets, $edit, $is_new, $current ) {
 					?>
 				</div>
 			<?php endforeach; ?>
-			<p class="submit"><button type="submit" class="button button-primary button-hero">Save preset</button></p>
+			<p class="submit dh-savebar"><button type="submit" class="button button-primary button-hero">Save preset</button></p>
 		</form>
 		<aside class="dh-aside">
 			<div class="dh-preview" id="dh-preview"><?php echo dh_render( array( $preview_settings ), 20, null, true ); // phpcs:ignore WordPress.Security.EscapeOutput ?></div>
@@ -576,7 +576,7 @@ function dh_admin_presets( $presets, $edit, $is_new, $current ) {
 
 function dh_admin_global( $g ) {
 	?>
-	<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" class="dh-form dh-form--narrow">
+	<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" class="dh-form dh-form--narrow dh-form--savebar">
 		<?php wp_nonce_field( 'dh_save_global' ); ?>
 		<input type="hidden" name="action" value="dh_save_global">
 		<div class="dh-panel">
@@ -610,7 +610,7 @@ function dh_admin_global( $g ) {
 			</div></div>
 				<div class="dh-field"><label for="dh-f">Load hero fonts</label><div class="dh-control"><input type="hidden" name="g[fonts]" value="0"><label class="dh-toggle"><input type="checkbox" id="dh-f" name="g[fonts]" value="1"<?php checked( $g['fonts'] ); ?>> <span>Bricolage Grotesque + Hanken Grotesk (served locally)</span></label></div></div>
 		</div>
-		<p class="submit"><button type="submit" class="button button-primary">Save settings</button></p>
+		<p class="submit dh-savebar"><button type="submit" class="button button-primary">Save settings</button></p>
 	</form>
 	<?php
 }

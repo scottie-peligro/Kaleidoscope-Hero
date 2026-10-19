@@ -3,7 +3,7 @@ Contributors: nextlevelexchange
 Requires at least: 5.8
 Tested up to: 6.6
 Requires PHP: 7.4
-Stable tag: 1.15.1
+Stable tag: 1.15.2
 License: GPLv2 or later
 
 Animated WebGL hero backgrounds with admin presets, per-page shortcodes, slideshows and seamless black-wipe page transitions.
@@ -28,6 +28,10 @@ Hero links use the black wipe automatically. Add the class dh-transition to any 
 == Requirements ==
 
 WebGL 2 (all current desktop and mobile browsers). Older browsers show a static gradient in the background colours.
+
+== Settings editor ==
+
+Save preset and Save settings stay visible in a fixed footer while you scroll. The footer adapts to the WordPress menu and mobile screens; space below the form keeps the final controls accessible.
 
 == Color blending ==
 

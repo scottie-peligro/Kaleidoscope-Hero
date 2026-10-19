@@ -5,8 +5,12 @@
 .dh-admin .dh-chip code{background:transparent;padding:0;font-size:11px;opacity:.7;color:inherit}
 .dh-admin .dh-chip--add{border-style:dashed}
 .dh-admin .dh-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(340px,560px);gap:24px;align-items:start}
-@media (max-width:1280px){.dh-admin .dh-layout{grid-template-columns:minmax(0,1fr)}.dh-admin .dh-aside{position:static;order:-1}}
 .dh-admin .dh-form--narrow{max-width:900px;margin-top:18px}
+.dh-admin .dh-form--savebar{padding-bottom:calc(100px + env(safe-area-inset-bottom,0px));scroll-padding-bottom:100px}
+.dh-admin .dh-savebar{position:fixed;inset-inline-start:160px;inset-inline-end:0;bottom:0;z-index:100;display:flex;justify-content:flex-end;align-items:center;gap:12px;margin:0;padding:12px 24px calc(12px + env(safe-area-inset-bottom,0px));background:#fff;border-top:1px solid #c3c4c7;box-shadow:0 -3px 12px #0000000d}
+.folded .dh-admin .dh-savebar{inset-inline-start:36px}
+@media (min-width:783px) and (max-width:960px){.auto-fold .dh-admin .dh-savebar{inset-inline-start:36px}}
+@media (max-width:782px){.dh-admin .dh-savebar,.folded .dh-admin .dh-savebar,.auto-fold .dh-admin .dh-savebar{inset-inline-start:0;padding-inline:16px}.dh-admin .dh-savebar .button{width:100%;text-align:center}}
 .dh-admin .dh-panel{background:#fff;border:1px solid #dcdcde;border-radius:8px;padding:4px 20px 12px;margin-bottom:16px}
 .dh-admin .dh-panel h2{font-size:14px;margin:16px 0 8px}
 .dh-admin .dh-field{display:grid;grid-template-columns:190px minmax(0,1fr);gap:6px 16px;align-items:center;padding:10px 0;border-top:1px solid #f0f0f1}
@@ -19,6 +23,7 @@
 .dh-admin .dh-control input[type=text],.dh-admin .dh-control input[type=url],.dh-admin .dh-control textarea,.dh-admin .dh-control select{width:100%;max-width:520px}
 .dh-admin .dh-toggle{display:inline-flex;align-items:center;gap:6px}
 .dh-admin .dh-aside{position:sticky;top:46px;display:flex;flex-direction:column;gap:12px}
+@media (max-width:1280px){.dh-admin .dh-layout{grid-template-columns:minmax(0,1fr)}.dh-admin .dh-aside{position:static;order:-1}}
 .dh-admin .dh-preview{border-radius:10px;overflow:hidden;border:1px solid #1d2327;background:#02040a}
 .dh-admin .dh-preview .dh-hero{min-height:0}
 .dh-admin .dh-shortcode{display:flex;gap:8px;align-items:center;background:#fff;border:1px solid #dcdcde;border-radius:8px;padding:10px 12px}
