@@ -6,8 +6,9 @@
   function still() { return reduced.matches || !!(connection && connection.saveData); }
   function randomizes(cfg) { return [true,1,'1','true','yes','on'].indexOf(cfg.randomize) !== -1; }
   function engineType(cfg, slides) {
-    var floatingSlides = (slides || [cfg]).every(function (slide) {return (slide.style === 'Floating shape' || slide.style === 'Morphing sculptures') && !randomizes(slide);});
-    if ((cfg.style === 'Floating shape' || cfg.style === 'Morphing sculptures') && floatingSlides && urls.floating) return 'floating';
+    var meshStyles = ['Floating shape','Morphing sculptures','Iridescent ribbons'];
+    var floatingSlides = (slides || [cfg]).every(function (slide) {return meshStyles.indexOf(slide.style) !== -1 && !randomizes(slide);});
+    if (meshStyles.indexOf(cfg.style) !== -1 && floatingSlides && urls.floating) return 'floating';
     // Random mode needs every style. A fixed disco scene only needs its own renderer.
     var discoSlides = (slides || [cfg]).every(function (slide) {
       return slide.style === 'Digital disco ball' && !randomizes(slide);

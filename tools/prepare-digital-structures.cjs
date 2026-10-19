@@ -16,7 +16,10 @@ source=source.replace(/var POST = ("(?:[^"\\]|\\.)*");/,'var POST = '+JSON.strin
 source=source.replace(/  \/\/ DH_FLOAT_BEGIN[\s\S]*?  \/\/ DH_FLOAT_END\r?\n/,'');
 const floating='  // DH_FLOAT_BEGIN\n  var FLOAT_VERT = '+JSON.stringify(fs.readFileSync(path.join(assets,'dh-floating.vert'),'utf8'))+';\n  var FLOAT_FRAG = '+JSON.stringify(fs.readFileSync(path.join(assets,'dh-floating.frag'),'utf8'))+';\n'+fs.readFileSync(path.join(assets,'dh-floating-runtime.js'),'utf8')+'\n  // DH_FLOAT_END\n';
 source=source.replace('  var VERT = ',floating+'  var VERT = ');
-const styles=['Digital grid','Fiber optics','Particle waves','Wireframe tunnel','Data rings','Voronoi crystal','Constellation','Fractal flythrough','Word rain','Digital fabric','Blueprint city','Dot matrix structures','LED globe','Digital disco ball','Floating shape','Morphing sculptures'];
+source=source.replace(/  \/\/ DH_RIBBON_BEGIN[\s\S]*?  \/\/ DH_RIBBON_END\r?\n/,'');
+const ribbons='  // DH_RIBBON_BEGIN\n  var RIBBON_VERT = '+JSON.stringify(fs.readFileSync(path.join(assets,'dh-ribbons.vert'),'utf8'))+';\n  var RIBBON_FRAG = '+JSON.stringify(fs.readFileSync(path.join(assets,'dh-ribbons.frag'),'utf8'))+';\n'+fs.readFileSync(path.join(assets,'dh-ribbons-runtime.js'),'utf8')+'\n  // DH_RIBBON_END\n';
+source=source.replace('  var VERT = ',ribbons+'  var VERT = ');
+const styles=['Digital grid','Fiber optics','Particle waves','Wireframe tunnel','Data rings','Voronoi crystal','Constellation','Fractal flythrough','Word rain','Digital fabric','Blueprint city','Dot matrix structures','LED globe','Digital disco ball','Floating shape','Morphing sculptures','Iridescent ribbons'];
 source=source.replace(/var STYLES = (.*);/,'var STYLES = '+JSON.stringify(styles)+';').replace(", 'uRip'",'').replace(", 'uNoWater'",'').replace(/    gl\.uniform4fv\(U\.uRip, new Float32Array\(32\)\);\r?\n/,'').replace('gl.uniform1f(U.uNoWater, 0); ','');fs.writeFileSync(file,source);
 require('./prepare-disco-renderer.cjs');
 require('./prepare-floating-renderer.cjs');

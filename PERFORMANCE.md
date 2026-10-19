@@ -4,6 +4,10 @@ Version 1.2.0 also supports [backgrounds behind normal section content](SECTION-
 
 The foreground content is server-rendered. Animation starts only after an intersection notification and an animation frame. Unsupported WebGL, reduced-motion, and Save-Data preferences use the CSS gradient and retain the text and navigation.
 
+## Iridescent ribbons (1.17.0)
+
+Ribbon surfaces use procedural instanced triangle grids, with positions, bend deformation and normals generated in the vertex shader. They share the mesh-only compact renderer, without noise textures, image/model downloads or per-frame geometry uploads. Translucent analytic shading uses the existing scene framebuffer and compositor. Low/medium/high topology budgets cap all ribbons and forward mirrors together at 90k/180k/300k submitted vertices by reducing the lengthwise subdivisions. Cursor mapping reuses the same compositor transform as particle sculptures. Existing lifecycle, long-page viewport, pixel, frame and motion-preference limits apply. See IRIDESCENT-RIBBONS.md.
+
 ## Tessellation (1.16.0)
 
 Square, mirrored-square, triangular and hexagonal tiling remap source coordinates in the existing compositor pass. They add no geometry, draw calls, images or render targets. Dense repeats use the existing mip chain with a density/zoom-dependent LOD to reduce undersampling. Particle cursor mapping uses the same cell transforms before mirrors/vortex. Off returns the original coordinates and uses the original sampling level.

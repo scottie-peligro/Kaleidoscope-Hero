@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Kaleidoscope Hero
  * Description:       Animated WebGL hero backgrounds with admin presets, per-page shortcodes, slideshows and seamless black-wipe page transitions.
- * Version:           1.16.0
+ * Version:           1.17.0
  * Requires at least: 5.8
  * Requires PHP:      7.4
  * Author:            Next Level Exchange
@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'DH_VERSION', '1.16.0' );
+define( 'DH_VERSION', '1.17.0' );
 define( 'DH_URL', plugin_dir_url( __FILE__ ) );
 
 /* ------------------------------------------------------------------ *
@@ -22,7 +22,7 @@ define( 'DH_URL', plugin_dir_url( __FILE__ ) );
  * ------------------------------------------------------------------ */
 
 function dh_styles() {
-	return array( 'Digital grid', 'Fiber optics', 'Particle waves', 'Wireframe tunnel', 'Data rings', 'Voronoi crystal', 'Constellation', 'Fractal flythrough', 'Word rain', 'Digital fabric', 'Blueprint city', 'Dot matrix structures', 'LED globe', 'Digital disco ball', 'Floating shape', 'Morphing sculptures' );
+	return array( 'Digital grid', 'Fiber optics', 'Particle waves', 'Wireframe tunnel', 'Data rings', 'Voronoi crystal', 'Constellation', 'Fractal flythrough', 'Word rain', 'Digital fabric', 'Blueprint city', 'Dot matrix structures', 'LED globe', 'Digital disco ball', 'Floating shape', 'Morphing sculptures', 'Iridescent ribbons' );
 }
 
 function dh_palettes() {
@@ -55,6 +55,20 @@ function dh_schema() {
 			'kaleidoscopeMode' => array( 'label' => __( 'Kaleidoscope mode', 'kaleidoscope-hero' ), 'type' => 'enum', 'options' => array( 'Forward elements', 'Whole screen', 'Both' ), 'default' => 'Forward elements', 'help' => __( 'Whole screen mirrors the complete animation, including nearby and outer elements. Forward elements keeps the existing scene effect. Both combines them. Set mirrors to 2 or more.', 'kaleidoscope-hero' ) ),
 			'randomize'      => array( 'label' => 'Randomize', 'type' => 'bool', 'default' => false, 'help' => 'Cycles through random styles, palettes and settings.' ),
 			'randomInterval' => $r( 'Random interval (seconds)', 5, 60, 1, 15 ),
+		),
+		'Iridescent ribbons' => array(
+			'ribbonCount' => $r( __( 'Ribbon count', 'kaleidoscope-hero' ), 1, 5, 1, 3 ),
+			'ribbonWidth' => $r( __( 'Ribbon width', 'kaleidoscope-hero' ), 0.3, 2.5, 0.05, 1.1 ),
+			'ribbonFold' => $r( __( 'Folding', 'kaleidoscope-hero' ), 0, 2, 0.05, 1 ),
+			'ribbonTwist' => $r( __( 'Ribbon twist', 'kaleidoscope-hero' ), 0, 4, 0.05, 1.4 ),
+			'ribbonTransparency' => $r( __( 'Translucency', 'kaleidoscope-hero' ), 0.1, 0.9, 0.05, 0.6, __( 'Higher values make the ribbon faces more transparent. Reflective edges remain visible.', 'kaleidoscope-hero' ) ),
+			'ribbonIridescence' => $r( __( 'Iridescence', 'kaleidoscope-hero' ), 0, 2, 0.05, 1, __( 'Changes color with the folds and viewing angle. 0 uses the selected palette.', 'kaleidoscope-hero' ) ),
+			'ribbonEdge' => $r( __( 'Edge shine', 'kaleidoscope-hero' ), 0, 3, 0.05, 1.4 ),
+			'ribbonBend' => $r( __( 'Cursor bend', 'kaleidoscope-hero' ), 0, 2, 0.05, 1, __( 'Pulls and bends the surface near the cursor. Works with Mouse look at 0. Set to 0 to disable bending.', 'kaleidoscope-hero' ) ),
+			'ribbonRadius' => $r( __( 'Bend radius', 'kaleidoscope-hero' ), 0.1, 1, 0.05, 0.45 ),
+			'ribbonScroll' => array( 'label' => __( 'Scroll response', 'kaleidoscope-hero' ), 'type' => 'enum', 'options' => array( 'Off', 'Twist', 'Unwrap', 'Twist and unwrap' ), 'default' => 'Twist', 'help' => __( 'Scrolling down from the section top twists or unfolds the ribbons. Scrolling back reverses it. Works with Flow speed at 0.', 'kaleidoscope-hero' ) ),
+			'ribbonScrollStrength' => $r( __( 'Scroll strength', 'kaleidoscope-hero' ), 0, 2, 0.05, 1 ),
+			'ribbonScrollDistance' => $r( __( 'Ribbon scroll distance (screens)', 'kaleidoscope-hero' ), 0.25, 4, 0.25, 1.5 ),
 		),
 		'Tessellation' => array(
 			'tessellation' => array( 'label' => __( 'Tiling pattern', 'kaleidoscope-hero' ), 'type' => 'enum', 'options' => array( 'Off', 'Squares', 'Mirrored squares', 'Triangles', 'Hexagons' ), 'default' => 'Off', 'help' => __( 'Repeats the animated elements across the screen. Works on its own or together with kaleidoscope and vortex. Background gradient and page text stay untiled. Off keeps the original scene.', 'kaleidoscope-hero' ) ),
@@ -639,7 +653,7 @@ function dh_admin_help() {
 		<h2>Shortcodes</h2>
 		<p><code>[kaleidoscope_hero preset="home"]</code> shows one preset.</p>
 		<p><code>[kaleidoscope_hero presets="home,ocean,rings" interval="20"]</code> plays a slideshow, fading between presets every 20 seconds.</p>
-		<p><code>[kaleidoscope_hero preset="work" height="60vh" opacity="0.5" overlay="no"]</code> overrides any setting for that page only. Setting names: <code>style, palette, opacity, density, flow, glow, brightness, multicolor, kaleidoscope, tessellation, tessellationdensity, tessellationzoom, tessellationrotation, randomize, randominterval, bgcolor1, bgcolor2, gradient, gradientangle, lookrange, warp, bloom, blendmode, blendsource, blendcolor, blendamount, vortex, vortexramp, overlay, headingtag, heading, subheading, buttontext, buttonurl, abouttext, abouturl, worktext, workurl, moretext, moreurl, brackets, height</code>.</p>
+		<p><code>[kaleidoscope_hero preset="work" height="60vh" opacity="0.5" overlay="no"]</code> overrides any setting for that page only. Setting names: <code>style, palette, opacity, density, flow, glow, brightness, multicolor, kaleidoscope, tessellation, tessellationdensity, tessellationzoom, tessellationrotation, ribboncount, ribbonwidth, ribbonfold, ribbontwist, ribbontransparency, ribboniridescence, ribbonedge, ribbonbend, ribbonradius, ribbonscroll, ribbonscrollstrength, ribbonscrolldistance, randomize, randominterval, bgcolor1, bgcolor2, gradient, gradientangle, lookrange, warp, bloom, blendmode, blendsource, blendcolor, blendamount, vortex, vortexramp, overlay, headingtag, heading, subheading, buttontext, buttonurl, abouttext, abouturl, worktext, workurl, moretext, moreurl, brackets, height</code>.</p>
 		<p><?php esc_html_e( 'Kaleidoscope mode supports Forward elements, Whole screen, or Both. Automatic vortex starts the full-animation twist on load, with strength, speed, direction and startup controls under Interaction.', 'kaleidoscope-hero' ); ?></p>
 		<p><code>[kaleidoscope_hero preset="home" kaleidoscope="6" kaleidoscopemode="Whole screen" autovortex="true" autovortexstrength="0.5" autovortexspeed="0.6" autovortexdirection="Clockwise" autovortexramp="2"]</code></p>
 		<p><?php esc_html_e( 'LED globe offers Cycle, Fireworks, Waves and Shapes under LED globe pattern. Digital disco ball casts moving mirror-tile light onto the surrounding wall. Density adjusts the LED or tile spacing; Flow speed animates the show.', 'kaleidoscope-hero' ); ?></p>

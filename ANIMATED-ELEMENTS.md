@@ -4,6 +4,8 @@ Select a preset under Kaleidoscope Hero and choose Animation → Style. Scene of
 
 Digital fabric uses broad transparent wave sheets with a faint weave and fold highlights. Blueprint city builds wireframe architecture as it approaches.
 
+**Iridescent ribbons** uses broad translucent ribbon surfaces with shifting thin-film colors, reflective faces and bright edges. The dedicated panel controls count, width, folding, twist, transparency, iridescence, shine, cursor bending and scroll response. Scroll can twist or unwrap the ribbons, and reversing the scroll reverses the deformation. Cursor bend works with Mouse look 0; both interactions work with Flow speed 0. See [Iridescent ribbons](IRIDESCENT-RIBBONS.md).
+
 **Floating shape** builds a softly rotating particle sculpture: Torus knot, Ring, Orb, Twisted ribbon, Helix, Star, Crystal or Seeded sculpture. Mouse movement scatters it and then lets it reform; scroll can pull it apart and reverse scrolling rebuilds it. Choose either input, both, or Off. Seed, lobes, twist, size, float, strength, sensitivity and recovery are configurable. See [Floating shapes](FLOATING-SHAPES.md) for instructions and shortcode examples.
 
 **LED globe** places the viewer inside a curved LED surface. Choose its LED globe pattern: Cycle, Fireworks, Waves or Shapes. Cycle fades between the three shows. Fireworks includes rising trails, expanding spokes and fading sparks; Shapes includes rotating stars, polygons and rings. Density adjusts LED spacing, Flow speed animates the patterns, and Palette/Multicolour/Glow/Brightness control their light.

@@ -55,6 +55,8 @@ jQuery(function ($) {
     ['blendSource','blendAmount'].forEach(function(key){form.find('#dh-'+key).closest('.dh-field').toggle(blending);});
     form.find('#dh-blendColor').closest('.dh-field').toggle(blending && form.find('#dh-blendSource').val() !== 'Background gradient');
     form.find('[data-dh-group="Tessellation"]').toggle(enabled);
+    form.find('[data-dh-group="Iridescent ribbons"]').toggle(enabled && form.find('#dh-style').val() === 'Iridescent ribbons');
+    ['ribbonScrollStrength','ribbonScrollDistance'].forEach(function(key){form.find('#dh-'+key).closest('.dh-field').toggle(form.find('#dh-ribbonScroll').val() !== 'Off');});
     ['tessellationDensity','tessellationZoom','tessellationRotation'].forEach(function(key){form.find('#dh-'+key).closest('.dh-field').toggle(form.find('#dh-tessellation').val() !== 'Off');});
     form.find('#dh-ledPattern').closest('.dh-field').toggle(form.find('#dh-style').val() === 'LED globe');
     form.find('#dh-discoMouseControl').closest('.dh-field').toggle(form.find('#dh-style').val() === 'Digital disco ball');

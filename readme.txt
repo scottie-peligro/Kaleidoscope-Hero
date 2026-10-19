@@ -3,7 +3,7 @@ Contributors: nextlevelexchange
 Requires at least: 5.8
 Tested up to: 6.6
 Requires PHP: 7.4
-Stable tag: 1.16.0
+Stable tag: 1.17.0
 License: GPLv2 or later
 
 Animated WebGL hero backgrounds with admin presets, per-page shortcodes, slideshows and seamless black-wipe page transitions.
@@ -36,6 +36,10 @@ Save preset and Save settings stay visible in a fixed footer while you scroll. T
 == Tessellation ==
 
 The Tessellation panel repeats animated elements in Squares, Mirrored squares, Triangles or Hexagons. Adjust repeat density, tile zoom and rotation. Combine with kaleidoscope, vortex and blending; gradient and text remain untiled. Particle mouse effects follow transformed points across the repeated copies. Defaults to Off. Works in all renderers, presets, shortcodes and templates. See TESSELLATION.md.
+
+== Iridescent ribbons ==
+
+Choose Animation > Style > Iridescent ribbons for broad translucent strips with changing color, shiny faces and bright edges. Cursor bend deforms nearby surfaces; scrolling can twist, unwrap, or combine both, with reversible progress. Adjust count, width, folds, twist, translucency, iridescence, edge shine, bend radius and scroll strength/distance. Cursor bend 0 and Scroll response Off disable those interactions. Works with Flow speed 0, tessellation, kaleidoscope, vortex, blending and templates. GPU-generated surfaces use the smaller mesh renderer for fixed scenes, with no model or image downloads. See IRIDESCENT-RIBBONS.md.
 
 == Color blending ==
 

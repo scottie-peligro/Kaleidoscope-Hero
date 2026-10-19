@@ -42,6 +42,7 @@ const compact = (uniforms + '\n' + constants + '\n' + body)
 const discoFragment = '#version 300 es\nprecision highp float;\n' + compact;
 const output = source.replace(fragmentMatch[0], 'var FRAG = ' + JSON.stringify(discoFragment) + ';')
   .replace(/  \/\/ DH_FLOAT_BEGIN[\s\S]*?  \/\/ DH_FLOAT_END\r?\n/,'')
+  .replace(/  \/\/ DH_RIBBON_BEGIN[\s\S]*?  \/\/ DH_RIBBON_END\r?\n/,'')
   .replace(/var WORDS = \[[^\n]*\];/, 'var WORDS = [];')
   .replaceAll('window.KaleidoscopeHero', 'window.KaleidoscopeDiscoHero');
 fs.writeFileSync(path.join(assets, 'dh-disco.js'), output);

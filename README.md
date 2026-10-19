@@ -1,8 +1,8 @@
 # Kaleidoscope Hero
 
-WordPress plugin for animated WebGL heroes and section backgrounds. Current version: **1.16.0**.
+WordPress plugin for animated WebGL heroes and section backgrounds. Current version: **1.17.0**.
 
-Includes 16 animated styles, saved presets, shortcodes, a native section block, slideshows, kaleidoscope/vortex controls, page transitions and floating particle sculptures. Long sections render a viewport-sized background within a bounded pixel budget. Version 1.14.0 adds reusable look/full-setting templates, preview/undo, and portable JSON import/export. Local particle explosions and cursor forces remain available. Morphing sculptures retain automatic, scroll and manual control. Stable long-page scrolling and filtered Particle Waves remain included.
+Includes 17 animated styles, saved presets, shortcodes, a native section block, slideshows, kaleidoscope/vortex controls, page transitions and floating particle sculptures. Long sections render a viewport-sized background within a bounded pixel budget. Version 1.14.0 adds reusable look/full-setting templates, preview/undo, and portable JSON import/export. Local particle explosions and cursor forces remain available. Morphing sculptures retain automatic, scroll and manual control. Stable long-page scrolling and filtered Particle Waves remain included.
 
 ## Install
 
@@ -38,3 +38,7 @@ Version 1.15.2 keeps Save preset and Save settings in a fixed footer, with WordP
 ## Tessellation
 
 Version 1.16.0 adds Squares, Mirrored squares, Triangles and Hexagons with repeat density, tile zoom and pattern rotation. It works with kaleidoscope/vortex/bloom/blending and particle mouse effects in all renderers. Background gradient and text stay untiled; Off preserves existing looks. Portable templates include the controls. No extra geometry or render pass. See [TESSELLATION.md](TESSELLATION.md).
+
+## Iridescent ribbons
+
+Version 1.17.0 adds broad translucent ribbon surfaces with changing thin-film colors, shiny edges, cursor bending and reversible scroll twist/unwrap. Dedicated controls cover geometry, material and input strength/radius. It shares the compact mesh renderer, with no model/image downloads; total mesh detail is capped for high mirror counts. Works with tessellation, kaleidoscope, vortex, blending, presets and templates. See [IRIDESCENT-RIBBONS.md](IRIDESCENT-RIBBONS.md).
