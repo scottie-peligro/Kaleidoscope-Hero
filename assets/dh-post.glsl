@@ -4,6 +4,7 @@ uniform float uOp;uniform vec3 uBg1;uniform vec3 uBg2;uniform float uGT;uniform 
 out vec4 o;
 uniform float uFullKal,uAutoVort,uAutoSpin;
 uniform int uBlendMode;
+uniform int uBlendSource;
 uniform float uBlendAmount;
 uniform vec3 uBlendColor;
 // W3C compositing blend functions. The animation is the backdrop; the chosen
@@ -75,8 +76,15 @@ void main(){
   float gt=uGT>.5?clamp(dot(ac,vec2(cos(uAng),sin(uAng)))/(.5*(abs(cos(uAng))*uRes.x/uRes.y+abs(sin(uAng))))*.5+.5,0.,1.):clamp(length(ac)/(.5*length(vec2(uRes.x/uRes.y,1.))),0.,1.);
   vec3 bg=mix(uBg1,uBg2,smoothstep(0.,1.,gt));
   col*=uOp;
-  col=1.-(1.-bg)*(1.-clamp(col,0.,1.));
-  if(uBlendMode>0&&uBlendAmount>0.)col=mix(col,clamp(blendGrade(col,uBlendColor,uBlendMode),0.,1.),uBlendAmount);
+  vec3 elements=clamp(col,0.,1.);
+  col=1.-(1.-bg)*(1.-elements);
+  if(uBlendMode>0&&uBlendAmount>0.){
+    // The gradient grades emitted light only, leaving empty background pixels
+    // intact. Use the displayed gradient coordinates, including linear angle.
+    float coverage=uBlendSource==1?max(elements.r,max(elements.g,elements.b)):1.;
+    vec3 source=uBlendSource==1?bg:uBlendColor;
+    col=mix(col,clamp(blendGrade(col,source,uBlendMode),0.,1.),uBlendAmount*coverage);
+  }
   col+=(fract(sin(dot(gl_FragCoord.xy,vec2(12.9898,78.233)))*43758.5453)-.5)/255.;
   o=vec4(col,1.);
 }

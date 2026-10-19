@@ -1,8 +1,9 @@
 # Color blending
 
-In a preset editor, open **Color blending**. This mixes a chosen color over the finished animation and its background gradient, after bloom, warp, mirrors and vortex. It affects the canvas; headings, links and surrounding page content retain their colors.
+In a preset editor, open **Color blending**. Choose Background gradient to blend the animated elements with your existing gradient colors, or Blend color for the separate color layer. Blending runs after bloom, warp, mirrors and vortex. It affects the canvas; headings, links and surrounding page content retain their colors.
 
 - **Blend mode:** Off (the default), Multiply, Screen, Overlay, Darken, Lighten, Color dodge, Color burn, Hard light, Soft light, Difference, Exclusion, Hue, Saturation, Color or Luminosity.
+- **Blend source:** Background gradient uses Background > Colour 1, Colour 2, Gradient and Linear angle at each pixel. It blends emitted light only, leaving empty background areas unchanged. Blend color preserves the separate color layer introduced in 1.15.0 and remains the default for compatibility.
 - **Blend color:** the source color layer. Violet (`#8866ff`) is the initial color. Change it to explore different looks.
 - **Blend strength:** 0–1. Zero restores the original image; 1 applies the full blend. Intermediate values mix the original and blended results.
 
@@ -10,14 +11,17 @@ For bright white bloom, try **Multiply**, a saturated violet or cyan, and streng
 
 **Color** applies the chosen hue and saturation while preserving the animation's luminosity. Pure white remains white with Color; use Multiply to color white highlights. **Luminosity** transfers the chosen color's luminosity while retaining the animation's hue and saturation. Screen lightens, Overlay/Soft light adjust contrast, and Difference/Exclusion produce inverted color combinations.
 
+With Background gradient, choose a brighter gradient for more visible Multiply highlights; dark gradient colors can make the elements very subdued. Element opacity controls their coverage, and the gradient remains fixed while mirrors/vortex transform the elements.
+
 These are color grading controls, not CSS blending against other page elements or photos. Background darkness and the vignette remain separate overlays. Scene Off and reduced-motion/Save-Data fallbacks keep the existing static gradient.
 
 ## Reuse
 
-The fields belong to each preset, work in slideshows and random style mode, and are included in both Look only and Full settings templates. Template export/import carries them to another website running version 1.15.0 or newer. Older versions ignore unknown fields.
+The fields belong to each preset, work in slideshows and random style mode, and are included in both Look only and Full settings templates. Template export/import carries them to another website running version 1.15.0 or newer. Background gradient source requires 1.15.1 or newer. Older versions ignore unknown fields.
 
 ```text
 [kaleidoscope_hero preset="home" blendmode="Multiply" blendcolor="#22bbff" blendamount="0.8"]
+[kaleidoscope_hero preset="home" blendmode="Multiply" blendsource="Background gradient" blendamount="0.65"]
 [kaleidoscope_hero preset="home" blendmode="Off"]
 ```
 

@@ -1,6 +1,6 @@
 # Kaleidoscope Hero
 
-WordPress plugin for animated WebGL heroes and section backgrounds. Current version: **1.15.0**.
+WordPress plugin for animated WebGL heroes and section backgrounds. Current version: **1.15.1**.
 
 Includes 16 animated styles, saved presets, shortcodes, a native section block, slideshows, kaleidoscope/vortex controls, page transitions and floating particle sculptures. Long sections render a viewport-sized background within a bounded pixel budget. Version 1.14.0 adds reusable look/full-setting templates, preview/undo, and portable JSON import/export. Local particle explosions and cursor forces remain available. Morphing sculptures retain automatic, scroll and manual control. Stable long-page scrolling and filtered Particle Waves remain included.
 
@@ -30,3 +30,5 @@ GPL-2.0-or-later. Bundled font licenses are in `assets/fonts/`.
 ## Color blending
 
 Version 1.15.0 adds fifteen optional blend modes, a blend color and strength slider. Mix the color over the finished animation after bloom; Multiply colors white highlights. Defaults preserve existing looks. The controls work in every renderer and portable templates, with no extra render pass or assets. See [COLOR-BLENDING.md](COLOR-BLENDING.md).
+
+Version 1.15.1 adds Background gradient as a blend source, using the existing two background colors, gradient type and angle to blend the elements while preserving empty background areas. Existing separate-color blends retain their look.
