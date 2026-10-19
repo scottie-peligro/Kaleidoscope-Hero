@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Kaleidoscope Hero
  * Description:       Animated WebGL hero backgrounds with admin presets, per-page shortcodes, slideshows and seamless black-wipe page transitions.
- * Version:           1.15.2
+ * Version:           1.16.0
  * Requires at least: 5.8
  * Requires PHP:      7.4
  * Author:            Next Level Exchange
@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'DH_VERSION', '1.15.2' );
+define( 'DH_VERSION', '1.16.0' );
 define( 'DH_URL', plugin_dir_url( __FILE__ ) );
 
 /* ------------------------------------------------------------------ *
@@ -55,6 +55,12 @@ function dh_schema() {
 			'kaleidoscopeMode' => array( 'label' => __( 'Kaleidoscope mode', 'kaleidoscope-hero' ), 'type' => 'enum', 'options' => array( 'Forward elements', 'Whole screen', 'Both' ), 'default' => 'Forward elements', 'help' => __( 'Whole screen mirrors the complete animation, including nearby and outer elements. Forward elements keeps the existing scene effect. Both combines them. Set mirrors to 2 or more.', 'kaleidoscope-hero' ) ),
 			'randomize'      => array( 'label' => 'Randomize', 'type' => 'bool', 'default' => false, 'help' => 'Cycles through random styles, palettes and settings.' ),
 			'randomInterval' => $r( 'Random interval (seconds)', 5, 60, 1, 15 ),
+		),
+		'Tessellation' => array(
+			'tessellation' => array( 'label' => __( 'Tiling pattern', 'kaleidoscope-hero' ), 'type' => 'enum', 'options' => array( 'Off', 'Squares', 'Mirrored squares', 'Triangles', 'Hexagons' ), 'default' => 'Off', 'help' => __( 'Repeats the animated elements across the screen. Works on its own or together with kaleidoscope and vortex. Background gradient and page text stay untiled. Off keeps the original scene.', 'kaleidoscope-hero' ) ),
+			'tessellationDensity' => $r( __( 'Repeat density', 'kaleidoscope-hero' ), 1, 8, 0.25, 3, __( 'Higher values create more, smaller tiles. Tiles keep their proportions on wide and narrow screens.', 'kaleidoscope-hero' ) ),
+			'tessellationZoom' => $r( __( 'Tile zoom', 'kaleidoscope-hero' ), 0.5, 2, 0.05, 1, __( 'Zooms the elements inside each tile without changing the tiling density.', 'kaleidoscope-hero' ) ),
+			'tessellationRotation' => $r( __( 'Pattern rotation (°)', 'kaleidoscope-hero' ), 0, 360, 5, 0 ),
 		),
 		'Sculpture' => array(
 			'shape' => array( 'label' => __( 'Shape', 'kaleidoscope-hero' ), 'type' => 'enum', 'options' => array( 'Torus knot', 'Ring', 'Orb', 'Twisted ribbon', 'Helix', 'Star', 'Crystal', 'Seeded sculpture' ), 'default' => 'Torus knot' ),
@@ -633,7 +639,7 @@ function dh_admin_help() {
 		<h2>Shortcodes</h2>
 		<p><code>[kaleidoscope_hero preset="home"]</code> shows one preset.</p>
 		<p><code>[kaleidoscope_hero presets="home,ocean,rings" interval="20"]</code> plays a slideshow, fading between presets every 20 seconds.</p>
-		<p><code>[kaleidoscope_hero preset="work" height="60vh" opacity="0.5" overlay="no"]</code> overrides any setting for that page only. Setting names: <code>style, palette, opacity, density, flow, glow, brightness, multicolor, kaleidoscope, randomize, randominterval, bgcolor1, bgcolor2, gradient, gradientangle, lookrange, warp, bloom, blendmode, blendsource, blendcolor, blendamount, vortex, vortexramp, overlay, headingtag, heading, subheading, buttontext, buttonurl, abouttext, abouturl, worktext, workurl, moretext, moreurl, brackets, height</code>.</p>
+		<p><code>[kaleidoscope_hero preset="work" height="60vh" opacity="0.5" overlay="no"]</code> overrides any setting for that page only. Setting names: <code>style, palette, opacity, density, flow, glow, brightness, multicolor, kaleidoscope, tessellation, tessellationdensity, tessellationzoom, tessellationrotation, randomize, randominterval, bgcolor1, bgcolor2, gradient, gradientangle, lookrange, warp, bloom, blendmode, blendsource, blendcolor, blendamount, vortex, vortexramp, overlay, headingtag, heading, subheading, buttontext, buttonurl, abouttext, abouturl, worktext, workurl, moretext, moreurl, brackets, height</code>.</p>
 		<p><?php esc_html_e( 'Kaleidoscope mode supports Forward elements, Whole screen, or Both. Automatic vortex starts the full-animation twist on load, with strength, speed, direction and startup controls under Interaction.', 'kaleidoscope-hero' ); ?></p>
 		<p><code>[kaleidoscope_hero preset="home" kaleidoscope="6" kaleidoscopemode="Whole screen" autovortex="true" autovortexstrength="0.5" autovortexspeed="0.6" autovortexdirection="Clockwise" autovortexramp="2"]</code></p>
 		<p><?php esc_html_e( 'LED globe offers Cycle, Fireworks, Waves and Shapes under LED globe pattern. Digital disco ball casts moving mirror-tile light onto the surrounding wall. Density adjusts the LED or tile spacing; Flow speed animates the show.', 'kaleidoscope-hero' ); ?></p>

@@ -4,6 +4,10 @@ Version 1.2.0 also supports [backgrounds behind normal section content](SECTION-
 
 The foreground content is server-rendered. Animation starts only after an intersection notification and an animation frame. Unsupported WebGL, reduced-motion, and Save-Data preferences use the CSS gradient and retain the text and navigation.
 
+## Tessellation (1.16.0)
+
+Square, mirrored-square, triangular and hexagonal tiling remap source coordinates in the existing compositor pass. They add no geometry, draw calls, images or render targets. Dense repeats use the existing mip chain with a density/zoom-dependent LOD to reduce undersampling. Particle cursor mapping uses the same cell transforms before mirrors/vortex. Off returns the original coordinates and uses the original sampling level.
+
 ## Gradient blend source (1.15.1)
 
 Background gradient source reuses the compositor gradient, including radial/linear geometry and angle. Element coverage derives from post-bloom emitted RGB so empty background pixels remain unchanged. It adds one source-selection uniform and a few scalar operations only when blending is enabled; no additional passes, textures or downloads. Existing separate-color source remains the default.

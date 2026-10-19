@@ -10,12 +10,24 @@ function makeFloating(gl) {
   var shapes=['Torus knot','Ring','Orb','Twisted ribbon','Helix','Star','Crystal','Seeded sculpture'];
   function pointerInScene(pointer,width,height){
     var x=pointer.x||0,y=pointer.y||0,kal=pointer.fullKal||0,vortex=pointer.autoVortex||0,spin=pointer.autoSpin||0;
+    function mod(n,d){return ((n%d)+d)%d;}
+    function repeat(n){return 1-Math.abs(mod(n,2)-1);}
+    if(pointer.tessMode>0){
+      // Same tile transform as the compositor, so local particle forces follow
+      // the visible sculpture in every repeated tile, including rotated cells.
+      var aspect=width/height,px=x*.5*aspect,py=y*.5,angle=pointer.tessRotation||0,cs=Math.cos(angle),sn=Math.sin(angle),density=Math.max(1,pointer.tessDensity||3),zoom=Math.max(.5,pointer.tessZoom||1),rotated=px*cs+py*sn;
+      py=(-px*sn+py*cs)*density;px=rotated*density;
+      if(pointer.tessMode===1){px=mod(px+.5,1)-.5;py=mod(py+.5,1)-.5;}
+      else if(pointer.tessMode===2){px=repeat(px+.5)-.5;py=repeat(py+.5)-.5;}
+      else if(pointer.tessMode===3){var fx=mod(px-py/1.7320508,1),fy=mod(py/.8660254,1);if(fx+fy>1){var swap=fx;fx=1-fy;fy=1-swap;}px=fx+.5*fy-.5;py=(fy-1/3)*.8660254;}
+      else{var ax=mod(px+.5,1)-.5,ay=mod(py+.8660254,1.7320508)-.8660254,bx=mod(px,1)-.5,by=mod(py,1.7320508)-.8660254,near=ax*ax+ay*ay<bx*bx+by*by;px=near?ax:bx;py=near?ay:by;}
+      x=repeat(.5+px/(aspect*zoom))*2-1;y=repeat(.5+py/zoom)*2-1;
+    }
     if(kal<1.5&&Math.abs(vortex)<.001&&Math.abs(spin)<.001)return [x,y];
     // Match the compositor's primary sample, including mirror-repeat at the edges.
     var aspect=width/height,px=x*.5*aspect,py=y*.5,radius=Math.hypot(px,py),angle=spin+vortex*Math.abs(vortex)*3.2*Math.exp(-radius*2.2),cs=Math.cos(angle),sn=Math.sin(angle);
     var rotated=px*cs+py*sn;py=-px*sn+py*cs;px=rotated;
     if(kal>1.5){var sector=Math.PI*2/Math.floor(kal);angle=((Math.atan2(py,px)+(pointer.time||0)*.04)%sector+sector)%sector;angle=Math.PI/2-sector*.5+Math.abs(angle-sector*.5);px=radius*Math.cos(angle);py=radius*Math.sin(angle);}
-    function repeat(n){return 1-Math.abs(((n%2)+2)%2-1);}
     return [repeat(.5+px/aspect)*2-1,repeat(.5+py)*2-1];
   }
   return {program:p,count:0,draw:function(cur,disc,time,amount,width,height,look,tints,quality,morphScroll,pointer){

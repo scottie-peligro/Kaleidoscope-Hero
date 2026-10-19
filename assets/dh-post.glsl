@@ -3,6 +3,8 @@ precision highp float;
 uniform float uOp;uniform vec3 uBg1;uniform vec3 uBg2;uniform float uGT;uniform float uAng;uniform sampler2D uScene;uniform vec2 uRes;uniform float uWarp;uniform float uBloom;uniform vec3 uTint2;uniform float uNight;uniform float uTime;
 out vec4 o;
 uniform float uFullKal,uAutoVort,uAutoSpin;
+uniform int uTessMode;
+uniform float uTessDensity,uTessZoom,uTessRotation;
 uniform int uBlendMode;
 uniform int uBlendSource;
 uniform float uBlendAmount;
@@ -40,7 +42,30 @@ vec3 blendGrade(vec3 b,vec3 s,int mode){
   return vec3(blendChannel(b.r,s.r,mode),blendChannel(b.g,s.g,mode),blendChannel(b.b,s.b,mode));
 }
 vec3 br(vec3 c,float th){return max(c-th,0.)/(1.-th);}
+vec2 tessellationUV(vec2 uv){
+  if(uTessMode==0)return uv;
+  vec2 aspect=vec2(uRes.x/uRes.y,1.),p=(uv-.5)*aspect;
+  float cs=cos(uTessRotation),sn=sin(uTessRotation);
+  p=mat2(cs,-sn,sn,cs)*p*max(1.,uTessDensity);
+  vec2 q;
+  if(uTessMode==1)q=fract(p+.5)-.5;
+  else if(uTessMode==2)q=1.-abs(mod(p+.5,2.)-1.)-.5;
+  else if(uTessMode==3){
+    // Equilateral lattice: reflect the upper triangle onto the lower one.
+    vec2 f=fract(vec2(p.x-p.y/1.7320508,p.y/.8660254));
+    if(f.x+f.y>1.)f=vec2(1.)-f.yx;
+    q=vec2(f.x+.5*f.y-.5,(f.y-1./3.)*.8660254);
+  }else{
+    // Nearest center in two staggered rectangular lattices gives hex cells.
+    vec2 spacing=vec2(1.,1.7320508);
+    vec2 a=mod(p+spacing*.5,spacing)-spacing*.5,b=mod(p,spacing)-spacing*.5;
+    q=dot(a,a)<dot(b,b)?a:b;
+  }
+  vec2 source=.5+q/(aspect*max(.5,uTessZoom));
+  return 1.-abs(mod(source,2.)-1.);
+}
 vec2 effectUV(vec2 uv){
+  uv=tessellationUV(uv);
   if(uFullKal<1.5&&abs(uAutoVort)<.001&&abs(uAutoSpin)<.001)return uv;
   vec2 aspect=vec2(uRes.x/uRes.y,1.),p=(uv-.5)*aspect;float radius=length(p);
   if(abs(uAutoVort)>.001||abs(uAutoSpin)>.001){
@@ -58,15 +83,17 @@ vec2 effectUV(vec2 uv){
 void main(){
   vec2 baseUV=gl_FragCoord.xy/uRes,uv=effectUV(baseUV),cen=vec2(.5,.52),dv=uv-cen;
   vec3 col=vec3(0.);
+  // Reuse existing mip levels when many tiles shrink the source image.
+  float detailLOD=uTessMode>0?max(0.,log2(max(1.,uTessDensity/max(.5,uTessZoom)))):0.;
   float w=clamp(uWarp,0.,2.5),ws=0.;
-  if(w<.001){col=textureLod(uScene,uv,0.).rgb;ws=1.;}else for(int i=0;i<WARP_TAPS;i++){float f=float(i)/float(WARP_TAPS-1);float k=1.-w*.16*f*f;float wt=1.-f*.6;col+=textureLod(uScene,cen+dv*k,0.).rgb*wt;ws+=wt;}
+  if(w<.001){col=textureLod(uScene,uv,detailLOD).rgb;ws=1.;}else for(int i=0;i<WARP_TAPS;i++){float f=float(i)/float(WARP_TAPS-1);float k=1.-w*.16*f*f;float wt=1.-f*.6;col+=textureLod(uScene,cen+dv*k,detailLOD).rgb*wt;ws+=wt;}
   col/=ws;
   if(uBloom>.001){
   float th=mix(.95,.42,uNight);
-  vec3 b=br(textureLod(uScene,uv,2.).rgb,th)*.5+br(textureLod(uScene,uv,3.).rgb,th)*.7+br(textureLod(uScene,uv,4.).rgb,th)*.9+br(textureLod(uScene,uv,5.).rgb,th)*1.1;
+  vec3 b=br(textureLod(uScene,uv,2.+detailLOD).rgb,th)*.5+br(textureLod(uScene,uv,3.+detailLOD).rgb,th)*.7+br(textureLod(uScene,uv,4.+detailLOD).rgb,th)*.9+br(textureLod(uScene,uv,5.+detailLOD).rgb,th)*1.1;
   vec3 st=vec3(0.);
-  for(int i=-7;i<=7;i++){float fi=float(i);st+=br(textureLod(uScene,uv+vec2(fi*.022,0.),3.).rgb,th+.12)*exp(-abs(fi)*.32);}
-  vec2 gu=cen-dv*.55;vec3 gh=br(textureLod(uScene,gu,4.).rgb,th+.1)*.35+br(textureLod(uScene,cen-dv*1.3,5.).rgb,th+.1)*.2;
+  for(int i=-7;i<=7;i++){float fi=float(i);st+=br(textureLod(uScene,uv+vec2(fi*.022,0.),3.+detailLOD).rgb,th+.12)*exp(-abs(fi)*.32);}
+  vec2 gu=cen-dv*.55;vec3 gh=br(textureLod(uScene,gu,4.+detailLOD).rgb,th+.1)*.35+br(textureLod(uScene,cen-dv*1.3,5.+detailLOD).rgb,th+.1)*.2;
   float vg=smoothstep(.8,.1,length(dv));
   col+=uBloom*mix(.2,1.,uNight)*(b*.32+st*uNight*mix(vec3(.5,.7,1.),uTint2,.5)*.09+gh*uTint2*vg*.6);
   }

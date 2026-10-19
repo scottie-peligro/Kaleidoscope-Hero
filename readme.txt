@@ -3,7 +3,7 @@ Contributors: nextlevelexchange
 Requires at least: 5.8
 Tested up to: 6.6
 Requires PHP: 7.4
-Stable tag: 1.15.2
+Stable tag: 1.16.0
 License: GPLv2 or later
 
 Animated WebGL hero backgrounds with admin presets, per-page shortcodes, slideshows and seamless black-wipe page transitions.
@@ -32,6 +32,10 @@ WebGL 2 (all current desktop and mobile browsers). Older browsers show a static 
 == Settings editor ==
 
 Save preset and Save settings stay visible in a fixed footer while you scroll. The footer adapts to the WordPress menu and mobile screens; space below the form keeps the final controls accessible.
+
+== Tessellation ==
+
+The Tessellation panel repeats animated elements in Squares, Mirrored squares, Triangles or Hexagons. Adjust repeat density, tile zoom and rotation. Combine with kaleidoscope, vortex and blending; gradient and text remain untiled. Particle mouse effects follow transformed points across the repeated copies. Defaults to Off. Works in all renderers, presets, shortcodes and templates. See TESSELLATION.md.
 
 == Color blending ==
 
