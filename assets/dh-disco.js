@@ -6,9 +6,9 @@
   var VERT = "#version 300 es\nin vec2 a;void main(){gl_Position=vec4(a,0.,1.);}";
   var PALETTES = {"Electric blue":[[0.12,0.42,1],[0.35,0.8,1]],"Cyan":[[0.08,0.8,1],[0.55,1,0.92]],"Violet":[[0.45,0.3,1],[0.9,0.45,1]],"Amber":[[1,0.5,0.12],[1,0.82,0.45]],"Fiber":[[1,0.14,0.08],[0.15,0.35,1]],"Neon":[[1,0.12,0.7],[0.25,0.35,1]],"Aurora":[[0.1,1,0.55],[0.55,0.25,1]],"Ember":[[1,0.25,0.05],[1,0.75,0.2]],"Ice":[[0.55,0.85,1],[0.9,0.97,1]],"Matrix":[[0.1,1,0.3],[0.6,1,0.5]],"Rose gold":[[1,0.5,0.55],[1,0.82,0.6]],"Ocean":[[0,0.55,1],[0,1,0.85]],"Vapor":[[1,0.4,0.85],[0.3,0.95,1]],"Mono":[[0.85,0.88,0.95],[1,1,1]],"Sunset":[[1,0.58,0.22],[1,0.8,0.5]],"Gold and blue":[[1,0.65,0.2],[0.2,0.6,1]]};
   var WORDS = [];
-  var STYLES = ["Digital grid","Fiber optics","Particle waves","Wireframe tunnel","Data rings","Voronoi crystal","Constellation","Fractal flythrough","Word rain","Digital fabric","Blueprint city","Dot matrix structures","LED globe","Digital disco ball","Floating shape"];
-  var NUM = ['opacity', 'density', 'flow', 'glow', 'brightness', 'multicolor', 'warp', 'bloom', 'vortex', 'vortexRamp', 'lookRange', 'gradientAngle', 'autoVortexStrength', 'autoVortexSpeed', 'autoVortexRamp', 'shapeSize', 'shapeFloat', 'shapeLobes', 'shapeTwist', 'shapeExplode', 'shapeSensitivity', 'shapeRecovery', 'shapeScrollDistance'];
-  var DEF = { style: 'Digital grid', palette: 'Electric blue', ledPattern: 'Cycle', opacity: 1, density: 0.55, flow: 2.5, glow: 1, brightness: 1, multicolor: 0.35, kaleidoscope: 0, kaleidoscopeMode: 'Forward elements', randomize: false, randomInterval: 15, bgColor1: '#140a2e', bgColor2: '#000000', gradient: 'Radial', gradientAngle: 90, warp: 1, bloom: 1, vortex: 1, vortexRamp: 2, lookRange: 1, discoMouseControl: true, shape: 'Torus knot', shapeSeed: 17, shapeSize: 1, shapeFloat: 1, shapeLobes: 5, shapeTwist: 1.5, shapeTrigger: 'Mouse and scroll', shapeExplode: 1, shapeSensitivity: 1, shapeRecovery: 1.2, shapeScrollDistance: .75, autoVortex: false, autoVortexStrength: 0.5, autoVortexSpeed: 0.5, autoVortexDirection: 'Clockwise', autoVortexRamp: 2 };
+  var STYLES = ["Digital grid","Fiber optics","Particle waves","Wireframe tunnel","Data rings","Voronoi crystal","Constellation","Fractal flythrough","Word rain","Digital fabric","Blueprint city","Dot matrix structures","LED globe","Digital disco ball","Floating shape","Morphing sculptures"];
+  var NUM = ['opacity', 'density', 'flow', 'glow', 'brightness', 'multicolor', 'warp', 'bloom', 'vortex', 'vortexRamp', 'lookRange', 'gradientAngle', 'autoVortexStrength', 'autoVortexSpeed', 'autoVortexRamp', 'shapeSize', 'shapeFloat', 'shapeLobes', 'shapeTwist', 'shapeExplode', 'shapeSensitivity', 'shapeRecovery', 'shapeScrollDistance', 'morphDuration', 'morphHold', 'morphProgress', 'morphStagger', 'morphScrollDistance'];
+  var DEF = { style: 'Digital grid', palette: 'Electric blue', ledPattern: 'Cycle', opacity: 1, density: 0.55, flow: 2.5, glow: 1, brightness: 1, multicolor: 0.35, kaleidoscope: 0, kaleidoscopeMode: 'Forward elements', randomize: false, randomInterval: 15, bgColor1: '#140a2e', bgColor2: '#000000', gradient: 'Radial', gradientAngle: 90, warp: 1, bloom: 1, vortex: 1, vortexRamp: 2, lookRange: 1, discoMouseControl: true, shape: 'Torus knot', shapeSeed: 17, shapeSize: 1, shapeFloat: 1, shapeLobes: 5, shapeTwist: 1.5, shapeTrigger: 'Mouse and scroll', shapeExplode: 1, shapeSensitivity: 1, shapeRecovery: 1.2, shapeScrollDistance: .75, morphMode: 'Cycle shapes', morphFrom: 'Orb', morphTo: 'Torus knot', morphDuration: 4, morphHold: 1, morphProgress: 0, morphStagger: .15, morphScrollDistance: 1, morphExplode: false, autoVortex: false, autoVortexStrength: 0.5, autoVortexSpeed: 0.5, autoVortexDirection: 'Clockwise', autoVortexRamp: 2 };
   var motion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)');
   var connection = navigator.connection;
   function staticMode() { return !!((motion && motion.matches) || (connection && connection.saveData)); }
@@ -43,10 +43,13 @@
     o.randomize = truthy(o.randomize);
     o.autoVortex = truthy(o.autoVortex);
     o.discoMouseControl = truthy(o.discoMouseControl);
+    o.morphExplode = truthy(o.morphExplode);
+    if (['Cycle shapes','Back and forth','Scroll','Manual'].indexOf(o.morphMode) < 0) o.morphMode = DEF.morphMode;
+    ['morphFrom','morphTo'].forEach(function(key){if (['Torus knot','Ring','Orb','Twisted ribbon','Helix','Star','Crystal','Seeded sculpture'].indexOf(o[key]) < 0) o[key] = DEF[key];});
     if (['Torus knot','Ring','Orb','Twisted ribbon','Helix','Star','Crystal','Seeded sculpture'].indexOf(o.shape) < 0) o.shape = DEF.shape;
     if (['Off','Mouse movement','Scroll','Mouse and scroll'].indexOf(o.shapeTrigger) < 0) o.shapeTrigger = DEF.shapeTrigger;
     o.shapeSeed = Math.max(1,Math.min(999,Math.round(Number(o.shapeSeed)||17)));
-    var shapeBounds = {shapeSize:[.3,2],shapeFloat:[0,2],shapeLobes:[2,10],shapeTwist:[0,4],shapeExplode:[0,3],shapeSensitivity:[.1,3],shapeRecovery:[.2,5],shapeScrollDistance:[.25,2]};
+    var shapeBounds = {shapeSize:[.3,2],shapeFloat:[0,2],shapeLobes:[2,10],shapeTwist:[0,4],shapeExplode:[0,3],shapeSensitivity:[.1,3],shapeRecovery:[.2,5],shapeScrollDistance:[.25,2],morphDuration:[1,15],morphHold:[0,8],morphProgress:[0,1],morphStagger:[0,.8],morphScrollDistance:[.25,4]};
     Object.keys(shapeBounds).forEach(function(key){o[key]=Math.max(shapeBounds[key][0],Math.min(shapeBounds[key][1],o[key]));});
     if (['Cycle', 'Fireworks', 'Waves', 'Shapes'].indexOf(o.ledPattern) < 0) o.ledPattern = DEF.ledPattern;
     if (['Forward elements', 'Whole screen', 'Both'].indexOf(o.kaleidoscopeMode) < 0) o.kaleidoscopeMode = DEF.kaleidoscopeMode;
@@ -74,7 +77,7 @@
     this.base = this.slides[0];
     this.tgt = Object.assign({}, this.base);
     this.cur = Object.assign({}, this.base);
-    this.disc = { style: this.base.style, shape: this.base.shape, shapeSeed: this.base.shapeSeed, ledPattern: this.base.ledPattern, kaleidoscope: this.base.kaleidoscope, kaleidoscopeMode: this.base.kaleidoscopeMode, gradient: this.base.gradient };
+    this.disc = { style: this.base.style, shape: this.base.shape, shapeSeed: this.base.shapeSeed, morphMode: this.base.morphMode, morphFrom: this.base.morphFrom, morphTo: this.base.morphTo, morphExplode: this.base.morphExplode, ledPattern: this.base.ledPattern, kaleidoscope: this.base.kaleidoscope, kaleidoscopeMode: this.base.kaleidoscopeMode, gradient: this.base.gradient };
     this.bg1 = hex(this.base.bgColor1);
     this.bg2 = hex(this.base.bgColor2);
     this.fade = 0;
@@ -142,8 +145,8 @@
   Hero.prototype.setTarget = function (c) {
     var d = this.disc;
     this.tgt = Object.assign({}, c);
-    if (c.style !== d.style || c.shape !== d.shape || c.shapeSeed !== d.shapeSeed || c.ledPattern !== d.ledPattern || c.kaleidoscope !== d.kaleidoscope || c.kaleidoscopeMode !== d.kaleidoscopeMode || c.gradient !== d.gradient) {
-      this.pending = { style: c.style, shape: c.shape, shapeSeed: c.shapeSeed, ledPattern: c.ledPattern, kaleidoscope: c.kaleidoscope, kaleidoscopeMode: c.kaleidoscopeMode, gradient: c.gradient };
+    if (c.style !== d.style || c.shape !== d.shape || c.shapeSeed !== d.shapeSeed || c.morphMode !== d.morphMode || c.morphFrom !== d.morphFrom || c.morphTo !== d.morphTo || c.morphExplode !== d.morphExplode || c.ledPattern !== d.ledPattern || c.kaleidoscope !== d.kaleidoscope || c.kaleidoscopeMode !== d.kaleidoscopeMode || c.gradient !== d.gradient) {
+      this.pending = { style: c.style, shape: c.shape, shapeSeed: c.shapeSeed, morphMode: c.morphMode, morphFrom: c.morphFrom, morphTo: c.morphTo, morphExplode: c.morphExplode, ledPattern: c.ledPattern, kaleidoscope: c.kaleidoscope, kaleidoscopeMode: c.kaleidoscopeMode, gradient: c.gradient };
     } else {
       this.pending = null;
     }
@@ -235,7 +238,7 @@
       gl.deleteProgram(pr); gl.deleteProgram(pp); return false;
     }
     gl.useProgram(pr);
-    if (this.disc.style === 'Floating shape') {
+    if ((this.disc.style === 'Floating shape' || this.disc.style === 'Morphing sculptures')) {
       try { this.floating = makeFloating(gl); } catch (e) { this.error = String(e); gl.deleteProgram(pr); gl.deleteProgram(pp); return false; }
     }
     var buf = gl.createBuffer();
@@ -398,7 +401,7 @@
       look.tx = ((e.clientX - inputBounds.left) / inputBounds.width) * 2 - 1;
       look.ty = -(((e.clientY - inputBounds.top) / inputBounds.height) * 2 - 1);
       var stamp = performance.now();
-      if (lastPointer && self.disc.style === 'Floating shape') {
+      if (lastPointer && (self.disc.style === 'Floating shape' || self.disc.style === 'Morphing sculptures')) {
         var movement = Math.hypot(look.tx-lastPointer.x,look.ty-lastPointer.y),elapsed = Math.max(16,stamp-lastPointer.time);
         var proximity = Math.exp(-(look.tx*look.tx+look.ty*look.ty)*.9);
         shapeImpulse = Math.max(shapeImpulse,Math.min(2,movement/elapsed*220*self.cur.shapeSensitivity)*proximity);
@@ -509,9 +512,9 @@
       gl.uniform1f(U.uVort, vort * spinDir); gl.uniform1f(U.uSpin, spin);
       gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
       gl.viewport(0, 0, c.width, c.height);
-      if (d.style === 'Floating shape') {
+      if ((d.style === 'Floating shape' || d.style === 'Morphing sculptures')) {
         if (!self.floating) { try { self.floating = makeFloating(gl); } catch (e) { self.error = String(e); self.pause(); el.classList.add('dh-nogl'); return; } }
-        self.floating.draw(cur,d,flowPos,shapeAmount,c.width,c.height,look,tint,self.quality);
+        self.floating.draw(cur,d,flowPos,shapeAmount,c.width,c.height,look,tint,self.quality,Math.max(0,Math.min(1,(scrollPosition-shapeAnchor)/Math.max(1,window.innerHeight*cur.morphScrollDistance))));
       } else gl.drawArrays(gl.TRIANGLES, 0, 3);
       gl.bindFramebuffer(gl.FRAMEBUFFER, null);
       gl.activeTexture(gl.TEXTURE3); gl.bindTexture(gl.TEXTURE_2D, stex); gl.generateMipmap(gl.TEXTURE_2D);

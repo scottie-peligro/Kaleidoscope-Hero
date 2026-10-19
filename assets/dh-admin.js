@@ -53,7 +53,16 @@ jQuery(function ($) {
     form.find('[data-dh-group="Animation"], [data-dh-group="Interaction"]').toggle(enabled);
     form.find('#dh-ledPattern').closest('.dh-field').toggle(form.find('#dh-style').val() === 'LED globe');
     form.find('#dh-discoMouseControl').closest('.dh-field').toggle(form.find('#dh-style').val() === 'Digital disco ball');
-    form.find('[data-dh-group="Floating shape"]').toggle(enabled && form.find('#dh-style').val() === 'Floating shape');
+    var style = form.find('#dh-style').val(), morphing = style === 'Morphing sculptures', sculpting = style === 'Floating shape' || morphing;
+    form.find('[data-dh-group="Sculpture"]').toggle(enabled && sculpting);
+    form.find('#dh-shape').closest('.dh-field').toggle(!morphing);
+    form.find('[data-dh-group="Morphing sculptures"]').toggle(enabled && morphing);
+    var morphMode = form.find('#dh-morphMode').val(), automaticMorph = morphMode === 'Cycle shapes' || morphMode === 'Back and forth';
+    form.find('#dh-morphTo').closest('.dh-field').toggle(morphMode !== 'Cycle shapes');
+    ['morphDuration','morphHold'].forEach(function(key){form.find('#dh-'+key).closest('.dh-field').toggle(automaticMorph);});
+    form.find('#dh-morphProgress').closest('.dh-field').toggle(morphMode === 'Manual');
+    form.find('#dh-morphScrollDistance').closest('.dh-field').toggle(morphMode === 'Scroll');
+    ['shapeTrigger','shapeExplode','shapeSensitivity','shapeRecovery','shapeScrollDistance'].forEach(function(key){form.find('#dh-'+key).closest('.dh-field').toggle(!morphing || !!form.find('#dh-morphExplode').prop('checked'));});
     var automatic = !!form.find('#dh-autoVortex').prop('checked');
     ['autoVortexStrength','autoVortexSpeed','autoVortexDirection','autoVortexRamp'].forEach(function (key) { form.find('#dh-' + key).closest('.dh-field').toggle(automatic); });
   }

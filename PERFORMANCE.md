@@ -61,3 +61,5 @@ Changed files: `assets/kaleidoscope-hero.js` and its minified build control rend
 
 - [MDN WebGL best practices](https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/WebGL_best_practices): smaller back buffers, static vertex arrays, asynchronous shader compilation, and resource cleanup.
 - [web.dev reduced-motion guidance](https://web.dev/articles/prefers-reduced-motion): offer a static presentation when animation is unwanted.
+
+Version 1.12.0 adds Morphing sculptures to the dedicated floating renderer and the complete renderer. GPU interpolation evaluates the two selected procedural surfaces per point during a transition. Seeded point identities, staggered quintic interpolation and matching endpoint surfaces avoid a dissolve or a visible reset at automatic cycle boundaries. Morphing and Floating shape slides can share the same compact engine. Morphing adds no textures, position buffers, libraries, targets, passes or scheduling loops; scene density, quality limits and visibility lifecycle remain shared. See MORPHING-SCULPTURES.md.

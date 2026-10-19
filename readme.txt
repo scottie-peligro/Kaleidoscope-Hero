@@ -3,7 +3,7 @@ Contributors: nextlevelexchange
 Requires at least: 5.8
 Tested up to: 6.6
 Requires PHP: 7.4
-Stable tag: 1.11.2
+Stable tag: 1.12.0
 License: GPLv2 or later
 
 Animated WebGL hero backgrounds with admin presets, per-page shortcodes, slideshows and seamless black-wipe page transitions.
@@ -41,12 +41,16 @@ Fixed disco scenes load a smaller dedicated renderer, without the other effects 
 
 == Floating particle shapes ==
 
-Choose Animation > Style > Floating shape. The Floating shape panel offers Torus knot, Ring, Orb, Twisted ribbon, Helix, Star, Crystal and Seeded sculpture. Change seed, lobes and twist to create variations. Set Explode with to Off, Mouse movement, Scroll, or Mouse and scroll. Particles reform after mouse movement stops; scrolling back rebuilds the shape. Strength, sensitivity, reform time, scroll distance, size and floating motion are adjustable. Flow speed 0 freezes automatic drift and rotation. Gold and blue is a new palette inspired by the particle reference.
+Choose Animation > Style > Floating shape. The Sculpture panel offers Torus knot, Ring, Orb, Twisted ribbon, Helix, Star, Crystal and Seeded sculpture. Change seed, lobes and twist to create variations. Set Explode with to Off, Mouse movement, Scroll, or Mouse and scroll. Particles reform after mouse movement stops; scrolling back rebuilds the shape. Strength, sensitivity, reform time, scroll distance, size and floating motion are adjustable. Flow speed 0 freezes automatic drift and rotation. Gold and blue is a new palette inspired by the particle reference.
 
-The dedicated renderer is about 30 KB (about 11 KB gzip). Particles are generated on the GPU without model/image downloads or per-frame particle uploads. It shares existing quality budgets, kaleidoscope/vortex controls, background mode and motion preferences. See FLOATING-SHAPES.md for setup and shortcode examples.
+Floating shape and Morphing sculptures share a dedicated particle renderer. Particles are generated on the GPU without model/image downloads or per-frame particle uploads. It shares existing quality budgets, kaleidoscope/vortex controls, background mode and motion preferences. See FLOATING-SHAPES.md for setup and shortcode examples.
 
 == Long-page sharpness ==
 
 Long backgrounds render a viewport-sized area as you scroll, instead of stretching a low-resolution canvas across the entire page. This keeps the existing pixel budget concentrated on what is visible. Sections taller than 1.6 viewport heights use this automatically; shorter sections keep their existing composition. Content stays in document flow, and background/section scroll motion and mouse interactions continue to work.
 
 Scrolling is independent of the scene's 30 FPS rendering: supported browsers pin a dedicated viewport stage using their scroll timeline, with an immediate scroll-event fallback for sticky/fixed containers or unsupported browsers. Particle Waves uses more accurate surface intersections, pixel-aware point filtering and gentler twinkling to reduce flicker.
+
+== Morphing sculptures ==
+
+Choose Animation > Style > Morphing sculptures. Cycle through all eight procedural shapes, move back and forth between a selected pair, transform with scroll, or hold a manual blend. Adjust duration, hold time and particle stagger. The shared Sculpture panel controls size, seed, float, lobes and twist. Optional explosion is disabled by default. Flow 0 pauses automatic motion while scroll/manual morphing remains available. See MORPHING-SCULPTURES.md for controls and shortcode examples.

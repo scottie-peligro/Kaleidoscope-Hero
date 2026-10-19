@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Kaleidoscope Hero
  * Description:       Animated WebGL hero backgrounds with admin presets, per-page shortcodes, slideshows and seamless black-wipe page transitions.
- * Version:           1.11.2
+ * Version:           1.12.0
  * Requires at least: 5.8
  * Requires PHP:      7.4
  * Author:            Next Level Exchange
@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'DH_VERSION', '1.11.2' );
+define( 'DH_VERSION', '1.12.0' );
 define( 'DH_URL', plugin_dir_url( __FILE__ ) );
 
 /* ------------------------------------------------------------------ *
@@ -22,7 +22,7 @@ define( 'DH_URL', plugin_dir_url( __FILE__ ) );
  * ------------------------------------------------------------------ */
 
 function dh_styles() {
-	return array( 'Digital grid', 'Fiber optics', 'Particle waves', 'Wireframe tunnel', 'Data rings', 'Voronoi crystal', 'Constellation', 'Fractal flythrough', 'Word rain', 'Digital fabric', 'Blueprint city', 'Dot matrix structures', 'LED globe', 'Digital disco ball', 'Floating shape' );
+	return array( 'Digital grid', 'Fiber optics', 'Particle waves', 'Wireframe tunnel', 'Data rings', 'Voronoi crystal', 'Constellation', 'Fractal flythrough', 'Word rain', 'Digital fabric', 'Blueprint city', 'Dot matrix structures', 'LED globe', 'Digital disco ball', 'Floating shape', 'Morphing sculptures' );
 }
 
 function dh_palettes() {
@@ -56,7 +56,7 @@ function dh_schema() {
 			'randomize'      => array( 'label' => 'Randomize', 'type' => 'bool', 'default' => false, 'help' => 'Cycles through random styles, palettes and settings.' ),
 			'randomInterval' => $r( 'Random interval (seconds)', 5, 60, 1, 15 ),
 		),
-		'Floating shape' => array(
+		'Sculpture' => array(
 			'shape' => array( 'label' => __( 'Shape', 'kaleidoscope-hero' ), 'type' => 'enum', 'options' => array( 'Torus knot', 'Ring', 'Orb', 'Twisted ribbon', 'Helix', 'Star', 'Crystal', 'Seeded sculpture' ), 'default' => 'Torus knot' ),
 			'shapeSeed' => $r( __( 'Shape variation / seed', 'kaleidoscope-hero' ), 1, 999, 1, 17, __( 'Choose a repeatable unique particle arrangement. Seeded sculpture also changes the silhouette.', 'kaleidoscope-hero' ) ),
 			'shapeSize' => $r( __( 'Shape size', 'kaleidoscope-hero' ), 0.3, 2, 0.05, 1 ),
@@ -68,6 +68,17 @@ function dh_schema() {
 			'shapeSensitivity' => $r( __( 'Mouse sensitivity', 'kaleidoscope-hero' ), 0.1, 3, 0.1, 1 ),
 			'shapeRecovery' => $r( __( 'Reform time (seconds)', 'kaleidoscope-hero' ), 0.2, 5, 0.1, 1.2 ),
 			'shapeScrollDistance' => $r( __( 'Scroll distance (screens)', 'kaleidoscope-hero' ), 0.25, 2, 0.05, 0.75 ),
+		),
+		'Morphing sculptures' => array(
+			'morphMode' => array( 'label' => __( 'Morph control', 'kaleidoscope-hero' ), 'type' => 'enum', 'options' => array( 'Cycle shapes', 'Back and forth', 'Scroll', 'Manual' ), 'default' => 'Cycle shapes', 'help' => __( 'Cycle visits all eight shapes, starting with From shape. Back and forth uses the selected pair. Scroll reverses as you scroll back. Manual holds the progress slider.', 'kaleidoscope-hero' ) ),
+			'morphFrom' => array( 'label' => __( 'From shape', 'kaleidoscope-hero' ), 'type' => 'enum', 'options' => array( 'Torus knot', 'Ring', 'Orb', 'Twisted ribbon', 'Helix', 'Star', 'Crystal', 'Seeded sculpture' ), 'default' => 'Orb' ),
+			'morphTo' => array( 'label' => __( 'To shape', 'kaleidoscope-hero' ), 'type' => 'enum', 'options' => array( 'Torus knot', 'Ring', 'Orb', 'Twisted ribbon', 'Helix', 'Star', 'Crystal', 'Seeded sculpture' ), 'default' => 'Torus knot' ),
+			'morphDuration' => $r( __( 'Morph duration (seconds)', 'kaleidoscope-hero' ), 1, 15, 0.5, 4, __( 'At the default Flow speed of 2.5. Flow 0 pauses automatic morphing and rotation.', 'kaleidoscope-hero' ) ),
+			'morphHold' => $r( __( 'Hold each shape (seconds)', 'kaleidoscope-hero' ), 0, 8, 0.5, 1 ),
+			'morphProgress' => $r( __( 'Morph progress', 'kaleidoscope-hero' ), 0, 1, 0.01, 0, __( '0 is From shape; 1 is To shape. Used by Manual control.', 'kaleidoscope-hero' ) ),
+			'morphStagger' => $r( __( 'Particle stagger', 'kaleidoscope-hero' ), 0, 0.8, 0.05, 0.15, __( '0 moves the points together. Higher values let different points begin at different times.', 'kaleidoscope-hero' ) ),
+			'morphScrollDistance' => $r( __( 'Morph scroll distance (screens)', 'kaleidoscope-hero' ), 0.25, 4, 0.25, 1, __( 'Distance from the section top to complete the transformation. Works with Flow 0.', 'kaleidoscope-hero' ) ),
+			'morphExplode' => array( 'label' => __( 'Also allow explosion', 'kaleidoscope-hero' ), 'type' => 'bool', 'default' => false, 'help' => __( 'Enables the sculpture explosion controls as an additional interaction. Morphing works on its own when this is off.', 'kaleidoscope-hero' ) ),
 		),
 		'Background'  => array(
 			'bgColor1'      => array( 'label' => 'Colour 1', 'type' => 'color', 'default' => '#140a2e' ),
