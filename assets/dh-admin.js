@@ -16,6 +16,12 @@ jQuery(function ($) {
 
   var form = $('#dh-preset-form');
   if (!form.length) return;
+  var words=$.extend({on:'On',off:'Off',mirrors:'%s mirrors',dirty:'Unsaved changes',clean:'No unsaved changes',still:'Still background'},window.DH_EDITOR||{});
+  var compactPreview=window.matchMedia&&window.matchMedia('(max-width:782px)');
+  if(compactPreview){
+    var fitPreview=function(){ $('.dh-preview-fold').prop('open',!compactPreview.matches); };
+    fitPreview();if(compactPreview.addEventListener)compactPreview.addEventListener('change',fitPreview);
+  }
 
   function collect() {
     var o = {};
@@ -48,39 +54,59 @@ jQuery(function ($) {
     el.style.setProperty('--dh-bg2', o.bgColor2 || '#000000');
   }
 
+  var pages=form.find('.dh-editor-page'),tabs=form.find('[role=tab]'),initial=form.serialize();
+  function activate(id,focus){
+    var tab=tabs.filter('[aria-controls="'+id+'"]');if(!tab.length)return;
+    var previous=pages.filter(':not([hidden])')[0],away=previous&&previous.id!==id&&previous.getBoundingClientRect().top<110;
+    tabs.attr({'aria-selected':'false',tabindex:'-1'});tab.attr({'aria-selected':'true',tabindex:'0'});
+    pages.prop('hidden',true).filter('#'+id).prop('hidden',false);
+    if(away)pages.filter('#'+id)[0].scrollIntoView({block:'start',behavior:'auto'});
+    if(focus)tab[0].focus();
+  }
+  tabs.on('click',function(){activate(this.getAttribute('aria-controls'));});
+  tabs.on('keydown',function(event){
+    var index=tabs.index(this),next=index;
+    if(event.key==='ArrowRight')next=(index+1)%tabs.length;
+    else if(event.key==='ArrowLeft')next=(index+tabs.length-1)%tabs.length;
+    else if(event.key==='Home')next=0;
+    else if(event.key==='End')next=tabs.length-1;
+    else return;
+    event.preventDefault();activate(tabs[next].getAttribute('aria-controls'),true);
+  });
+  form.addClass('dh-editor--ready');activate('dh-page-element');
+  form[0].addEventListener('invalid',function(event){
+    var field=$(event.target),page=field.closest('.dh-editor-page');
+    if(page.length)activate(page.attr('id'));
+    field.parents('details').prop('open',true);
+    field.parentsUntil(form).filter(function(){return this.hidden||$(this).css('display')==='none';}).prop('hidden',false).show();
+  },true);
+  function row(key,visible){form.find('#dh-'+key).closest('.dh-field').toggle(!!visible);}
   function sceneFields() {
-    var enabled = (form.find('#dh-scene').val() || 'Kaleidoscope') !== 'Off';
-    form.find('[data-dh-group="Animation"], [data-dh-group="Interaction"], [data-dh-group="Color blending"]').toggle(enabled);
-    var blending = form.find('#dh-blendMode').val() !== 'Off';
-    ['blendSource','blendAmount'].forEach(function(key){form.find('#dh-'+key).closest('.dh-field').toggle(blending);});
-    form.find('#dh-blendColor').closest('.dh-field').toggle(blending && form.find('#dh-blendSource').val() !== 'Background gradient');
-    form.find('[data-dh-group="Tessellation"]').toggle(enabled);
-    ['Wireframe tunnel','Wireframe landscape','Blueprint city'].forEach(function(group){form.find('[data-dh-group="'+group+'"]').toggle(enabled && form.find('#dh-style').val() === group);});
-    form.find('#dh-cityWindows').closest('.dh-field').toggle(form.find('#dh-cityAppearance').val() === 'Night skyline');
-    form.find('[data-dh-group="Iridescent ribbons"]').toggle(enabled && form.find('#dh-style').val() === 'Iridescent ribbons');
-    ['ribbonScrollStrength','ribbonScrollDistance'].forEach(function(key){form.find('#dh-'+key).closest('.dh-field').toggle(form.find('#dh-ribbonScroll').val() !== 'Off');});
-    ['tessellationDensity','tessellationZoom','tessellationRotation'].forEach(function(key){form.find('#dh-'+key).closest('.dh-field').toggle(form.find('#dh-tessellation').val() !== 'Off');});
-    form.find('#dh-ledPattern').closest('.dh-field').toggle(form.find('#dh-style').val() === 'LED globe');
-    form.find('#dh-discoMouseControl').closest('.dh-field').toggle(form.find('#dh-style').val() === 'Digital disco ball');
-    var style = form.find('#dh-style').val(), morphing = style === 'Morphing sculptures', sculpting = style === 'Floating shape' || morphing;
-    form.find('[data-dh-group="Sculpture"]').toggle(enabled && sculpting);
-    form.find('#dh-shape').closest('.dh-field').toggle(!morphing);
-    form.find('[data-dh-group="Morphing sculptures"]').toggle(enabled && morphing);
-    var morphMode = form.find('#dh-morphMode').val(), automaticMorph = morphMode === 'Cycle shapes' || morphMode === 'Back and forth';
-    form.find('#dh-morphTo').closest('.dh-field').toggle(morphMode !== 'Cycle shapes');
-    ['morphDuration','morphHold'].forEach(function(key){form.find('#dh-'+key).closest('.dh-field').toggle(automaticMorph);});
-    form.find('#dh-morphProgress').closest('.dh-field').toggle(morphMode === 'Manual');
-    form.find('#dh-morphScrollDistance').closest('.dh-field').toggle(morphMode === 'Scroll');
-    var mouseEffect=form.find('#dh-shapeMouseEffect').val(),localExplosion=mouseEffect==='Local explosion',force=mouseEffect==='Attract'||mouseEffect==='Repel',localMouse=localExplosion||force;
-    ['shapeMouseRadius','shapeMouseGlobal'].forEach(function(key){form.find('#dh-'+key).closest('.dh-field').toggle(localMouse);});
-    form.find('#dh-shapeMouseStrength').closest('.dh-field').toggle(force);
-    var wholeExplosion=!morphing||!!form.find('#dh-morphExplode').prop('checked');
-    ['shapeTrigger','shapeExplode'].forEach(function(key){form.find('#dh-'+key).closest('.dh-field').toggle(wholeExplosion||localExplosion);});
-    form.find('#dh-shapeSensitivity').closest('.dh-field').toggle(localExplosion||(wholeExplosion&&mouseEffect==='Whole sculpture explosion'));
-    form.find('#dh-shapeRecovery').closest('.dh-field').toggle(wholeExplosion||localMouse);
-    form.find('#dh-shapeScrollDistance').closest('.dh-field').toggle(wholeExplosion);
-    var automatic = !!form.find('#dh-autoVortex').prop('checked');
-    ['autoVortexStrength','autoVortexSpeed','autoVortexDirection','autoVortexRamp'].forEach(function (key) { form.find('#dh-' + key).closest('.dh-field').toggle(automatic); });
+    var value=function(key){return form.find('#dh-'+key).val();},checked=function(key){return !!form.find('#dh-'+key).prop('checked');};
+    var enabled=value('scene')!=='Off',style=value('style'),background=value('mode')==='Section background';
+    form.find('[data-dh-animation]').each(function(){var only=this.getAttribute('data-dh-for');$(this).toggle(enabled&&(!only||only.split('|').indexOf(style)!==-1));});
+    form.find('[data-dh-still]').prop('hidden',enabled);
+    form.find('#dh-random-note').prop('hidden',!enabled||!checked('randomize'));
+    form.find('[data-dh-hero-content]').toggle(!background);
+    form.find('[data-dh-overlay-content]').toggle(checked('overlay'));
+    form.find('#dh-background-content-note').prop('hidden',!background);
+    row('height',!background);row('darkness',background);
+    row('gradientAngle',value('gradient')==='Linear');
+    row('randomInterval',checked('randomize'));row('kaleidoscopeMode',Number(value('kaleidoscope'))>=2);
+    row('cityWindows',value('cityAppearance')==='Night skyline');row('discoMouseControl',style==='Digital disco ball');
+    var blending=value('blendMode')!=='Off';['blendSource','blendAmount'].forEach(function(key){row(key,blending);});row('blendColor',blending&&value('blendSource')!=='Background gradient');
+    ['tessellationDensity','tessellationZoom','tessellationRotation'].forEach(function(key){row(key,value('tessellation')!=='Off');});
+    ['autoVortexStrength','autoVortexSpeed','autoVortexDirection','autoVortexRamp'].forEach(function(key){row(key,checked('autoVortex'));});row('vortexRamp',Number(value('vortex'))>0);
+    row('ribbonRadius',Number(value('ribbonBend'))>0);['ribbonScrollStrength','ribbonScrollDistance'].forEach(function(key){row(key,value('ribbonScroll')!=='Off');});
+    var morphing=style==='Morphing sculptures',morphMode=value('morphMode'),automaticMorph=morphMode==='Cycle shapes'||morphMode==='Back and forth';
+    row('shape',!morphing);row('morphExplode',morphing);row('morphTo',morphMode!=='Cycle shapes');
+    ['morphDuration','morphHold'].forEach(function(key){row(key,automaticMorph);});row('morphProgress',morphMode==='Manual');row('morphScrollDistance',morphMode==='Scroll');
+    var shapes=morphing?(morphMode==='Cycle shapes'?['Star','Seeded sculpture','Twisted ribbon']:[value('morphFrom'),value('morphTo')]):[value('shape')];
+    row('shapeLobes',shapes.indexOf('Star')!==-1||shapes.indexOf('Seeded sculpture')!==-1);row('shapeTwist',shapes.indexOf('Twisted ribbon')!==-1||shapes.indexOf('Seeded sculpture')!==-1);
+    var mouse=value('shapeMouseEffect'),local=mouse==='Local explosion',force=mouse==='Attract'||mouse==='Repel',whole=!morphing||checked('morphExplode'),explosion=whole||local,trigger=value('shapeTrigger')||'',usesMouse=trigger.indexOf('Mouse')!==-1,usesScroll=trigger.indexOf('scroll')!==-1||trigger==='Scroll';
+    ['shapeMouseRadius','shapeMouseGlobal'].forEach(function(key){row(key,local||force);});row('shapeMouseStrength',force);row('shapeTrigger',explosion);row('shapeExplode',explosion&&trigger!=='Off');row('shapeSensitivity',usesMouse&&(local||(whole&&mouse==='Whole sculpture explosion')));row('shapeRecovery',force||local||whole&&trigger!=='Off');row('shapeScrollDistance',whole&&usesScroll);
+    form.find('[data-dh-status]').each(function(){var key=this.getAttribute('data-dh-status'),text=words.off;if(key==='mirrors')text=Number(value('kaleidoscope'))>=2?words.mirrors.replace('%s',value('kaleidoscope')):words.off;else if(key==='vortex')text=Number(value(key))>0?words.on:words.off;else if(key==='autoVortex'||key==='randomize')text=checked(key)?words.on:words.off;else text=value(key)==='Off'?words.off:value(key)||words.off;$(this).text(text);});
+    $('#dh-preview-style').text(enabled?style:words.still);
   }
   sceneFields();
 
@@ -88,10 +114,11 @@ jQuery(function ($) {
   function schedule() { clearTimeout(tm); tm = setTimeout(push, 60); }
 
   form.on('input change', 'input, select, textarea', function () {
-    sceneFields();
     var t = $(this);
     if (t.is('[type=range]')) t.siblings('input[type=number]').val(t.val());
     if (t.is('[type=number]')) t.siblings('input[type=range]').val(t.val());
+    sceneFields();
+    var dirty=form.serialize()!==initial,status=$('#dh-save-status');if(status.hasClass('is-dirty')!==dirty)status.text(dirty?words.dirty:words.clean).toggleClass('is-dirty',dirty);
     schedule();
   });
 

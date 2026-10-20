@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Kaleidoscope Hero
  * Description:       Animated WebGL hero backgrounds with admin presets, per-page shortcodes, slideshows and seamless black-wipe page transitions.
- * Version:           1.18.1
+ * Version:           1.19.0
  * Requires at least: 5.8
  * Requires PHP:      7.4
  * Author:            Next Level Exchange
@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'DH_VERSION', '1.18.1' );
+define( 'DH_VERSION', '1.19.0' );
 define( 'DH_URL', plugin_dir_url( __FILE__ ) );
 
 /* ------------------------------------------------------------------ *
@@ -461,6 +461,7 @@ function dh_admin_assets( $hook ) {
 	wp_enqueue_style( 'dh-admin', DH_URL . 'assets/dh-admin.css', array(), DH_VERSION );
 	wp_enqueue_script( 'dh-scenes' );
 	wp_enqueue_script( 'dh-admin', DH_URL . 'assets/dh-admin.js', array( 'jquery', 'wp-color-picker', 'dh-scenes' ), DH_VERSION, true );
+	wp_localize_script( 'dh-admin', 'DH_EDITOR', array( 'on' => __( 'On', 'kaleidoscope-hero' ), 'off' => __( 'Off', 'kaleidoscope-hero' ), 'mirrors' => __( '%s mirrors', 'kaleidoscope-hero' ), 'dirty' => __( 'Unsaved changes', 'kaleidoscope-hero' ), 'clean' => __( 'No unsaved changes', 'kaleidoscope-hero' ), 'still' => __( 'Still background', 'kaleidoscope-hero' ) ) );
 	wp_enqueue_script( 'dh-templates', DH_URL . 'assets/dh-templates.js', array( 'jquery', 'dh-admin' ), DH_VERSION, true );
 	wp_localize_script( 'dh-templates', 'DH_TEMPLATES', array( 'ajaxUrl' => admin_url( 'admin-ajax.php' ), 'nonce' => wp_create_nonce( 'dh_templates' ), 'templates' => array_values( dh_get_templates() ), 'messages' => array( 'choose' => __( 'Choose a template first.', 'kaleidoscope-hero' ), 'name' => __( 'Give the template a name.', 'kaleidoscope-hero' ), 'error' => __( 'The template could not be saved. Refresh and try again.', 'kaleidoscope-hero' ), 'applied' => __( 'Template applied to the preview. Review, then Save preset to keep it.', 'kaleidoscope-hero' ), 'undone' => __( 'Previous settings restored. Preset changes are still unsaved.', 'kaleidoscope-hero' ), 'delete' => __( 'Delete this template from the library? Presets that used it will stay unchanged.', 'kaleidoscope-hero' ), 'look' => __( 'Look only', 'kaleidoscope-hero' ), 'full' => __( 'Full settings', 'kaleidoscope-hero' ) ) ) );
 }
@@ -481,8 +482,18 @@ function dh_field( $k, $f, $v ) {
 			break;
 		case 'enum':
 			echo '<select id="' . esc_attr( $id ) . '" name="' . esc_attr( $name ) . '">';
-			foreach ( $f['options'] as $o ) {
-				echo '<option value="' . esc_attr( $o ) . '"' . selected( $v, $o, false ) . '>' . esc_html( $o ) . '</option>';
+			$groups = isset( $f['option_groups'] ) ? $f['option_groups'] : array( '' => $f['options'] );
+			foreach ( $groups as $group => $options ) {
+				if ( '' !== $group ) {
+					echo '<optgroup label="' . esc_attr( $group ) . '">';
+				}
+				foreach ( $options as $o ) {
+					$label = isset( $f['option_labels'][ $o ] ) ? $f['option_labels'][ $o ] : $o;
+					echo '<option value="' . esc_attr( $o ) . '"' . selected( $v, $o, false ) . '>' . esc_html( $label ) . '</option>';
+				}
+				if ( '' !== $group ) {
+					echo '</optgroup>';
+				}
 			}
 			echo '</select>';
 			break;
@@ -551,65 +562,9 @@ function dh_admin_page() {
 }
 
 function dh_admin_presets( $presets, $edit, $is_new, $current ) {
-	$preview_settings           = $current['settings'];
-	$preview_settings['height'] = '380px';
-	?>
-	<div class="dh-chips">
-		<?php foreach ( $presets as $slug => $p ) : ?>
-			<a class="dh-chip<?php echo ( ! $is_new && $slug === $edit ) ? ' is-active' : ''; ?>" href="<?php echo esc_url( dh_admin_url( array( 'edit' => $slug ) ) ); ?>"><?php echo esc_html( $p['name'] ); ?> <code><?php echo esc_html( $slug ); ?></code></a>
-		<?php endforeach; ?>
-		<a class="dh-chip dh-chip--add<?php echo $is_new ? ' is-active' : ''; ?>" href="<?php echo esc_url( dh_admin_url( array( 'new' => 1 ) ) ); ?>">+ New preset</a>
-	</div>
-	<div class="dh-layout">
-		<form id="dh-preset-form" class="dh-form dh-form--savebar" method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
-			<?php wp_nonce_field( 'dh_save_preset' ); ?>
-			<input type="hidden" name="action" value="dh_save_preset">
-			<input type="hidden" name="dh_slug" value="<?php echo esc_attr( $is_new ? '' : $edit ); ?>">
-			<div class="dh-panel">
-				<h2><?php echo $is_new ? 'New preset' : 'Preset'; ?></h2>
-				<div class="dh-field"><label for="dh-name">Name</label><div class="dh-control"><input type="text" id="dh-name" name="dh_name" value="<?php echo esc_attr( $current['name'] ); ?>" required placeholder="e.g. Work page"></div></div>
-				<div class="dh-field"><label for="dh-new-slug">Shortcode ID</label><div class="dh-control"><input type="text" id="dh-new-slug" name="dh_new_slug" value="<?php echo esc_attr( $is_new ? '' : $edit ); ?>" pattern="[a-z0-9\-]*" placeholder="Generated from the name"><p class="description">Lowercase letters, numbers and dashes. Changing it breaks shortcodes that use the old ID.</p></div></div>
-			</div>
-			<?php dh_template_editor_panel(); ?>
-			<?php foreach ( dh_schema() as $group => $fields ) : ?>
-				<div class="dh-panel" data-dh-group="<?php echo esc_attr( $group ); ?>">
-					<h2><?php echo esc_html( $group ); ?></h2>
-					<?php
-					foreach ( $fields as $k => $f ) {
-						dh_field( $k, $f, $current['settings'][ $k ] );
-					}
-					?>
-				</div>
-			<?php endforeach; ?>
-			<p class="submit dh-savebar"><button type="submit" class="button button-primary button-hero">Save preset</button></p>
-		</form>
-		<aside class="dh-aside">
-			<div class="dh-preview" id="dh-preview"><?php echo dh_render( array( $preview_settings ), 20, null, true ); // phpcs:ignore WordPress.Security.EscapeOutput ?></div>
-			<p class="description"><?php esc_html_e( 'Live preview. Adjust the animation and Mouse look above, or choose Scene → Off for a still background.', 'kaleidoscope-hero' ); ?></p>
-			<?php if ( ! $is_new ) : ?>
-				<?php $sc = '[kaleidoscope_hero preset="' . $edit . '"]'; ?>
-				<div class="dh-shortcode"><code><?php echo esc_html( $sc ); ?></code><button type="button" class="button dh-copy" data-copy="<?php echo esc_attr( $sc ); ?>">Copy</button></div>
-				<?php $bg_sc = '[kaleidoscope_hero preset="' . $edit . '" mode="background" darkness="0.35"]'; ?>
-				<p class="description"><?php esc_html_e( 'For your own content, insert a Kaleidoscope Section block, or place this shortcode inside an existing Group or section:', 'kaleidoscope-hero' ); ?></p>
-				<div class="dh-shortcode"><code><?php echo esc_html( $bg_sc ); ?></code><button type="button" class="button dh-copy" data-copy="<?php echo esc_attr( $bg_sc ); ?>"><?php esc_html_e( 'Copy', 'kaleidoscope-hero' ); ?></button></div>
-				<div class="dh-actions">
-					<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
-						<?php wp_nonce_field( 'dh_duplicate_preset' ); ?>
-						<input type="hidden" name="action" value="dh_duplicate_preset"><input type="hidden" name="dh_slug" value="<?php echo esc_attr( $edit ); ?>">
-						<button type="submit" class="button">Duplicate</button>
-					</form>
-					<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" onsubmit="return confirm('Delete this preset? Shortcodes using it will fall back to the first preset.');">
-						<?php wp_nonce_field( 'dh_delete_preset' ); ?>
-						<input type="hidden" name="action" value="dh_delete_preset"><input type="hidden" name="dh_slug" value="<?php echo esc_attr( $edit ); ?>">
-						<button type="submit" class="button button-link-delete">Delete</button>
-					</form>
-				</div>
-			<?php endif; ?>
-		</aside>
-	</div>
-	<?php
+	require_once __DIR__ . '/includes/admin-editor.php';
+	dh_admin_editor( $presets, $edit, $is_new, $current );
 }
-
 function dh_admin_global( $g ) {
 	?>
 	<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" class="dh-form dh-form--narrow dh-form--savebar">
@@ -655,7 +610,7 @@ function dh_admin_help() {
 	?>
 	<div class="dh-panel dh-help">
 		<h2><?php esc_html_e( 'Save and reuse templates', 'kaleidoscope-hero' ); ?></h2>
-		<p><?php esc_html_e( 'In a preset, use Reusable templates → Save as template to capture the current controls, including unsaved changes. Look only preserves destination content and layout; Full settings includes them. Apply a template to the preview, use Undo apply if needed, then Save preset. The Templates tab exports and imports JSON files for other websites with Kaleidoscope Hero installed.', 'kaleidoscope-hero' ); ?></p>
+		<p><?php esc_html_e( 'In a preset, open Apply or save a template → Save as template to capture the current controls, including unsaved changes. Look only preserves destination content and layout; Full settings includes them. Apply a template to the preview, use Undo apply if needed, then Save preset. The Templates tab exports and imports JSON files for other websites with Kaleidoscope Hero installed.', 'kaleidoscope-hero' ); ?></p>
 		<h2><?php esc_html_e( 'A background behind your own content', 'kaleidoscope-hero' ); ?></h2>
 		<ol>
 			<li><?php esc_html_e( 'In the WordPress editor, add a Kaleidoscope Section block.', 'kaleidoscope-hero' ); ?></li>

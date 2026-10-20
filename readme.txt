@@ -3,7 +3,7 @@ Contributors: nextlevelexchange
 Requires at least: 5.8
 Tested up to: 6.6
 Requires PHP: 7.4
-Stable tag: 1.18.1
+Stable tag: 1.19.0
 License: GPLv2 or later
 
 Animated WebGL hero backgrounds with admin presets, per-page shortcodes, slideshows and seamless black-wipe page transitions.
@@ -36,6 +36,8 @@ WebGL 2 (all current desktop and mobile browsers). Older browsers show a static 
 Wireframe tunnel now has independently timed racing particles and light tails, with speed, tail length and active-lane controls. New Wireframe landscape travels across mixed terrain, hills, mountains or desert, with height/scale/grid controls and an optional striped horizon sun. Blueprint city's optional Night skyline appearance uses dark opaque buildings and scattered white windows; Blueprint remains the default. All support presets, templates and shortcode overrides. See LANDSCAPES-AND-LIGHT-TRAILS.md.
 
 == Settings editor ==
+
+Preset controls are now organized into Element, Appearance, Interaction, Text & links, and Placement. Related elements are grouped in the element menu. Only relevant controls appear; optional effects are expandable with active-state labels. Templates sit under Apply or save a template. The preview is collapsible and starts closed on phones. Every setting and saved look is retained. See ADMIN-SETTINGS.md.
 
 Save preset and Save settings stay visible in a fixed footer while you scroll. The footer adapts to the WordPress menu and mobile screens; space below the form keeps the final controls accessible.
 
