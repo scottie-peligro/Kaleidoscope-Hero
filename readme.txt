@@ -3,7 +3,7 @@ Contributors: nextlevelexchange
 Requires at least: 5.8
 Tested up to: 6.6
 Requires PHP: 7.4
-Stable tag: 1.19.0
+Stable tag: 1.19.1
 License: GPLv2 or later
 
 Animated WebGL hero backgrounds with admin presets, per-page shortcodes, slideshows and seamless black-wipe page transitions.
@@ -30,6 +30,8 @@ Hero links use the black wipe automatically. Add the class dh-transition to any 
 WebGL 2 (all current desktop and mobile browsers). Older browsers show a static gradient in the background colours.
 
 == Landscapes and light trails ==
+
+1.19.1 gives Mountains distinct elevated ranges and deeper valleys instead of low plateaus. The world-anchored flight valley keeps the camera clear of the taller landforms. Terrain height still controls relief and 0 remains flat; no new assets, geometry or render passes are added.
 
 1.18.1 fixes broken/flickering landscape ridges with a continuous depth-tested terrain mesh, rounded landforms, stable shared noise cells and softly filtered grid lines. Saved landscape controls remain supported.
 

@@ -1,4 +1,4 @@
-// Vertex heightfield with rounded ridges and continuous second derivatives.
+// World-anchored heightfield; shared noise cells keep moving ridges continuous.
 uniform float uTerrainType,uTerrainHeight,uTerrainScale;
 float landHash(vec2 p){
  // Integer cell hashing gives a shared corner exactly the same height from
@@ -17,8 +17,18 @@ float landNoise(vec2 p){
 float landHeight(vec2 world){
  vec2 p=world*.05/uTerrainScale;
  float broad=landNoise(p*.7),detail=landNoise(p*1.8+17.),n=landNoise(p*1.25+41.);
- float ridge=1.-pow(n*2.-1.,2.);
- float hill=broad*2.+detail*.55,mountain=ridge*ridge*(1.2+broad*3.6)+detail*.3;
+ float hill=broad*2.+detail*.55;
+ // A squared inverse-noise ridge was almost entirely a high, broad plateau.
+ // Narrower, layered crests give mountains actual relief rather than ripples.
+ float ridge=1.-sqrt(pow(n*2.-1.,2.)+.012);
+ float crest=pow(max(ridge,0.),2.4);
+ float mass=broad*.35+detail*.2+n*.45;
+ float mountain=.35+pow(mass,2.6)*38.+crest*2.;
+ // Keep an open valley along the flight path, with ranges on either side.
+ // Its slow bends are fixed in world space, so scrolling never reshapes land.
+ float valleyCenter=sin(p.y*.55)*3.;
+ float valley=smoothstep(5.,30.*uTerrainScale,abs(world.x-valleyCenter));
+ mountain=mix(.2+detail*.35,mountain,valley);
  float desert=.1+.12*sin(p.x*2.+p.y*.7)+landNoise(p*2.)*.1;
  float zone=landNoise(vec2(p.y*.25,13.));
  float h=mix(desert,hill,smoothstep(.23,.48,zone));h=mix(h,mountain,smoothstep(.56,.8,zone));

@@ -12,6 +12,8 @@ The new style places the camera above a continuous moving heightfield. Mixed lan
 
 Since 1.18.1, terrain is a continuous depth-tested mesh with rounded ridges. Stable shared noise cells prevent height jumps, and the grid softens at subpixel sizes instead of flashing at the horizon. World-anchored rows recycle outside the visible frustum. Quality controls the bounded mesh detail; positions are generated on the GPU without downloaded models or per-frame vertex uploads.
 
+Version 1.19.1 replaces the shallow mountain plateaus with layered elevated massifs and deeper valleys. A gently bending flight valley leaves room for the camera below the peaks. Mountains also appear in the mountain regions of Mixed landscape. Terrain height and Landform scale retain their existing controls; height 0 is flat. Hills and Desert retain their height functions. This changes only procedural vertex heights, with the same mesh budget and render passes.
+
 ## Blueprint City → Night skyline
 
 Keep Style at Blueprint city and choose City appearance → Night skyline. Buildings become opaque dark facades with scattered rectangular white windows, with subtle warm/cool variation and shaded sides. Nearby facades hide those behind them. Lit windows controls occupancy, from all dark to fully occupied. The original Blueprint appearance remains the default, including its growing wireframe buildings.
