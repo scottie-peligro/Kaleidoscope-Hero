@@ -75,3 +75,4 @@ html.dh-covered .dh-wipe{visibility:visible;transform:none;opacity:1;transition:
 .dh-wipe.dh-loading .dh-spinner{opacity:1}
 @keyframes dhspin{to{transform:rotate(360deg)}}
 @media (prefers-reduced-motion:reduce){.dh-wipe{transition-duration:.01s}}
+.dh-model-status{position:absolute;bottom:16px;left:16px;right:16px;z-index:2;text-align:center;font:12px/1.5 system-ui;color:#cbd5e1;pointer-events:none}.dh-model-status[hidden]{display:none}

@@ -1,8 +1,8 @@
 # Kaleidoscope Hero
 
-WordPress plugin for animated WebGL heroes and section backgrounds. Current version: **1.19.2**.
+WordPress plugin for animated WebGL heroes and section backgrounds. Current version: **1.20.0**.
 
-Includes 18 animated styles, saved presets, shortcodes, a native section block, slideshows, kaleidoscope/vortex controls, page transitions and floating particle sculptures. Long sections render a viewport-sized background within a bounded pixel budget. Version 1.14.0 adds reusable look/full-setting templates, preview/undo, and portable JSON import/export. Local particle explosions and cursor forces remain available. Morphing sculptures retain automatic, scroll and manual control. Stable long-page scrolling and filtered Particle Waves remain included.
+Includes 19 animated styles, saved presets, shortcodes, a native section block, slideshows, kaleidoscope/vortex controls, page transitions and floating particle sculptures. Long sections render a viewport-sized background within a bounded pixel budget. Version 1.14.0 adds reusable look/full-setting templates, preview/undo, and portable JSON import/export. Local particle explosions and cursor forces remain available. Morphing sculptures retain automatic, scroll and manual control. Stable long-page scrolling and filtered Particle Waves remain included.
 
 ## Install
 
@@ -58,3 +58,9 @@ Version 1.19.0 organizes the admin into Element, Appearance, Interaction, Text &
 Version 1.19.1 restores substantial mountain relief with layered ranges and a world-anchored flight valley. The continuous terrain mesh, stable grid filtering and existing settings remain supported, with no new runtime assets or geometry.
 
 Version 1.19.2 keeps Whole screen and Both kaleidoscope modes filled to the viewport corners. The capture wedge fits the viewport diagonal on wide, square and portrait screens, with matching particle and ribbon cursor coordinates. Automatic vortex alone still fades outside the frame without reflected duplicates. No new passes, assets or settings.
+
+## Custom 3D objects and SVG extrusion
+
+Version 1.20.0 adds self-contained GLB models and raised SVG logos, with Solid/Wireframe/Particles, model colors or palette, depth, bevel, rotation, floating, cursor/scroll forces and the existing compositor. The model importer and geometry renderer load only for visible custom-object scenes. Includes tiny original CC0 samples. See [CUSTOM-3D-OBJECTS.md](CUSTOM-3D-OBJECTS.md) for supported SVGs, GLB features, limits, uploads and portable templates.
+
+To rebuild the optional importer and renderer, run `npm ci --prefix tools/model-build` then `node tools/build-model-loader.cjs`. Shared engine generation remains `node tools/prepare-digital-structures.cjs` followed by the minification commands above. Build dependencies are pinned to Three.js 0.186.0 and esbuild 0.28.0; WordPress uses the prebuilt files without Node.

@@ -134,11 +134,11 @@ function makeRibbons(gl){
   var VERT = "#version 300 es\nin vec2 a;void main(){gl_Position=vec4(a,0.,1.);}";
   var PALETTES = {"Electric blue":[[0.12,0.42,1],[0.35,0.8,1]],"Cyan":[[0.08,0.8,1],[0.55,1,0.92]],"Violet":[[0.45,0.3,1],[0.9,0.45,1]],"Amber":[[1,0.5,0.12],[1,0.82,0.45]],"Fiber":[[1,0.14,0.08],[0.15,0.35,1]],"Neon":[[1,0.12,0.7],[0.25,0.35,1]],"Aurora":[[0.1,1,0.55],[0.55,0.25,1]],"Ember":[[1,0.25,0.05],[1,0.75,0.2]],"Ice":[[0.55,0.85,1],[0.9,0.97,1]],"Matrix":[[0.1,1,0.3],[0.6,1,0.5]],"Rose gold":[[1,0.5,0.55],[1,0.82,0.6]],"Ocean":[[0,0.55,1],[0,1,0.85]],"Vapor":[[1,0.4,0.85],[0.3,0.95,1]],"Mono":[[0.85,0.88,0.95],[1,1,1]],"Sunset":[[1,0.58,0.22],[1,0.8,0.5]],"Gold and blue":[[1,0.65,0.2],[0.2,0.6,1]]};
   var WORDS = [];
-  var STYLES = ["Digital grid","Fiber optics","Particle waves","Wireframe tunnel","Data rings","Voronoi crystal","Constellation","Fractal flythrough","Word rain","Digital fabric","Blueprint city","Dot matrix structures","LED globe","Digital disco ball","Floating shape","Morphing sculptures","Iridescent ribbons","Wireframe landscape"];
+  var STYLES = ["Digital grid","Fiber optics","Particle waves","Wireframe tunnel","Data rings","Voronoi crystal","Constellation","Fractal flythrough","Word rain","Digital fabric","Blueprint city","Dot matrix structures","LED globe","Digital disco ball","Floating shape","Morphing sculptures","Iridescent ribbons","Wireframe landscape","Custom 3D Object"];
   var TESSELLATIONS = ['Off','Squares','Mirrored squares','Triangles','Hexagons'];
   var BLEND_MODES = ['Off','Multiply','Screen','Overlay','Darken','Lighten','Color dodge','Color burn','Hard light','Soft light','Difference','Exclusion','Hue','Saturation','Color','Luminosity'];
-  var NUM = ["trailSpeed", "trailLength", "trailAmount", "terrainHeight", "terrainScale", "terrainGrid", "cityWindows", "ribbonCount", "ribbonWidth", "ribbonFold", "ribbonTwist", "ribbonTransparency", "ribbonIridescence", "ribbonEdge", "ribbonBend", "ribbonRadius", "ribbonScrollStrength", "ribbonScrollDistance", 'tessellationDensity', 'tessellationZoom', 'tessellationRotation', 'blendAmount', 'opacity', 'density', 'flow', 'glow', 'brightness', 'multicolor', 'warp', 'bloom', 'vortex', 'vortexRamp', 'lookRange', 'gradientAngle', 'autoVortexStrength', 'autoVortexSpeed', 'autoVortexRamp', 'shapeSize', 'shapeFloat', 'shapeLobes', 'shapeTwist', 'shapeExplode', 'shapeSensitivity', 'shapeRecovery', 'shapeScrollDistance', 'morphDuration', 'morphHold', 'morphProgress', 'morphStagger', 'morphScrollDistance', 'shapeMouseRadius', 'shapeMouseStrength', 'shapeMouseGlobal'];
-  var DEF = { trailSpeed: 1, trailLength: 1, trailAmount: .8, terrainType: "Mixed landscape", terrainHeight: 1, terrainScale: 1, terrainGrid: 1, terrainSun: true, cityAppearance: "Blueprint", cityWindows: .35, ribbonScroll: 'Twist', ribbonCount: 3, ribbonWidth: 1.1, ribbonFold: 1, ribbonTwist: 1.4, ribbonTransparency: 0.6, ribbonIridescence: 1, ribbonEdge: 1.4, ribbonBend: 1, ribbonRadius: 0.45, ribbonScrollStrength: 1, ribbonScrollDistance: 1.5, tessellation: 'Off', tessellationDensity: 3, tessellationZoom: 1, tessellationRotation: 0, blendMode: 'Off', blendSource: 'Blend color', blendColor: '#8866ff', blendAmount: 1, style: 'Digital grid', palette: 'Electric blue', ledPattern: 'Cycle', opacity: 1, density: 0.55, flow: 2.5, glow: 1, brightness: 1, multicolor: 0.35, kaleidoscope: 0, kaleidoscopeMode: 'Forward elements', randomize: false, randomInterval: 15, bgColor1: '#140a2e', bgColor2: '#000000', gradient: 'Radial', gradientAngle: 90, warp: 1, bloom: 1, vortex: 1, vortexRamp: 2, lookRange: 1, discoMouseControl: true, shape: 'Torus knot', shapeSeed: 17, shapeSize: 1, shapeFloat: 1, shapeLobes: 5, shapeTwist: 1.5, shapeTrigger: 'Mouse and scroll', shapeMouseEffect: 'Whole sculpture explosion', shapeMouseRadius: .18, shapeMouseStrength: 1, shapeMouseGlobal: 0, shapeExplode: 1, shapeSensitivity: 1, shapeRecovery: 1.2, shapeScrollDistance: .75, morphMode: 'Cycle shapes', morphFrom: 'Orb', morphTo: 'Torus knot', morphDuration: 4, morphHold: 1, morphProgress: 0, morphStagger: .15, morphScrollDistance: 1, morphExplode: false, autoVortex: false, autoVortexStrength: 0.5, autoVortexSpeed: 0.5, autoVortexDirection: 'Clockwise', autoVortexRamp: 2 };
+  var NUM = ["svgDepth","svgBevel","modelSize","modelFloat","modelRotationSpeed","modelRotateX","modelRotateY","modelRotateZ","trailSpeed", "trailLength", "trailAmount", "terrainHeight", "terrainScale", "terrainGrid", "cityWindows", "ribbonCount", "ribbonWidth", "ribbonFold", "ribbonTwist", "ribbonTransparency", "ribbonIridescence", "ribbonEdge", "ribbonBend", "ribbonRadius", "ribbonScrollStrength", "ribbonScrollDistance", 'tessellationDensity', 'tessellationZoom', 'tessellationRotation', 'blendAmount', 'opacity', 'density', 'flow', 'glow', 'brightness', 'multicolor', 'warp', 'bloom', 'vortex', 'vortexRamp', 'lookRange', 'gradientAngle', 'autoVortexStrength', 'autoVortexSpeed', 'autoVortexRamp', 'shapeSize', 'shapeFloat', 'shapeLobes', 'shapeTwist', 'shapeExplode', 'shapeSensitivity', 'shapeRecovery', 'shapeScrollDistance', 'morphDuration', 'morphHold', 'morphProgress', 'morphStagger', 'morphScrollDistance', 'shapeMouseRadius', 'shapeMouseStrength', 'shapeMouseGlobal'];
+  var DEF = { modelSource: "3D model (GLB)", svgUrl: "", svgDepth: .12, svgBevel: .005, modelUrl: "", modelDisplay: "Solid", modelColor: "Original materials", modelSize: 1, modelFloat: 1, modelRotation: "Automatic", modelAxis: "Y", modelRotationSpeed: .5, modelRotateX: 10, modelRotateY: 0, modelRotateZ: 0, trailSpeed: 1, trailLength: 1, trailAmount: .8, terrainType: "Mixed landscape", terrainHeight: 1, terrainScale: 1, terrainGrid: 1, terrainSun: true, cityAppearance: "Blueprint", cityWindows: .35, ribbonScroll: 'Twist', ribbonCount: 3, ribbonWidth: 1.1, ribbonFold: 1, ribbonTwist: 1.4, ribbonTransparency: 0.6, ribbonIridescence: 1, ribbonEdge: 1.4, ribbonBend: 1, ribbonRadius: 0.45, ribbonScrollStrength: 1, ribbonScrollDistance: 1.5, tessellation: 'Off', tessellationDensity: 3, tessellationZoom: 1, tessellationRotation: 0, blendMode: 'Off', blendSource: 'Blend color', blendColor: '#8866ff', blendAmount: 1, style: 'Digital grid', palette: 'Electric blue', ledPattern: 'Cycle', opacity: 1, density: 0.55, flow: 2.5, glow: 1, brightness: 1, multicolor: 0.35, kaleidoscope: 0, kaleidoscopeMode: 'Forward elements', randomize: false, randomInterval: 15, bgColor1: '#140a2e', bgColor2: '#000000', gradient: 'Radial', gradientAngle: 90, warp: 1, bloom: 1, vortex: 1, vortexRamp: 2, lookRange: 1, discoMouseControl: true, shape: 'Torus knot', shapeSeed: 17, shapeSize: 1, shapeFloat: 1, shapeLobes: 5, shapeTwist: 1.5, shapeTrigger: 'Mouse and scroll', shapeMouseEffect: 'Whole sculpture explosion', shapeMouseRadius: .18, shapeMouseStrength: 1, shapeMouseGlobal: 0, shapeExplode: 1, shapeSensitivity: 1, shapeRecovery: 1.2, shapeScrollDistance: .75, morphMode: 'Cycle shapes', morphFrom: 'Orb', morphTo: 'Torus knot', morphDuration: 4, morphHold: 1, morphProgress: 0, morphStagger: .15, morphScrollDistance: 1, morphExplode: false, autoVortex: false, autoVortexStrength: 0.5, autoVortexSpeed: 0.5, autoVortexDirection: 'Clockwise', autoVortexRamp: 2 };
   var motion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)');
   var connection = navigator.connection;
   function staticMode() { return !!((motion && motion.matches) || (connection && connection.saveData)); }
@@ -204,6 +204,10 @@ function makeRibbons(gl){
     o.autoVortexStrength = Math.max(0, Math.min(2.5, o.autoVortexStrength));
     o.autoVortexSpeed = Math.max(0, Math.min(3, o.autoVortexSpeed));
     o.autoVortexRamp = Math.max(0, Math.min(10, o.autoVortexRamp));
+    ['modelDisplay','modelColor','modelRotation','modelAxis'].forEach(function(key){var allowed={modelDisplay:['Solid','Wireframe','Particles'],modelColor:['Original materials','Palette'],modelRotation:['Automatic','Mouse','Off'],modelAxis:['X','Y','Z']};if(allowed[key].indexOf(o[key])<0)o[key]=DEF[key];});
+    var modelBounds={modelSize:[.3,2],modelFloat:[0,2],modelRotationSpeed:[-2,2],modelRotateX:[-180,180],modelRotateY:[-180,180],modelRotateZ:[-180,180]};Object.keys(modelBounds).forEach(function(key){o[key]=Math.max(modelBounds[key][0],Math.min(modelBounds[key][1],Number.isFinite(o[key])?o[key]:DEF[key]));});
+    if(['3D model (GLB)','SVG extrusion'].indexOf(o.modelSource)<0)o.modelSource=DEF.modelSource;
+    o.svgDepth=Math.max(0,Math.min(.5,o.svgDepth));o.svgBevel=Math.max(0,Math.min(.05,o.svgBevel));
     if (STYLES.indexOf(o.style) < 0) o.style = DEF.style;
     if (!PALETTES[o.palette]) o.palette = DEF.palette;
     return o;
@@ -304,7 +308,7 @@ function makeRibbons(gl){
     var p = function (a) { return a[Math.floor(Math.random() * a.length)]; };
     var rr = function (a, b) { return a + Math.random() * (b - a); };
     return Object.assign({}, this.base, {
-      style: p(STYLES), palette: p(Object.keys(PALETTES)),
+      style: p(STYLES.filter(function(style){return style!=='Custom 3D Object';})), palette: p(Object.keys(PALETTES)),
       kaleidoscope: Math.random() < 0.5 ? 0 : 2 + Math.floor(Math.random() * 11),
       density: rr(0.25, 1), multicolor: Math.random() < 0.4 ? 0 : rr(0.15, 1),
       glow: rr(0, 2.5), flow: rr(1, 8), brightness: rr(0.6, 2)
@@ -685,7 +689,18 @@ function makeRibbons(gl){
       gl.uniform1f(U.uVort, vort * spinDir); gl.uniform1f(U.uSpin, spin);
       gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
       gl.viewport(0, 0, c.width, c.height);
-      if (d.style === 'Wireframe landscape') {
+      if (d.style === 'Custom 3D Object') {
+        if (!self.model && !self.modelLoading && !self.modelLoadError) {
+          self.modelLoading=true;
+          if(!window.DHModelRenderLoading)window.DHModelRenderLoading=new Promise(function(resolve,reject){var script=document.createElement('script');script.src=window.DH_SCENES.modelRuntime;script.onload=function(){resolve(window.DHModelRuntime);};script.onerror=function(){script.remove();window.DHModelRenderLoading=null;reject(Error('3D renderer unavailable'));};document.head.appendChild(script);});
+          window.DHModelRenderLoading.then(function(runtime){if(!self.disposed)self.model=runtime.create(gl,el,{mapPointer:mapScenePointer,rng:rng});self.modelLoading=false;}).catch(function(e){self.modelLoadError=String(e);self.modelLoading=false;});
+        }
+        if(self.model){
+          particlePointer.tessMode=TESSELLATIONS.indexOf(self.tgt.tessellation);particlePointer.tessDensity=cur.tessellationDensity;particlePointer.tessZoom=cur.tessellationZoom;particlePointer.tessRotation=cur.tessellationRotation*Math.PI/180;
+          particlePointer.fullKal=d.kaleidoscopeMode==='Forward elements'?0:d.kaleidoscope;particlePointer.autoVortex=autoAmount*autoDirection+vort*spinDir;particlePointer.autoSpin=autoSpin+spin;particlePointer.time=t;
+          self.model.draw(cur,d,flowPos,c.width,c.height,look,tint,self.quality,shapeAmount,particlePointer,self.tgt);
+        }else{gl.clearColor(0,0,0,1);gl.clear(gl.COLOR_BUFFER_BIT);}
+      } else if (d.style === 'Wireframe landscape') {
         if (!self.terrain) { try { self.terrain=makeTerrain(gl); } catch(e) { self.error=String(e);self.pause();el.classList.add('dh-nogl');return; } }
         self.terrain.draw(cur,d,flowPos,c.width,c.height,look,tint,zoom.v,vort*spinDir,spin,self.quality);
       } else if (d.style === 'Iridescent ribbons') {
@@ -706,7 +721,7 @@ function makeRibbons(gl){
       gl.uniform1i(PU.uScene, 3); gl.uniform2f(PU.uRes, c.width, c.height); gl.uniform1f(PU.uWarp, zoom.v);
       gl.uniform1f(PU.uBloom, cur.bloom); gl.uniform3fv(PU.uTint2, tint[1]); gl.uniform1f(PU.uNight, 1); gl.uniform1f(PU.uTime, t);
       gl.uniform1f(PU.uFullKal, d.kaleidoscopeMode === 'Forward elements' ? 0 : d.kaleidoscope);
-      gl.uniform1f(PU.uAutoVort, autoAmount * autoDirection + (d.style === 'Iridescent ribbons' ? vort * spinDir : 0)); gl.uniform1f(PU.uAutoSpin, autoSpin + (d.style === 'Iridescent ribbons' ? spin : 0));
+      gl.uniform1f(PU.uAutoVort, autoAmount * autoDirection + ((d.style === 'Iridescent ribbons' || d.style === 'Custom 3D Object') ? vort * spinDir : 0)); gl.uniform1f(PU.uAutoSpin, autoSpin + ((d.style === 'Iridescent ribbons' || d.style === 'Custom 3D Object') ? spin : 0));
       gl.uniform1i(PU.uTessMode, TESSELLATIONS.indexOf(self.tgt.tessellation));
       gl.uniform1f(PU.uTessDensity, cur.tessellationDensity); gl.uniform1f(PU.uTessZoom, cur.tessellationZoom); gl.uniform1f(PU.uTessRotation, cur.tessellationRotation*Math.PI/180);
       gl.uniform1i(PU.uBlendSource, self.tgt.blendSource === 'Background gradient' ? 1 : 0);
@@ -729,6 +744,7 @@ function makeRibbons(gl){
       self.raf = requestAnimationFrame(loop);
     };
     this.releaseGPU = function () {
+      if (self.model) { self.model.dispose(); self.model=null; }
       if (self.floating) self.floating.dispose();
       if (self.ribbons) { self.ribbons.dispose(); self.ribbons=null; }
       if (self.terrain) { self.terrain.dispose(); self.terrain=null; }

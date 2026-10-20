@@ -1,0 +1,10 @@
+const fs=require('node:fs'),path=require('node:path');
+const root=path.resolve(__dirname,'../assets'),deps=fs.existsSync(path.resolve(__dirname,'model-build/node_modules'))?path.resolve(__dirname,'model-build/node_modules'):path.resolve(__dirname,'water-build/node_modules');
+const esbuild=require(path.join(deps,'esbuild'));
+esbuild.buildSync({entryPoints:[path.join(root,'dh-model-loader.entry.js')],bundle:true,minify:true,format:'iife',target:'es2020',define:{'import.meta.url':'document.currentScript.src'},nodePaths:[deps],outfile:path.join(root,'dh-model-loader.min.js'),legalComments:'eof'});
+const runtime='/*! Optional Custom 3D Object renderer. */\n(function(){"use strict";var MODEL_VERT='+JSON.stringify(fs.readFileSync(path.join(root,'dh-model.vert'),'utf8'))+',MODEL_FRAG='+JSON.stringify(fs.readFileSync(path.join(root,'dh-model.frag'),'utf8'))+';\n'+fs.readFileSync(path.join(root,'dh-model-runtime.js'),'utf8')+'\nwindow.DHModelRuntime={create:makeModel};})();';
+esbuild.buildSync({stdin:{contents:runtime,loader:'js'},minify:true,target:'es2020',outfile:path.join(root,'dh-model-runtime.min.js'),legalComments:'eof'});
+const draco=path.join(root,'model-draco');fs.mkdirSync(draco,{recursive:true});
+for(const file of ['draco_wasm_wrapper.js','draco_decoder.wasm','draco_decoder.js'])fs.copyFileSync(path.join(deps,'three/examples/jsm/libs/draco/gltf',file),path.join(draco,file));
+fs.copyFileSync(path.join(deps,'three/LICENSE'),path.join(root,'THREE-LICENSE.txt'));
+console.log('Optional importer:',fs.statSync(path.join(root,'dh-model-loader.min.js')).size,'bytes; renderer:',fs.statSync(path.join(root,'dh-model-runtime.min.js')).size,'bytes');

@@ -50,7 +50,7 @@ function dh_editor_controls( $keys, $settings, &$seen ) {
 				__( 'Light & patterns', 'kaleidoscope-hero' ) => array( 'Digital grid', 'Fiber optics', 'Constellation', 'Word rain', 'LED globe' ),
 				__( 'Surfaces & spaces', 'kaleidoscope-hero' ) => array( 'Particle waves', 'Digital fabric', 'Iridescent ribbons', 'Wireframe tunnel', 'Data rings', 'Voronoi crystal', 'Fractal flythrough', 'Wireframe landscape' ),
 				__( 'Cities & structures', 'kaleidoscope-hero' ) => array( 'Blueprint city', 'Dot matrix structures' ),
-				__( 'Sculptures & objects', 'kaleidoscope-hero' ) => array( 'Digital disco ball', 'Floating shape', 'Morphing sculptures' ),
+				__( 'Sculptures & objects', 'kaleidoscope-hero' ) => array( 'Digital disco ball', 'Floating shape', 'Morphing sculptures', 'Custom 3D Object' ),
 			);
 			$unlisted = array_diff( $field['options'], array_merge( ...array_values( $field['option_groups'] ) ) );
 			if ( $unlisted ) {
@@ -103,6 +103,7 @@ function dh_admin_editor( $presets, $edit, $is_new, $current ) {
 			<p class="dh-editor-notice" data-dh-still hidden><?php esc_html_e( 'Animation is off. You can still edit the background colors, text and placement.', 'kaleidoscope-hero' ); ?></p>
 			<?php
 			dh_editor_card( __( 'Speed & detail', 'kaleidoscope-hero' ), array( 'flow', 'density' ), $settings, $seen );
+			dh_editor_card( __( 'Custom 3D Object', 'kaleidoscope-hero' ), array_diff( array_keys( dh_schema()['Custom 3D Object'] ), array( 'modelRotateX', 'modelRotateY', 'modelRotateZ' ) ), $settings, $seen, 'Custom 3D Object' );
 			dh_editor_card( __( 'Tunnel particles', 'kaleidoscope-hero' ), array_keys( dh_schema()['Wireframe tunnel'] ), $settings, $seen, 'Wireframe tunnel' );
 			dh_editor_card( __( 'Landscape', 'kaleidoscope-hero' ), array_keys( dh_schema()['Wireframe landscape'] ), $settings, $seen, 'Wireframe landscape' );
 			dh_editor_card( __( 'City', 'kaleidoscope-hero' ), array_keys( dh_schema()['Blueprint city'] ), $settings, $seen, 'Blueprint city' );
@@ -111,6 +112,7 @@ function dh_admin_editor( $presets, $edit, $is_new, $current ) {
 			dh_editor_card( __( 'Morphing', 'kaleidoscope-hero' ), array( 'morphMode', 'morphFrom', 'morphTo', 'morphDuration', 'morphHold', 'morphProgress', 'morphStagger', 'morphScrollDistance' ), $settings, $seen, 'Morphing sculptures' );
 			dh_editor_card( __( 'Ribbon shape & material', 'kaleidoscope-hero' ), array( 'ribbonCount', 'ribbonWidth', 'ribbonFold', 'ribbonTwist', 'ribbonTransparency', 'ribbonIridescence', 'ribbonEdge' ), $settings, $seen, 'Iridescent ribbons' );
 			?>
+			<details class="dh-panel dh-editor-details" data-dh-animation data-dh-for="Custom 3D Object"><summary><?php esc_html_e( 'Starting orientation', 'kaleidoscope-hero' ); ?></summary><?php dh_editor_controls( array( 'modelRotateX', 'modelRotateY', 'modelRotateZ' ), $settings, $seen ); ?></details>
 			<details class="dh-panel dh-editor-details" data-dh-animation><summary><?php esc_html_e( 'Cycle through random looks', 'kaleidoscope-hero' ); ?><span data-dh-status="randomize"></span></summary><?php dh_editor_controls( array( 'randomize', 'randomInterval' ), $settings, $seen ); ?></details>
 		</section>
 		<section id="dh-page-appearance" class="dh-editor-page" role="tabpanel" aria-labelledby="dh-tab-appearance" tabindex="0">
@@ -126,7 +128,7 @@ function dh_admin_editor( $presets, $edit, $is_new, $current ) {
 			<h2><?php esc_html_e( 'Mouse, scroll & rotation', 'kaleidoscope-hero' ); ?></h2><p class="dh-editor-intro"><?php esc_html_e( 'Control how the animation responds. Set a strength to 0 to disable that response.', 'kaleidoscope-hero' ); ?></p>
 			<p class="dh-editor-notice" data-dh-still hidden><?php esc_html_e( 'Turn Animation on in Element to use these controls.', 'kaleidoscope-hero' ); ?></p>
 			<?php dh_editor_card( __( 'Mouse movement', 'kaleidoscope-hero' ), array( 'lookRange', 'discoMouseControl', 'warp' ), $settings, $seen ); ?>
-			<?php dh_editor_card( __( 'Particle interaction', 'kaleidoscope-hero' ), array( 'shapeMouseEffect', 'shapeMouseRadius', 'shapeMouseStrength', 'shapeMouseGlobal', 'morphExplode', 'shapeTrigger', 'shapeExplode', 'shapeSensitivity', 'shapeRecovery', 'shapeScrollDistance' ), $settings, $seen, 'Floating shape|Morphing sculptures' ); ?>
+			<?php dh_editor_card( __( 'Particle interaction', 'kaleidoscope-hero' ), array( 'shapeMouseEffect', 'shapeMouseRadius', 'shapeMouseStrength', 'shapeMouseGlobal', 'morphExplode', 'shapeTrigger', 'shapeExplode', 'shapeSensitivity', 'shapeRecovery', 'shapeScrollDistance' ), $settings, $seen, 'Floating shape|Morphing sculptures|Custom 3D Object' ); ?>
 			<?php dh_editor_card( __( 'Ribbon interaction', 'kaleidoscope-hero' ), array( 'ribbonBend', 'ribbonRadius', 'ribbonScroll', 'ribbonScrollStrength', 'ribbonScrollDistance' ), $settings, $seen, 'Iridescent ribbons' ); ?>
 			<details class="dh-panel dh-editor-details" data-dh-animation><summary><?php esc_html_e( 'Automatic vortex', 'kaleidoscope-hero' ); ?><span data-dh-status="autoVortex"></span></summary><?php dh_editor_controls( array( 'autoVortex', 'autoVortexStrength', 'autoVortexSpeed', 'autoVortexDirection', 'autoVortexRamp' ), $settings, $seen ); ?></details>
 			<details class="dh-panel dh-editor-details" data-dh-animation><summary><?php esc_html_e( 'Mouse-edge vortex', 'kaleidoscope-hero' ); ?><span data-dh-status="vortex"></span></summary><?php dh_editor_controls( array( 'vortex', 'vortexRamp' ), $settings, $seen ); ?></details>

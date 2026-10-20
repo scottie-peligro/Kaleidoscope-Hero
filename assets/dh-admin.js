@@ -94,6 +94,11 @@ jQuery(function ($) {
     row('gradientAngle',value('gradient')==='Linear');
     row('randomInterval',checked('randomize'));row('kaleidoscopeMode',Number(value('kaleidoscope'))>=2);
     row('cityWindows',value('cityAppearance')==='Night skyline');row('discoMouseControl',style==='Digital disco ball');
+    var custom=style==='Custom 3D Object',modelParticles=custom&&value('modelDisplay')==='Particles';
+    var svg=value('modelSource')==='SVG extrusion';row('modelUrl',!svg);['svgUrl','svgDepth','svgBevel'].forEach(function(key){row(key,svg);});
+    row('svgBevel',svg&&Number(value('svgDepth'))>0);
+    row('density',!custom||modelParticles);row('modelAxis',value('modelRotation')==='Automatic');row('modelRotationSpeed',value('modelRotation')==='Automatic');
+    form.find('[data-dh-for="Floating shape|Morphing sculptures|Custom 3D Object"]').toggle(enabled&&(style==='Floating shape'||style==='Morphing sculptures'||modelParticles));
     var blending=value('blendMode')!=='Off';['blendSource','blendAmount'].forEach(function(key){row(key,blending);});row('blendColor',blending&&value('blendSource')!=='Background gradient');
     ['tessellationDensity','tessellationZoom','tessellationRotation'].forEach(function(key){row(key,value('tessellation')!=='Off');});
     ['autoVortexStrength','autoVortexSpeed','autoVortexDirection','autoVortexRamp'].forEach(function(key){row(key,checked('autoVortex'));});row('vortexRamp',Number(value('vortex'))>0);
