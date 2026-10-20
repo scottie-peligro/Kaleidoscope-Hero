@@ -3,7 +3,7 @@ Contributors: nextlevelexchange
 Requires at least: 5.8
 Tested up to: 6.6
 Requires PHP: 7.4
-Stable tag: 1.21.0
+Stable tag: 1.22.0
 License: GPLv2 or later
 
 Animated WebGL hero backgrounds with admin presets, per-page shortcodes, slideshows and seamless black-wipe page transitions.
@@ -38,6 +38,8 @@ WebGL 2 (all current desktop and mobile browsers). Older browsers show a static 
 Wireframe tunnel now has independently timed racing particles and light tails, with speed, tail length and active-lane controls. New Wireframe landscape travels across mixed terrain, hills, mountains or desert, with height/scale/grid controls and an optional striped horizon sun. Blueprint city's optional Night skyline appearance uses dark opaque buildings and scattered white windows; Blueprint remains the default. All support presets, templates and shortcode overrides. See LANDSCAPES-AND-LIGHT-TRAILS.md.
 
 == Custom 3D objects and SVG extrusion ==
+
+1.22.0 adds Horizontal position (%) for custom 3D objects. Move GLB models or raised SVG logos left/right by section-width percentage in Solid, Wireframe or Particles views. Cursor forces follow the offset. Default 0 preserves centered placement; templates and modeloffsetx shortcode overrides are supported.
 
 1.21.0 adds selective random cycles: element type, element colors, all kaleidoscope settings, speeds, finish and gradient backgrounds. Choose Light, Dark or Both for background tones. Unchecked groups retain the saved look. Appearance > Kaleidoscope mirrors now offers Full screen or Centered framing for Whole screen / Both modes. New controls work with templates and shortcode overrides; existing saved settings are preserved.
 

@@ -9,6 +9,8 @@ Choose **Solid**, **Wireframe** or **Particles**. Original materials uses base c
 
 Object size and Floating motion affect all views. Rotation can be Automatic, Mouse or Off. Automatic rotation has an axis and reversible speed. Animation speed 0 freezes automatic rotation and floating; mouse rotation remains independent. Open Starting orientation for X/Y/Z tilt. Mouse follow strength is a separate camera-look control; use 0 to keep the camera steady while controlling rotation with the mouse.
 
+**Horizontal position (%)** moves the object left or right without changing its size or rotation center. 0 is centered, -25 places its center one quarter of the section width to the left, and +25 moves it one quarter to the right. The range is -50 to +50; large objects can extend beyond the section at the extremes. This works for GLB models and raised SVGs in Solid, Wireframe and Particles views, with local mouse forces following the displayed position. Deliberate kaleidoscope and tessellation effects still transform the positioned object. The default is 0, so existing presets keep their placement.
+
 In Particles view, use **Interaction → Particle interaction** for whole/local explosions, attraction, repulsion, nearby radius, global influence, mouse/scroll triggers and recovery. Density sets the sampled surface-particle count; it does not change the solid mesh. Particles are distributed over triangle surfaces so a low-poly model retains a recognizable silhouette. Kaleidoscope, tessellation, vortex, blending and bloom use the existing compositor. Scene Off, reduced motion and Save-Data retain the existing still-background behavior.
 
 ## Files and performance
@@ -22,6 +24,7 @@ Presets, shortcodes and look/full templates retain these controls. Templates inc
 ```text
 [kaleidoscope_hero preset="home" style="Custom 3D Object" modelurl="https://example.com/model.glb" modeldisplay="Wireframe"]
 [kaleidoscope_hero preset="home" style="Custom 3D Object" modelsource="SVG extrusion" svgdepth="0.15" svgbevel="0.005" modelrotation="Off"]
+[kaleidoscope_hero preset="home" modeloffsetx="25"]
 ```
 
 The included crystal and badge are original CC0 samples. Three.js and Meshoptimizer use MIT licenses; Draco uses Apache 2.0. License files are included with the assets. External models retain their own licenses.

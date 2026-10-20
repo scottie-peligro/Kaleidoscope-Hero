@@ -29,4 +29,9 @@ if(!source.includes('modelSource:')){
     o.svgDepth=Math.max(0,Math.min(.5,o.svgDepth));o.svgBevel=Math.max(0,Math.min(.05,o.svgBevel));
     if (STYLES.indexOf(o.style)`);
 }
+if(!source.includes('modelOffsetX: 0')){
+ source=source.replace('var DEF = {','var DEF = { modelOffsetX: 0,');
+ source=source.replace('var NUM = [','var NUM = ["modelOffsetX",');
+ source=source.replace('var modelBounds={','var modelBounds={modelOffsetX:[-50,50],');
+}
 fs.writeFileSync(file,source);

@@ -5,7 +5,7 @@ in vec4 aColor;
 in vec2 aUV;
 uniform mat3 uRotation,uUV;
 uniform vec2 uResolution;
-uniform float uTime,uSize,uFloat,uForward,uPoints,uPointSize,uExplosion,uStrength,uMouseForce,uMouseRadius,uMouseStrength,uMouseGlobal;
+uniform float uTime,uSize,uOffsetX,uFloat,uForward,uPoints,uPointSize,uExplosion,uStrength,uMouseForce,uMouseRadius,uMouseStrength,uMouseGlobal;
 uniform vec4 uPointer;
 out vec3 vNormal,vBary;
 out vec4 vColor;
@@ -19,7 +19,9 @@ void main(){
  float depth=max(1.,5.+p.z),aspect=uResolution.x/uResolution.y;
  vec2 screen=p.xy*2.4*min(1.,aspect)/depth;
  if(gl_InstanceID>0){float angle=float(gl_InstanceID-1)*6.2831853/max(2.,uForward);screen=turn(angle)*screen;if(gl_InstanceID%2==0)screen.x=-screen.x;}
- screen.x/=aspect;
+ // Offset in section-width percent, after rotation and projection so changing
+ // the position never changes the object's size or its rotation center.
+ screen.x=screen.x/aspect+uOffsetX*.02;
  if(uPoints>.5){
   vec2 screenAspect=uResolution/min(uResolution.x,uResolution.y),delta=(screen-uPointer.xy)*screenAspect*.5;
   float radius=max(.01,uMouseRadius),distance=length(delta),influence=mix(1.-smoothstep(0.,radius,distance),1.,uMouseGlobal);

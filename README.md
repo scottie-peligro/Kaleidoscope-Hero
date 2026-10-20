@@ -1,6 +1,6 @@
 # Kaleidoscope Hero
 
-WordPress plugin for animated WebGL heroes and section backgrounds. Current version: **1.21.0**.
+WordPress plugin for animated WebGL heroes and section backgrounds. Current version: **1.22.0**.
 
 Includes 19 animated styles, saved presets, shortcodes, a native section block, slideshows, kaleidoscope/vortex controls, page transitions and floating particle sculptures. Long sections render a viewport-sized background within a bounded pixel budget. Version 1.14.0 adds reusable look/full-setting templates, preview/undo, and portable JSON import/export. Local particle explosions and cursor forces remain available. Morphing sculptures retain automatic, scroll and manual control. Stable long-page scrolling and filtered Particle Waves remain included.
 
@@ -60,6 +60,8 @@ Version 1.19.1 restores substantial mountain relief with layered ranges and a wo
 Version 1.19.2 keeps Whole screen and Both kaleidoscope modes filled to the viewport corners. The capture wedge fits the viewport diagonal on wide, square and portrait screens, with matching particle and ribbon cursor coordinates. Automatic vortex alone still fades outside the frame without reflected duplicates. No new passes, assets or settings.
 
 ## Custom 3D objects and SVG extrusion
+
+Version 1.22.0 adds **Element → Custom 3D Object → Horizontal position (%)**. Move GLB models or raised SVG logos left/right by a percentage of the section width (-50 to +50, default 0). +25 moves the center to 75% of the section width; -25 moves it to 25%. Size and rotation center stay unchanged, and local particle interactions follow the positioned object. Solid/Wireframe/Particles, templates and the `modeloffsetx` shortcode override are supported. Run `node tools/check-model-position.cjs` for bounds, defaults, random preservation and smooth-update checks. No extra downloads or rendering passes.
 
 Version 1.21.0 adds checkboxes under **Element → Cycle through random looks** for element type, colors, all kaleidoscope settings, animation speeds, density/brightness/glow and gradient backgrounds. Random background tones can be Light, Dark or Both. Unchecked groups keep the saved preset values; randomizing speeds does not enable disabled effects. Backgrounds stay unchanged by default. Fixed disco and mesh elements keep their compact renderer when only their other settings are randomized.
 

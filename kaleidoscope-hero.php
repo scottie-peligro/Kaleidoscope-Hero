@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Kaleidoscope Hero
  * Description:       Animated WebGL hero backgrounds with admin presets, per-page shortcodes, slideshows and seamless black-wipe page transitions.
- * Version:           1.21.0
+ * Version:           1.22.0
  * Requires at least: 5.8
  * Requires PHP:      7.4
  * Author:            Next Level Exchange
@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'DH_VERSION', '1.21.0' );
+define( 'DH_VERSION', '1.22.0' );
 define( 'DH_URL', plugin_dir_url( __FILE__ ) );
 
 /* ------------------------------------------------------------------ *
@@ -73,6 +73,7 @@ function dh_schema() {
 			'modelDisplay' => array( 'label' => __( 'Display as', 'kaleidoscope-hero' ), 'type' => 'enum', 'options' => array( 'Solid', 'Wireframe', 'Particles' ), 'default' => 'Solid' ),
 			'modelColor' => array( 'label' => __( 'Model colors', 'kaleidoscope-hero' ), 'type' => 'enum', 'options' => array( 'Original materials', 'Palette' ), 'default' => 'Original materials', 'help' => __( 'Keep the file colors or recolor with the preset palette. Wireframe always uses the palette.', 'kaleidoscope-hero' ) ),
 			'modelSize' => $r( __( 'Object size', 'kaleidoscope-hero' ), 0.3, 2, 0.05, 1 ),
+			'modelOffsetX' => $r( __( 'Horizontal position (%)', 'kaleidoscope-hero' ), -50, 50, 1, 0, __( '0 centers the object. Negative values move left; positive values move right, as a percentage of the section width. Applies to all three display styles.', 'kaleidoscope-hero' ) ),
 			'modelFloat' => $r( __( 'Floating motion', 'kaleidoscope-hero' ), 0, 2, 0.05, 1 ),
 			'modelRotation' => array( 'label' => __( 'Rotation', 'kaleidoscope-hero' ), 'type' => 'enum', 'options' => array( 'Automatic', 'Mouse', 'Off' ), 'default' => 'Automatic' ),
 			'modelAxis' => array( 'label' => __( 'Rotation axis', 'kaleidoscope-hero' ), 'type' => 'enum', 'options' => array( 'X', 'Y', 'Z' ), 'default' => 'Y' ),
