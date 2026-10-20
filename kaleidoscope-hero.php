@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Kaleidoscope Hero
  * Description:       Animated WebGL hero backgrounds with admin presets, per-page shortcodes, slideshows and seamless black-wipe page transitions.
- * Version:           1.17.1
+ * Version:           1.18.0
  * Requires at least: 5.8
  * Requires PHP:      7.4
  * Author:            Next Level Exchange
@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'DH_VERSION', '1.17.1' );
+define( 'DH_VERSION', '1.18.0' );
 define( 'DH_URL', plugin_dir_url( __FILE__ ) );
 
 /* ------------------------------------------------------------------ *
@@ -22,7 +22,7 @@ define( 'DH_URL', plugin_dir_url( __FILE__ ) );
  * ------------------------------------------------------------------ */
 
 function dh_styles() {
-	return array( 'Digital grid', 'Fiber optics', 'Particle waves', 'Wireframe tunnel', 'Data rings', 'Voronoi crystal', 'Constellation', 'Fractal flythrough', 'Word rain', 'Digital fabric', 'Blueprint city', 'Dot matrix structures', 'LED globe', 'Digital disco ball', 'Floating shape', 'Morphing sculptures', 'Iridescent ribbons' );
+	return array( 'Digital grid', 'Fiber optics', 'Particle waves', 'Wireframe tunnel', 'Data rings', 'Voronoi crystal', 'Constellation', 'Fractal flythrough', 'Word rain', 'Digital fabric', 'Blueprint city', 'Dot matrix structures', 'LED globe', 'Digital disco ball', 'Floating shape', 'Morphing sculptures', 'Iridescent ribbons', 'Wireframe landscape' );
 }
 
 function dh_palettes() {
@@ -55,6 +55,22 @@ function dh_schema() {
 			'kaleidoscopeMode' => array( 'label' => __( 'Kaleidoscope mode', 'kaleidoscope-hero' ), 'type' => 'enum', 'options' => array( 'Forward elements', 'Whole screen', 'Both' ), 'default' => 'Forward elements', 'help' => __( 'Whole screen mirrors the complete animation, including nearby and outer elements. Forward elements keeps the existing scene effect. Both combines them. Set mirrors to 2 or more.', 'kaleidoscope-hero' ) ),
 			'randomize'      => array( 'label' => 'Randomize', 'type' => 'bool', 'default' => false, 'help' => 'Cycles through random styles, palettes and settings.' ),
 			'randomInterval' => $r( 'Random interval (seconds)', 5, 60, 1, 15 ),
+		),
+		'Wireframe tunnel' => array(
+			'trailSpeed' => $r( __( 'Particle speed', 'kaleidoscope-hero' ), 0.25, 3, 0.05, 1, __( 'Each wire has its own staggered timing and speed. Flow speed 0 pauses travel.', 'kaleidoscope-hero' ) ),
+			'trailLength' => $r( __( 'Light tail length', 'kaleidoscope-hero' ), 0.2, 3, 0.05, 1 ),
+			'trailAmount' => $r( __( 'Active particle lanes', 'kaleidoscope-hero' ), 0, 1, 0.05, 0.8, __( '0 leaves the wire grid without racing particles.', 'kaleidoscope-hero' ) ),
+		),
+		'Wireframe landscape' => array(
+			'terrainType' => array( 'label' => __( 'Landscape', 'kaleidoscope-hero' ), 'type' => 'enum', 'options' => array( 'Mixed landscape', 'Hills', 'Mountains', 'Desert' ), 'default' => 'Mixed landscape', 'help' => __( 'Mixed landscape travels through flat deserts, rolling hills and mountain ridges.', 'kaleidoscope-hero' ) ),
+			'terrainHeight' => $r( __( 'Terrain height', 'kaleidoscope-hero' ), 0, 2, 0.05, 1, __( '0 makes a flat grid.', 'kaleidoscope-hero' ) ),
+			'terrainScale' => $r( __( 'Landform scale', 'kaleidoscope-hero' ), 0.5, 3, 0.05, 1 ),
+			'terrainGrid' => $r( __( 'Grid spacing detail', 'kaleidoscope-hero' ), 0.5, 3, 0.05, 1 ),
+			'terrainSun' => array( 'label' => __( 'Retro horizon sun', 'kaleidoscope-hero' ), 'type' => 'bool', 'default' => true ),
+		),
+		'Blueprint city' => array(
+			'cityAppearance' => array( 'label' => __( 'City appearance', 'kaleidoscope-hero' ), 'type' => 'enum', 'options' => array( 'Blueprint', 'Night skyline' ), 'default' => 'Blueprint', 'help' => __( 'Night skyline uses dark solid facades and scattered white windows. Try Mono or Ice, low Bloom and a nearly black background.', 'kaleidoscope-hero' ) ),
+			'cityWindows' => $r( __( 'Lit windows', 'kaleidoscope-hero' ), 0, 1, 0.05, 0.35 ),
 		),
 		'Iridescent ribbons' => array(
 			'ribbonCount' => $r( __( 'Ribbon count', 'kaleidoscope-hero' ), 1, 5, 1, 3 ),

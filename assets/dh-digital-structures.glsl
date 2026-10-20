@@ -55,10 +55,25 @@ vec2 dsDotShape(vec3 ro,vec3 rd,vec3 size,int kind){
  if(kind==3)for(int face=0;face<8;face++){vec3 normal=vec3((face&1)==0?-1.:1.,(face&2)==0?-1.:1.,(face&4)==0?-1.:1.)/size;interval=dsClipPlane(interval,ro,rd,normal,1.45);}
  return interval;
 }
+uniform float uCityNight,uCityWindows;
 vec3 dsBuildingFace(vec3 q,vec3 size,float t,float seed,float progress){
  float aa=.006+t*.0015;vec3 face=abs(abs(q)-size);float outline=max(min(face.x,face.y),min(max(face.x,face.y),face.z));
  float edge=1.-smoothstep(.014,.014+aa,outline);
  vec2 uv=face.z<face.x?q.xy:q.zy;uv.y+=size.y;
+ if(uCityNight>.5){
+  // Opaque facades and independently occupied windows, not transparent cages.
+  vec2 cell=uv*vec2(2.1,2.7),id=floor(cell),local=abs(fract(cell)-.5),pixel=max(fwidth(cell),vec2(.001));
+  float occupied=step(1.-uCityWindows,hash(dot(id,vec2(7.3,13.1))+seed*117.));
+  vec2 windowMask=1.-smoothstep(vec2(.24,.2)-pixel*.5,vec2(.24,.2)+pixel*.5,local);
+  float resolved=1.-smoothstep(.4,1.2,max(pixel.x,pixel.y));
+  float windows=mix(uCityWindows*.192,windowMask.x*windowMask.y*occupied,resolved);
+  float roof=1.-smoothstep(.01,.01+aa,face.y);windows*=1.-roof;
+  float shade=face.z<face.x?.65:1.;
+  float variation=hash(dot(id,vec2(19.7,3.1))+seed*71.);
+  vec3 white=mix(vec3(.64,.78,1.),vec3(1.,.91,.72),variation);
+  vec3 tint=mix(uTint,uTint2,seed);
+  return tint*(.004*shade+edge*.018)+mix(white,tint,.13)*windows*(1.1+variation)*shade;
+ }
  float floorLine=abs(fract(uv.y*1.4)-.5)/1.4,windowLine=abs(fract(uv.x*1.5)-.5)/1.5;
  float grid=(1.-smoothstep(.007,.007+aa,min(floorLine,windowLine)))*.3;
  float lit=step(.84,hash(dot(floor(uv*vec2(1.5,1.4)),vec2(7.3,13.1))+seed));
@@ -68,13 +83,14 @@ vec3 dsBuildingFace(vec3 q,vec3 size,float t,float seed,float progress){
  return color*(.012+grid+edge*.95+fill*.3+scan*.8)+mix(color,vec3(1.),.7)*edge*step(.8,seed)*.35;
 }
 vec3 dsCity(vec3 ro,vec3 rd,bool dots){
- vec3 acc=vec3(0.);float offset=uFlow*1.05,first=floor((ro.z+offset)/6.5);
+ vec3 acc=vec3(0.),nearestColor=vec3(0.);float nearest=1e5;bool night=!dots&&uCityNight>.5;
+ float offset=uFlow*1.05,first=floor((ro.z+offset)/6.5);
  for(int row=0;row<int(7.+uDensity*3.);row++)for(int column=0;column<8;column++){
-  if(!dots&&column>=4)break;
-  float r=dots?float(row):first+float(row),side=column<2?-1.:1.,lane=mod(float(column),2.);vec3 h=hash3(vec3(r,float(column),39.));if(h.x>.4+uDensity*.6)continue;
+  if(!dots&&!night&&column>=4)break;
+  float r=dots?float(row):first+float(row),side=night?(column<4?-1.:1.):(column<2?-1.:1.),lane=mod(float(column),night?4.:2.);vec3 h=hash3(vec3(r,float(column),39.));if(h.x>.4+uDensity*.6)continue;
   vec3 motion=hash3(vec3(r,float(column),91.));
   float z=dots?.5+mod((r+.5)*6.5+motion.z*20.-uFlow*(.45+motion.x*1.9),65.):(r+.5)*6.5-offset;if(z<.3)continue;
-  float progress=1.-smoothstep(9.,54.,z),fullHeight=2.+pow(h.y,1.2)*10.,height=fullHeight*(.035+.965*progress);
+  float progress=night?1.:1.-smoothstep(9.,54.,z),fullHeight=2.+pow(h.y,1.2)*10.,height=fullHeight*(.035+.965*progress);
   vec3 size=vec3(.85+h.z*.6,height*.5,1.4+h.x*.6),center=vec3(side*(2.7+lane*3.8),height*.5-.45,z);
   if(dots){float angle=(float(column)+.5)*.785398,rad=3.2+h.x*1.2;center=vec3(cos(angle)*rad,.5+sin(angle)*rad,z);size=vec3(.45+h.x*1.1,.55+h.y*1.4,.8+h.z*1.4);}
   vec3 localOrigin=ro-center,localRay=rd;int kind=0;
@@ -101,10 +117,14 @@ vec3 dsCity(vec3 ro,vec3 rd,bool dots){
    float route=step(.82,hash(floor(cell.y)*7.+r))*exp(-abs(fract(cell.x*.1-uFlow*.3)-.5)*18.);
    acc+=color*(dotMask*(.7+.7*pulse)+route*.12*uGlow)*shade*exp(-t*.035);
   }else{
-   acc+=dsBuildingFace(q,size,t,h.z,progress)*exp(-t*.033);
-   vec3 back=ro+rd*interval.y-center;acc+=dsBuildingFace(back,size,interval.y,h.z,progress)*exp(-interval.y*.035)*.18;
+   if(night){if(t<nearest){nearest=t;nearestColor=dsBuildingFace(q,size,t,h.z,progress)*exp(-t*.024);}}
+   else{
+    acc+=dsBuildingFace(q,size,t,h.z,progress)*exp(-t*.033);
+    vec3 back=ro+rd*interval.y-center;acc+=dsBuildingFace(back,size,interval.y,h.z,progress)*exp(-interval.y*.035)*.18;
+   }
   }
  }
+ if(night)return nearestColor;
  if(!dots&&rd.y<-.001){float t=(-.45-ro.y)/rd.y;if(t>0.&&t<80.){vec3 p=ro+rd*t;p.z+=offset;vec2 f=abs(fract(p.xz)-.5);float grid=1.-smoothstep(.012,.012+t*.001,min(f.x,f.y));acc+=uTint*grid*.13*exp(-t*.045);}}
  return acc;
 }

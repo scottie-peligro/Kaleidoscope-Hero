@@ -4,6 +4,10 @@ Version 1.2.0 also supports [backgrounds behind normal section content](SECTION-
 
 The foreground content is server-rendered. Animation starts only after an intersection notification and an animation frame. Unsupported WebGL, reduced-motion, and Save-Data preferences use the CSS gradient and retain the text and navigation.
 
+## Terrain, tunnel particles and night skyline (1.18.0)
+
+Fixed Wireframe landscape scenes use the compact mesh bundle and a separate small heightfield shader. Mixed/random shows create that shader on demand, so the heightfield ray loop is not compiled into every other element. The bounded ray search and refined intersections render a continuous world-space grid; projected footprint filtering reduces distant grid shimmer. There are no model/image/noise downloads for terrain, and no extra scene render target or compositor pass. Particle runners are analytic positions/tails on the existing tunnel grid, with seeded phases and velocities. Night skyline uses nearest-building occlusion, filtered windows and existing procedural boxes. Existing quality, pixel, long-section viewport, reduced-motion and visibility limits remain in force. Terrain does add per-pixel GPU work; performance varies by device. See LANDSCAPES-AND-LIGHT-TRAILS.md.
+
 ## Vortex frame edges (1.17.1)
 
 The compositor leaves transformed UVs unwrapped after vortex/whole-screen kaleidoscope instead of mirror-repeating the entire source frame. Outside samples fade to the existing gradient; bloom and warp taps use the same coverage guard to avoid reflected copies or clamped edge bands. A broad edge fade ramps with the turning amount, preventing a hard rotated rectangle. Intentional tessellation cells and angular kaleidoscope folding stay in their own transforms. Particle/ribbon cursor mapping now returns the same raw source coordinates, including positions outside the frame. No extra images, targets or passes. Off/no whole-screen transforms retain exact previous pixels.

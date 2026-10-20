@@ -55,6 +55,8 @@ jQuery(function ($) {
     ['blendSource','blendAmount'].forEach(function(key){form.find('#dh-'+key).closest('.dh-field').toggle(blending);});
     form.find('#dh-blendColor').closest('.dh-field').toggle(blending && form.find('#dh-blendSource').val() !== 'Background gradient');
     form.find('[data-dh-group="Tessellation"]').toggle(enabled);
+    ['Wireframe tunnel','Wireframe landscape','Blueprint city'].forEach(function(group){form.find('[data-dh-group="'+group+'"]').toggle(enabled && form.find('#dh-style').val() === group);});
+    form.find('#dh-cityWindows').closest('.dh-field').toggle(form.find('#dh-cityAppearance').val() === 'Night skyline');
     form.find('[data-dh-group="Iridescent ribbons"]').toggle(enabled && form.find('#dh-style').val() === 'Iridescent ribbons');
     ['ribbonScrollStrength','ribbonScrollDistance'].forEach(function(key){form.find('#dh-'+key).closest('.dh-field').toggle(form.find('#dh-ribbonScroll').val() !== 'Off');});
     ['tessellationDensity','tessellationZoom','tessellationRotation'].forEach(function(key){form.find('#dh-'+key).closest('.dh-field').toggle(form.find('#dh-tessellation').val() !== 'Off');});

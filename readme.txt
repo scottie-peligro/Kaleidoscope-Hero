@@ -3,7 +3,7 @@ Contributors: nextlevelexchange
 Requires at least: 5.8
 Tested up to: 6.6
 Requires PHP: 7.4
-Stable tag: 1.17.1
+Stable tag: 1.18.0
 License: GPLv2 or later
 
 Animated WebGL hero backgrounds with admin presets, per-page shortcodes, slideshows and seamless black-wipe page transitions.
@@ -28,6 +28,10 @@ Hero links use the black wipe automatically. Add the class dh-transition to any 
 == Requirements ==
 
 WebGL 2 (all current desktop and mobile browsers). Older browsers show a static gradient in the background colours.
+
+== Landscapes and light trails ==
+
+Wireframe tunnel now has independently timed racing particles and light tails, with speed, tail length and active-lane controls. New Wireframe landscape travels across mixed terrain, hills, mountains or desert, with height/scale/grid controls and an optional striped horizon sun. Blueprint city's optional Night skyline appearance uses dark opaque buildings and scattered white windows; Blueprint remains the default. All support presets, templates and shortcode overrides. See LANDSCAPES-AND-LIGHT-TRAILS.md.
 
 == Settings editor ==
 
