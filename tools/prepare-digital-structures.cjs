@@ -13,6 +13,10 @@ source=source.replace(match[0],'var FRAG = '+JSON.stringify(shader)+';');
 // call makes some WebGL drivers expand every structure twice during compilation.
 shader=shader.replace('  col=scene(ro,rs,75.);\n  if(kal>.5){','  col=vec3(0.);\n  for(int pass=0;pass<int(1.+kal);pass++){\n    vec3 ray=rs;\n    if(pass==1){').replace('    col+=scene(ro,rk,75.);\n  }','    ray=rk;\n    }\n    col+=scene(ro,ray,75.);\n  }');
 source=source.replace(/var FRAG = ("(?:[^"\\]|\\.)*");/,'var FRAG = '+JSON.stringify(shader)+';');
+// Preserve the existing general-effect shader byte for byte, including its
+// separator, so a terrain-only update does not invalidate other GPU caches.
+shader=shader.replace('\n// DH_STRUCTURES_END','\n\n// DH_STRUCTURES_END');
+source=source.replace(/var FRAG = ("(?:[^"\\]|\\.)*");/,'var FRAG = '+JSON.stringify(shader)+';');
 // Terrain is continuous geometry, with its own small vertex/fragment programs.
 const terrainVertex=fs.readFileSync(path.join(assets,'dh-terrain.vert'),'utf8').replace('// DH_TERRAIN_HEIGHT',fs.readFileSync(path.join(assets,'dh-terrain.glsl'),'utf8'));
 source=source.replace(/  \/\/ DH_TERRAIN_BEGIN[\s\S]*?  \/\/ DH_TERRAIN_END\r?\n/,'');
