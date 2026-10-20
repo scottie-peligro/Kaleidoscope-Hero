@@ -559,7 +559,7 @@
       gl.viewport(0, 0, c.width, c.height);
       if (d.style === 'Wireframe landscape') {
         if (!self.terrain) { try { self.terrain=makeTerrain(gl); } catch(e) { self.error=String(e);self.pause();el.classList.add('dh-nogl');return; } }
-        self.terrain.draw(cur,d,flowPos,c.width,c.height,look,tint,zoom.v,vort*spinDir,spin);
+        self.terrain.draw(cur,d,flowPos,c.width,c.height,look,tint,zoom.v,vort*spinDir,spin,self.quality);
       } else if (d.style === 'Iridescent ribbons') {
         if (!self.ribbons) { try { self.ribbons = makeRibbons(gl); } catch (e) { self.error=String(e);self.pause();el.classList.add('dh-nogl');return; } }
         particlePointer.tessMode=TESSELLATIONS.indexOf(self.tgt.tessellation);particlePointer.tessDensity=cur.tessellationDensity;particlePointer.tessZoom=cur.tessellationZoom;particlePointer.tessRotation=cur.tessellationRotation*Math.PI/180;

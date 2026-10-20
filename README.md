@@ -1,6 +1,6 @@
 # Kaleidoscope Hero
 
-WordPress plugin for animated WebGL heroes and section backgrounds. Current version: **1.18.0**.
+WordPress plugin for animated WebGL heroes and section backgrounds. Current version: **1.18.1**.
 
 Includes 18 animated styles, saved presets, shortcodes, a native section block, slideshows, kaleidoscope/vortex controls, page transitions and floating particle sculptures. Long sections render a viewport-sized background within a bounded pixel budget. Version 1.14.0 adds reusable look/full-setting templates, preview/undo, and portable JSON import/export. Local particle explosions and cursor forces remain available. Morphing sculptures retain automatic, scroll and manual control. Stable long-page scrolling and filtered Particle Waves remain included.
 
@@ -48,3 +48,5 @@ Version 1.17.1 removes unintended frame reflections during vortex rotation. Artw
 ## Landscapes and light trails
 
 Version 1.18.0 adds moving wireframe terrain with mixed landscapes, hills, mountains and desert, plus an optional striped sun. Wireframe tunnel now has independently timed racing particles with configurable light tails. Blueprint City offers Night skyline: opaque dark buildings and scattered white windows. Existing blueprint appearance is preserved. Controls work in portable templates and shortcodes. See [Landscapes and light trails](LANDSCAPES-AND-LIGHT-TRAILS.md).
+
+Version 1.18.1 replaces terrain ray tracing with a continuous depth-tested GPU mesh, rounds the mountain ridges and fixes shared height-cell discontinuities. Soft footprint filtering reduces grid shimmer; world-anchored mesh rows recycle continuously. Existing settings are preserved. See the performance notes for bounded geometry and buffer costs.
