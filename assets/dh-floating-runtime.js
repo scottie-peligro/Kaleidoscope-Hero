@@ -17,7 +17,7 @@ function mapScenePointer(pointer,width,height){
     // Match the compositor's unwrapped sample; empty edges must not mirror input.
     var aspect=width/height,px=x*.5*aspect,py=y*.5,radius=Math.hypot(px,py),angle=spin+vortex*Math.abs(vortex)*3.2*Math.exp(-radius*2.2),cs=Math.cos(angle),sn=Math.sin(angle);
     var rotated=px*cs+py*sn;py=-px*sn+py*cs;px=rotated;
-    if(kal>1.5){var sector=Math.PI*2/Math.floor(kal);angle=((Math.atan2(py,px)+(pointer.time||0)*.04)%sector+sector)%sector;angle=Math.PI/2-sector*.5+Math.abs(angle-sector*.5);px=radius*Math.cos(angle);py=radius*Math.sin(angle);}
+    if(kal>1.5){var sector=Math.PI*2/Math.floor(kal);angle=((Math.atan2(py,px)+(pointer.time||0)*.04)%sector+sector)%sector;angle=Math.PI/2-sector*.5+Math.abs(angle-sector*.5);var reach=Math.min(Math.max(.001,.5-2/width)*aspect/Math.max(Math.sin(sector*.5),.0001),Math.max(.001,.5-2/height)),fit=Math.min(1,reach/(.5*Math.hypot(aspect,1)));px=radius*fit*Math.cos(angle);py=radius*fit*Math.sin(angle);}
     return [px/aspect*2,py*2];
   }
 // Point geometry stays on the GPU. No mesh downloads or per-frame particle uploads.

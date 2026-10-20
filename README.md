@@ -1,6 +1,6 @@
 # Kaleidoscope Hero
 
-WordPress plugin for animated WebGL heroes and section backgrounds. Current version: **1.19.1**.
+WordPress plugin for animated WebGL heroes and section backgrounds. Current version: **1.19.2**.
 
 Includes 18 animated styles, saved presets, shortcodes, a native section block, slideshows, kaleidoscope/vortex controls, page transitions and floating particle sculptures. Long sections render a viewport-sized background within a bounded pixel budget. Version 1.14.0 adds reusable look/full-setting templates, preview/undo, and portable JSON import/export. Local particle explosions and cursor forces remain available. Morphing sculptures retain automatic, scroll and manual control. Stable long-page scrolling and filtered Particle Waves remain included.
 
@@ -56,3 +56,5 @@ Version 1.18.1 replaces terrain ray tracing with a continuous depth-tested GPU m
 Version 1.19.0 organizes the admin into Element, Appearance, Interaction, Text & links, and Placement. Element choices are grouped; only relevant controls appear. Optional effects and templates use expandable sections, with active-state summaries. The preview is collapsible and starts closed on phones. Keyboard tabs, validation reveal, unsaved-state feedback and the fixed Save footer keep editing manageable. All settings and saved looks are preserved; no frontend renderer assets were changed. See [Admin settings](ADMIN-SETTINGS.md).
 
 Version 1.19.1 restores substantial mountain relief with layered ranges and a world-anchored flight valley. The continuous terrain mesh, stable grid filtering and existing settings remain supported, with no new runtime assets or geometry.
+
+Version 1.19.2 keeps Whole screen and Both kaleidoscope modes filled to the viewport corners. The capture wedge fits the viewport diagonal on wide, square and portrait screens, with matching particle and ribbon cursor coordinates. Automatic vortex alone still fades outside the frame without reflected duplicates. No new passes, assets or settings.
