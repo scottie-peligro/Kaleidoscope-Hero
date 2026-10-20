@@ -1,6 +1,6 @@
 # Kaleidoscope Hero
 
-WordPress plugin for animated WebGL heroes and section backgrounds. Current version: **1.20.0**.
+WordPress plugin for animated WebGL heroes and section backgrounds. Current version: **1.21.0**.
 
 Includes 19 animated styles, saved presets, shortcodes, a native section block, slideshows, kaleidoscope/vortex controls, page transitions and floating particle sculptures. Long sections render a viewport-sized background within a bounded pixel budget. Version 1.14.0 adds reusable look/full-setting templates, preview/undo, and portable JSON import/export. Local particle explosions and cursor forces remain available. Morphing sculptures retain automatic, scroll and manual control. Stable long-page scrolling and filtered Particle Waves remain included.
 
@@ -60,6 +60,10 @@ Version 1.19.1 restores substantial mountain relief with layered ranges and a wo
 Version 1.19.2 keeps Whole screen and Both kaleidoscope modes filled to the viewport corners. The capture wedge fits the viewport diagonal on wide, square and portrait screens, with matching particle and ribbon cursor coordinates. Automatic vortex alone still fades outside the frame without reflected duplicates. No new passes, assets or settings.
 
 ## Custom 3D objects and SVG extrusion
+
+Version 1.21.0 adds checkboxes under **Element → Cycle through random looks** for element type, colors, all kaleidoscope settings, animation speeds, density/brightness/glow and gradient backgrounds. Random background tones can be Light, Dark or Both. Unchecked groups keep the saved preset values; randomizing speeds does not enable disabled effects. Backgrounds stay unchanged by default. Fixed disco and mesh elements keep their compact renderer when only their other settings are randomized.
+
+Under **Appearance → Kaleidoscope mirrors**, Whole screen and Both modes now support **Full screen** (default) or **Centered** framing. Centered restores the original circular fade; Full screen retains edge-to-edge coverage. Cursor forces follow both framings. All new fields work in portable templates and lowercase shortcode overrides. Run `node tools/check-random-controls.cjs` for the random-control checks.
 
 Version 1.20.0 adds self-contained GLB models and raised SVG logos, with Solid/Wireframe/Particles, model colors or palette, depth, bevel, rotation, floating, cursor/scroll forces and the existing compositor. The model importer and geometry renderer load only for visible custom-object scenes. Includes tiny original CC0 samples. See [CUSTOM-3D-OBJECTS.md](CUSTOM-3D-OBJECTS.md) for supported SVGs, GLB features, limits, uploads and portable templates.
 

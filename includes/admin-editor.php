@@ -33,6 +33,9 @@ function dh_editor_controls( $keys, $settings, &$seen ) {
 			continue;
 		}
 		$field = $fields[ $key ];
+		if ( 'bool' === $field['type'] && 0 === strpos( $key, 'random' ) ) {
+			$field['inline_checkbox'] = true;
+		}
 		if ( isset( $labels[ $key ] ) ) {
 			$field['label'] = $labels[ $key ];
 		}
@@ -99,7 +102,7 @@ function dh_admin_editor( $presets, $edit, $is_new, $current ) {
 		<section id="dh-page-element" class="dh-editor-page" role="tabpanel" aria-labelledby="dh-tab-element" tabindex="0">
 			<h2><?php esc_html_e( 'Choose your element', 'kaleidoscope-hero' ); ?></h2><p class="dh-editor-intro"><?php esc_html_e( 'Choose a look, then adjust its speed and detail. Only controls for this element appear below.', 'kaleidoscope-hero' ); ?></p>
 			<?php dh_editor_card( __( 'Animation', 'kaleidoscope-hero' ), array( 'scene', 'style' ), $settings, $seen, '', false ); ?>
-			<p class="dh-editor-notice" id="dh-random-note" hidden><?php esc_html_e( 'Random looks are on. Turn off Cycle through random looks below to preview one element and palette.', 'kaleidoscope-hero' ); ?></p>
+			<p class="dh-editor-notice" id="dh-random-note" hidden><?php esc_html_e( 'Random looks are on. Choose what changes in Cycle through random looks below. Unchecked groups keep your preset settings.', 'kaleidoscope-hero' ); ?></p>
 			<p class="dh-editor-notice" data-dh-still hidden><?php esc_html_e( 'Animation is off. You can still edit the background colors, text and placement.', 'kaleidoscope-hero' ); ?></p>
 			<?php
 			dh_editor_card( __( 'Speed & detail', 'kaleidoscope-hero' ), array( 'flow', 'density' ), $settings, $seen );
@@ -113,14 +116,14 @@ function dh_admin_editor( $presets, $edit, $is_new, $current ) {
 			dh_editor_card( __( 'Ribbon shape & material', 'kaleidoscope-hero' ), array( 'ribbonCount', 'ribbonWidth', 'ribbonFold', 'ribbonTwist', 'ribbonTransparency', 'ribbonIridescence', 'ribbonEdge' ), $settings, $seen, 'Iridescent ribbons' );
 			?>
 			<details class="dh-panel dh-editor-details" data-dh-animation data-dh-for="Custom 3D Object"><summary><?php esc_html_e( 'Starting orientation', 'kaleidoscope-hero' ); ?></summary><?php dh_editor_controls( array( 'modelRotateX', 'modelRotateY', 'modelRotateZ' ), $settings, $seen ); ?></details>
-			<details class="dh-panel dh-editor-details" data-dh-animation><summary><?php esc_html_e( 'Cycle through random looks', 'kaleidoscope-hero' ); ?><span data-dh-status="randomize"></span></summary><?php dh_editor_controls( array( 'randomize', 'randomInterval' ), $settings, $seen ); ?></details>
+			<details class="dh-panel dh-editor-details" data-dh-animation><summary><?php esc_html_e( 'Cycle through random looks', 'kaleidoscope-hero' ); ?><span data-dh-status="randomize"></span></summary><?php dh_editor_controls( array( 'randomize', 'randomInterval', 'randomStyle', 'randomPalette', 'randomKaleidoscope', 'randomSpeeds', 'randomFinish', 'randomBackground', 'randomBackgroundTone' ), $settings, $seen ); ?></details>
 		</section>
 		<section id="dh-page-appearance" class="dh-editor-page" role="tabpanel" aria-labelledby="dh-tab-appearance" tabindex="0">
 			<h2><?php esc_html_e( 'Colors & finish', 'kaleidoscope-hero' ); ?></h2><p class="dh-editor-intro"><?php esc_html_e( 'Set the element colors and background first. Open the optional effects when you need them.', 'kaleidoscope-hero' ); ?></p>
 			<?php dh_editor_card( __( 'Element colors', 'kaleidoscope-hero' ), array( 'palette', 'opacity', 'brightness', 'multicolor' ), $settings, $seen ); ?>
 			<?php dh_editor_card( __( 'Background', 'kaleidoscope-hero' ), array_keys( dh_schema()['Background'] ), $settings, $seen, '', false ); ?>
 			<details class="dh-panel dh-editor-details" data-dh-animation><summary><?php esc_html_e( 'Glow & bloom', 'kaleidoscope-hero' ); ?></summary><?php dh_editor_controls( array( 'glow', 'bloom' ), $settings, $seen ); ?></details>
-			<details class="dh-panel dh-editor-details" data-dh-animation><summary><?php esc_html_e( 'Kaleidoscope mirrors', 'kaleidoscope-hero' ); ?><span data-dh-status="mirrors"></span></summary><?php dh_editor_controls( array( 'kaleidoscope', 'kaleidoscopeMode' ), $settings, $seen ); ?></details>
+			<details class="dh-panel dh-editor-details" data-dh-animation><summary><?php esc_html_e( 'Kaleidoscope mirrors', 'kaleidoscope-hero' ); ?><span data-dh-status="mirrors"></span></summary><?php dh_editor_controls( array( 'kaleidoscope', 'kaleidoscopeMode', 'kaleidoscopeFraming' ), $settings, $seen ); ?></details>
 			<details class="dh-panel dh-editor-details" data-dh-animation><summary><?php esc_html_e( 'Tessellation / tiling', 'kaleidoscope-hero' ); ?><span data-dh-status="tessellation"></span></summary><?php dh_editor_controls( array_keys( dh_schema()['Tessellation'] ), $settings, $seen ); ?></details>
 			<details class="dh-panel dh-editor-details" data-dh-animation><summary><?php esc_html_e( 'Color blending', 'kaleidoscope-hero' ); ?><span data-dh-status="blendMode"></span></summary><?php dh_editor_controls( array_keys( dh_schema()['Color blending'] ), $settings, $seen ); ?></details>
 		</section>

@@ -92,7 +92,10 @@ jQuery(function ($) {
     form.find('#dh-background-content-note').prop('hidden',!background);
     row('height',!background);row('darkness',background);
     row('gradientAngle',value('gradient')==='Linear');
-    row('randomInterval',checked('randomize'));row('kaleidoscopeMode',Number(value('kaleidoscope'))>=2);
+    ['randomInterval','randomStyle','randomPalette','randomKaleidoscope','randomSpeeds','randomFinish','randomBackground'].forEach(function(key){row(key,checked('randomize'));});
+    row('randomBackgroundTone',checked('randomize')&&checked('randomBackground'));
+    row('kaleidoscopeMode',Number(value('kaleidoscope'))>=2);
+    row('kaleidoscopeFraming',Number(value('kaleidoscope'))>=2&&value('kaleidoscopeMode')!=='Forward elements');
     row('cityWindows',value('cityAppearance')==='Night skyline');row('discoMouseControl',style==='Digital disco ball');
     var custom=style==='Custom 3D Object',modelParticles=custom&&value('modelDisplay')==='Particles';
     var svg=value('modelSource')==='SVG extrusion';row('modelUrl',!svg);['svgUrl','svgDepth','svgBevel'].forEach(function(key){row(key,svg);});

@@ -2,7 +2,7 @@
 precision highp float;
 uniform float uOp;uniform vec3 uBg1;uniform vec3 uBg2;uniform float uGT;uniform float uAng;uniform sampler2D uScene;uniform vec2 uRes;uniform float uWarp;uniform float uBloom;uniform vec3 uTint2;uniform float uNight;uniform float uTime;
 out vec4 o;
-uniform float uFullKal,uAutoVort,uAutoSpin;
+uniform float uFullKal,uKalCentered,uAutoVort,uAutoSpin;
 uniform int uTessMode;
 uniform float uTessDensity,uTessZoom,uTessRotation;
 uniform int uBlendMode;
@@ -79,20 +79,21 @@ vec2 effectUV(vec2 uv){
     // Without this, widescreen corners rotate above the texture and disappear.
     vec2 safeHalf=max(vec2(.5)-2./uRes,vec2(.001));
     float reach=min(safeHalf.x*aspect.x/max(sin(sector*.5),.0001),safeHalf.y);
-    p=length(p)*min(1.,reach/(.5*length(aspect)))*vec2(cos(angle),sin(angle));
+    float fit=uKalCentered>.5?1.:min(1.,reach/(.5*length(aspect)));
+    p=length(p)*fit*vec2(cos(angle),sin(angle));
   }
   // A vortex moves one scene beyond the frame; it must not reflect it back.
   // Deliberate tile repeats and angular kaleidoscope folds happen above.
   return .5+p/aspect;
 }
 float sourceCoverage(vec2 uv){
-  if(uFullKal>1.5){
+  if(uFullKal>1.5&&uKalCentered<.5){
     // Angular mirrors deliberately fill the frame; only antialias the boundary.
     vec2 edge=min(uv,1.-uv);
     return smoothstep(0.,2./uRes.x,edge.x)*smoothstep(0.,2./uRes.y,edge.y);
   }
   if(uFullKal<1.5&&abs(uAutoVort)<.001&&abs(uAutoSpin)<.001)return 1.;
-  float turning=clamp(abs(uAutoVort)*2.+abs(sin(uAutoSpin))*2.,0.,1.);
+  float turning=clamp(abs(uAutoVort)*2.+abs(sin(uAutoSpin))*2.+step(1.5,uFullKal),0.,1.);
   vec2 edge=min(uv,1.-uv),feather=max(2./uRes+vec2(.16)*turning,fwidth(uv)*1.25);
   return smoothstep(0.,feather.x,edge.x)*smoothstep(0.,feather.y,edge.y);
 }

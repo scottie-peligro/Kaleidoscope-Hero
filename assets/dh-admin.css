@@ -53,6 +53,9 @@
 .dh-admin .dh-editor .dh-panel{padding:6px 18px 12px;border-color:#dfe2e6}
 .dh-admin .dh-editor h3{font-size:14px;margin:14px 0 8px;color:#1d2327}
 .dh-admin .dh-editor .dh-field{grid-template-columns:150px minmax(0,1fr);gap:8px 16px}
+.dh-admin .dh-editor .dh-field--inline{grid-template-columns:minmax(0,1fr);padding:10px 0}
+.dh-admin .dh-field--inline .dh-toggle{font-weight:600}
+.dh-admin .dh-field--inline .description{margin-inline-start:26px;font-size:12px}
 .dh-admin .dh-editor h3+.dh-field,.dh-admin .dh-preset-meta .dh-field{border-top:0}
 .dh-admin .dh-preset-meta{margin-bottom:16px}
 .dh-admin .dh-preset-meta .dh-field{padding:8px 0}

@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Kaleidoscope Hero
  * Description:       Animated WebGL hero backgrounds with admin presets, per-page shortcodes, slideshows and seamless black-wipe page transitions.
- * Version:           1.20.0
+ * Version:           1.21.0
  * Requires at least: 5.8
  * Requires PHP:      7.4
  * Author:            Next Level Exchange
@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'DH_VERSION', '1.20.0' );
+define( 'DH_VERSION', '1.21.0' );
 define( 'DH_URL', plugin_dir_url( __FILE__ ) );
 
 /* ------------------------------------------------------------------ *
@@ -53,8 +53,16 @@ function dh_schema() {
 			'multicolor'     => $r( 'Multicolour', 0, 1, 0.05, 0.35 ),
 			'kaleidoscope'   => $r( 'Kaleidoscope mirrors', 0, 12, 1, 0, '0 or 1 turns it off.' ),
 			'kaleidoscopeMode' => array( 'label' => __( 'Kaleidoscope mode', 'kaleidoscope-hero' ), 'type' => 'enum', 'options' => array( 'Forward elements', 'Whole screen', 'Both' ), 'default' => 'Forward elements', 'help' => __( 'Whole screen mirrors the complete animation, including nearby and outer elements. Forward elements keeps the existing scene effect. Both combines them. Set mirrors to 2 or more.', 'kaleidoscope-hero' ) ),
-			'randomize'      => array( 'label' => 'Randomize', 'type' => 'bool', 'default' => false, 'help' => 'Cycles through random styles, palettes and settings.' ),
+			'kaleidoscopeFraming' => array( 'label' => __( 'Kaleidoscope framing', 'kaleidoscope-hero' ), 'type' => 'enum', 'options' => array( 'Full screen', 'Centered' ), 'default' => 'Full screen', 'help' => __( 'Full screen fills the edges and corners. Centered keeps the original circular effect fading into the background. Applies to Whole screen and Both modes.', 'kaleidoscope-hero' ) ),
+			'randomize'      => array( 'label' => __( 'Enable random cycle', 'kaleidoscope-hero' ), 'type' => 'bool', 'default' => false, 'help' => __( 'Only checked groups change. Others keep the saved look.', 'kaleidoscope-hero' ) ),
 			'randomInterval' => $r( 'Random interval (seconds)', 5, 60, 1, 15 ),
+			'randomStyle' => array( 'label' => __( 'Change element type', 'kaleidoscope-hero' ), 'type' => 'bool', 'default' => true, 'help' => __( 'Built-in elements only; excludes uploaded models.', 'kaleidoscope-hero' ) ),
+			'randomPalette' => array( 'label' => __( 'Change element colors', 'kaleidoscope-hero' ), 'type' => 'bool', 'default' => true, 'help' => __( 'Palette and multicolor amount.', 'kaleidoscope-hero' ) ),
+			'randomKaleidoscope' => array( 'label' => __( 'Change all kaleidoscope settings', 'kaleidoscope-hero' ), 'type' => 'bool', 'default' => true, 'help' => __( 'Mirror count, mode and Full screen / Centered framing.', 'kaleidoscope-hero' ) ),
+			'randomSpeeds' => array( 'label' => __( 'Change animation speeds', 'kaleidoscope-hero' ), 'type' => 'bool', 'default' => true, 'help' => __( 'Animation, tunnel, rotation, morph and vortex speeds.', 'kaleidoscope-hero' ) ),
+			'randomFinish' => array( 'label' => __( 'Change density, brightness & glow', 'kaleidoscope-hero' ), 'type' => 'bool', 'default' => true ),
+			'randomBackground' => array( 'label' => __( 'Change gradient background', 'kaleidoscope-hero' ), 'type' => 'bool', 'default' => false, 'help' => __( 'Both colors, gradient type and angle; keeps text colors.', 'kaleidoscope-hero' ) ),
+			'randomBackgroundTone' => array( 'label' => __( 'Random background tones', 'kaleidoscope-hero' ), 'type' => 'enum', 'options' => array( 'Light', 'Dark', 'Both' ), 'default' => 'Dark', 'help' => __( 'Both chooses a light or dark gradient for each look.', 'kaleidoscope-hero' ) ),
 		),
 		'Custom 3D Object' => array(
 			'modelSource' => array( 'label' => __( 'Object source', 'kaleidoscope-hero' ), 'type' => 'enum', 'options' => array( '3D model (GLB)', 'SVG extrusion' ), 'default' => '3D model (GLB)' ),
@@ -499,8 +507,11 @@ add_action( 'admin_enqueue_scripts', 'dh_admin_assets' );
 function dh_field( $k, $f, $v ) {
 	$name = 'dh[' . $k . ']';
 	$id   = 'dh-' . $k;
-	echo '<div class="dh-field dh-field--' . esc_attr( $f['type'] ) . '">';
-	echo '<label for="' . esc_attr( $id ) . '">' . esc_html( $f['label'] ) . '</label>';
+	$inline_checkbox = 'bool' === $f['type'] && ! empty( $f['inline_checkbox'] );
+	echo '<div class="dh-field dh-field--' . esc_attr( $f['type'] ) . ( $inline_checkbox ? ' dh-field--inline' : '' ) . '">';
+	if ( ! $inline_checkbox ) {
+		echo '<label for="' . esc_attr( $id ) . '">' . esc_html( $f['label'] ) . '</label>';
+	}
 	echo '<div class="dh-control">';
 	switch ( $f['type'] ) {
 		case 'range':
@@ -528,7 +539,7 @@ function dh_field( $k, $f, $v ) {
 			break;
 		case 'bool':
 			echo '<input type="hidden" name="' . esc_attr( $name ) . '" value="0">';
-			echo '<label class="dh-toggle"><input type="checkbox" id="' . esc_attr( $id ) . '" name="' . esc_attr( $name ) . '" value="1"' . checked( $v, true, false ) . '> <span>' . esc_html__( 'On', 'kaleidoscope-hero' ) . '</span></label>';
+			echo '<label class="dh-toggle"><input type="checkbox" id="' . esc_attr( $id ) . '" name="' . esc_attr( $name ) . '" value="1"' . checked( $v, true, false ) . '> <span>' . ( $inline_checkbox ? esc_html( $f['label'] ) : esc_html__( 'On', 'kaleidoscope-hero' ) ) . '</span></label>';
 			break;
 		case 'color':
 			echo '<input type="text" class="dh-color" id="' . esc_attr( $id ) . '" name="' . esc_attr( $name ) . '" value="' . esc_attr( $v ) . '" data-default-color="' . esc_attr( $f['default'] ) . '">';
@@ -661,7 +672,7 @@ function dh_admin_help() {
 		<h2>Shortcodes</h2>
 		<p><code>[kaleidoscope_hero preset="home"]</code> shows one preset.</p>
 		<p><code>[kaleidoscope_hero presets="home,ocean,rings" interval="20"]</code> plays a slideshow, fading between presets every 20 seconds.</p>
-		<p><code>[kaleidoscope_hero preset="work" height="60vh" opacity="0.5" overlay="no"]</code> overrides any setting for that page only. Setting names: <code>style, palette, opacity, density, flow, glow, brightness, multicolor, kaleidoscope, tessellation, tessellationdensity, tessellationzoom, tessellationrotation, ribboncount, ribbonwidth, ribbonfold, ribbontwist, ribbontransparency, ribboniridescence, ribbonedge, ribbonbend, ribbonradius, ribbonscroll, ribbonscrollstrength, ribbonscrolldistance, randomize, randominterval, bgcolor1, bgcolor2, gradient, gradientangle, lookrange, warp, bloom, blendmode, blendsource, blendcolor, blendamount, vortex, vortexramp, overlay, headingtag, heading, subheading, buttontext, buttonurl, abouttext, abouturl, worktext, workurl, moretext, moreurl, brackets, height</code>.</p>
+		<p><code>[kaleidoscope_hero preset="work" height="60vh" opacity="0.5" overlay="no"]</code> overrides any setting for that page only. Setting names: <code>style, palette, opacity, density, flow, glow, brightness, multicolor, kaleidoscope, kaleidoscopemode, kaleidoscopeframing, tessellation, tessellationdensity, tessellationzoom, tessellationrotation, ribboncount, ribbonwidth, ribbonfold, ribbontwist, ribbontransparency, ribboniridescence, ribbonedge, ribbonbend, ribbonradius, ribbonscroll, ribbonscrollstrength, ribbonscrolldistance, randomize, randominterval, randomstyle, randompalette, randomkaleidoscope, randomspeeds, randomfinish, randombackground, randombackgroundtone, bgcolor1, bgcolor2, gradient, gradientangle, lookrange, warp, bloom, blendmode, blendsource, blendcolor, blendamount, vortex, vortexramp, overlay, headingtag, heading, subheading, buttontext, buttonurl, abouttext, abouturl, worktext, workurl, moretext, moreurl, brackets, height</code>.</p>
 		<p><?php esc_html_e( 'Kaleidoscope mode supports Forward elements, Whole screen, or Both. Automatic vortex starts the full-animation twist on load, with strength, speed, direction and startup controls under Interaction.', 'kaleidoscope-hero' ); ?></p>
 		<p><code>[kaleidoscope_hero preset="home" kaleidoscope="6" kaleidoscopemode="Whole screen" autovortex="true" autovortexstrength="0.5" autovortexspeed="0.6" autovortexdirection="Clockwise" autovortexramp="2"]</code></p>
 		<p><?php esc_html_e( 'LED globe offers Cycle, Fireworks, Waves and Shapes under LED globe pattern. Digital disco ball casts moving mirror-tile light onto the surrounding wall. Density adjusts the LED or tile spacing; Flow speed animates the show.', 'kaleidoscope-hero' ); ?></p>

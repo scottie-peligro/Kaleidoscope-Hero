@@ -4,12 +4,13 @@
   var urls = window.DH_SCENES || {}, loads = {}, controllers = [];
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)'), connection = navigator.connection;
   function still() { return reduced.matches || !!(connection && connection.saveData); }
-  function randomizes(cfg) { return [true,1,'1','true','yes','on'].indexOf(cfg.randomize) !== -1; }
+  function randomizes(cfg) { var on=[true,1,'1','true','yes','on'];return on.indexOf(cfg.randomize)!==-1&&(cfg.randomStyle===undefined||on.indexOf(cfg.randomStyle)!==-1); }
   function engineType(cfg, slides) {
     var meshStyles = ['Floating shape','Morphing sculptures','Iridescent ribbons','Wireframe landscape','Custom 3D Object'];
     var floatingSlides = (slides || [cfg]).every(function (slide) {return meshStyles.indexOf(slide.style) !== -1 && !randomizes(slide);});
     if (meshStyles.indexOf(cfg.style) !== -1 && floatingSlides && urls.floating) return 'floating';
-    // Random mode needs every style. A fixed disco scene only needs its own renderer.
+    // Only element-type randomization needs every style; other random groups
+    // can keep the smaller fixed-scene renderer.
     var discoSlides = (slides || [cfg]).every(function (slide) {
       return slide.style === 'Digital disco ball' && !randomizes(slide);
     });
