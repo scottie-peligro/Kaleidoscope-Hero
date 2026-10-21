@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Kaleidoscope Hero
  * Description:       Animated WebGL hero backgrounds with admin presets, per-page shortcodes, slideshows and seamless black-wipe page transitions.
- * Version:           1.22.0
+ * Version:           1.23.0
  * Requires at least: 5.8
  * Requires PHP:      7.4
  * Author:            Next Level Exchange
@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'DH_VERSION', '1.22.0' );
+define( 'DH_VERSION', '1.23.0' );
 define( 'DH_URL', plugin_dir_url( __FILE__ ) );
 
 /* ------------------------------------------------------------------ *
@@ -22,7 +22,7 @@ define( 'DH_URL', plugin_dir_url( __FILE__ ) );
  * ------------------------------------------------------------------ */
 
 function dh_styles() {
-	return array( 'Digital grid', 'Fiber optics', 'Particle waves', 'Wireframe tunnel', 'Data rings', 'Voronoi crystal', 'Constellation', 'Fractal flythrough', 'Word rain', 'Digital fabric', 'Blueprint city', 'Dot matrix structures', 'LED globe', 'Digital disco ball', 'Floating shape', 'Morphing sculptures', 'Iridescent ribbons', 'Wireframe landscape', 'Custom 3D Object' );
+	return array( 'Digital grid', 'Fiber optics', 'Particle waves', 'Wireframe tunnel', 'Data rings', 'Voronoi crystal', 'Constellation', 'Fractal flythrough', 'Word rain', 'Digital fabric', 'Blueprint city', 'Dot matrix structures', 'LED globe', 'Digital disco ball', 'Floating shape', 'Morphing sculptures', 'Iridescent ribbons', 'Wireframe landscape', 'Custom 3D Object', 'Video wall' );
 }
 
 function dh_palettes() {
@@ -81,6 +81,21 @@ function dh_schema() {
 			'modelRotateX' => $r( __( 'Starting tilt X', 'kaleidoscope-hero' ), -180, 180, 1, 10 ),
 			'modelRotateY' => $r( __( 'Starting tilt Y', 'kaleidoscope-hero' ), -180, 180, 1, 0 ),
 			'modelRotateZ' => $r( __( 'Starting tilt Z', 'kaleidoscope-hero' ), -180, 180, 1, 0 ),
+		),
+		'Video wall' => array(
+			'videoUrl' => array( 'label' => __( 'Video source', 'kaleidoscope-hero' ), 'type' => 'video', 'default' => '', 'help' => __( 'Choose an MP4 or WebM from your Media Library, or paste its URL. A short silent loop is easiest to load.', 'kaleidoscope-hero' ) ),
+			'videoPoster' => array( 'label' => __( 'Still image', 'kaleidoscope-hero' ), 'type' => 'poster', 'default' => '', 'help' => __( 'Shown before playback and when motion or data saving is requested.', 'kaleidoscope-hero' ) ),
+			'videoDisplay' => array( 'label' => __( 'Display', 'kaleidoscope-hero' ), 'type' => 'enum', 'options' => array( 'Video', 'Particle wall' ), 'default' => 'Particle wall' ),
+			'videoFit' => array( 'label' => __( 'Fill section', 'kaleidoscope-hero' ), 'type' => 'enum', 'options' => array( 'Cover', 'Contain' ), 'default' => 'Cover' ),
+			'videoPlaybackSpeed' => $r( __( 'Playback speed', 'kaleidoscope-hero' ), 0, 2, 0.05, 1, __( '0 holds the first frame.', 'kaleidoscope-hero' ) ),
+			'videoLoop' => array( 'label' => __( 'Loop video', 'kaleidoscope-hero' ), 'type' => 'bool', 'default' => true ),
+			'videoParticleSpacing' => $r( __( 'Particle spacing (px)', 'kaleidoscope-hero' ), 3, 24, 1, 6, __( 'Smaller spacing shows more detail; larger spacing uses fewer points. The renderer caps the count on large screens.', 'kaleidoscope-hero' ) ),
+			'videoParticleSize' => $r( __( 'Particle size (px)', 'kaleidoscope-hero' ), 0.5, 10, 0.25, 3 ),
+			'videoParticleShape' => array( 'label' => __( 'Particle shape', 'kaleidoscope-hero' ), 'type' => 'enum', 'options' => array( 'Round', 'Square' ), 'default' => 'Round' ),
+			'videoColor' => array( 'label' => __( 'Particle color', 'kaleidoscope-hero' ), 'type' => 'enum', 'options' => array( 'Original video', 'Palette', 'Monochrome' ), 'default' => 'Original video' ),
+			'videoDepth' => $r( __( 'Brightness depth', 'kaleidoscope-hero' ), 0, 2, 0.05, 0, __( 'Moves bright points forward for a decorative 3D effect. It does not reconstruct real depth.', 'kaleidoscope-hero' ) ),
+			'videoThreshold' => $r( __( 'Dark pixel cutoff', 'kaleidoscope-hero' ), 0, 1, 0.05, 0, __( 'Hide dark particles for a more open wall.', 'kaleidoscope-hero' ) ),
+			'videoContrast' => $r( __( 'Video contrast', 'kaleidoscope-hero' ), 0.5, 2, 0.05, 1 ),
 		),
 		'Wireframe tunnel' => array(
 			'trailSpeed' => $r( __( 'Particle speed', 'kaleidoscope-hero' ), 0.25, 3, 0.05, 1, __( 'Each wire has its own staggered timing and speed. Flow speed 0 pauses travel.', 'kaleidoscope-hero' ) ),
@@ -227,6 +242,8 @@ function dh_sanitize_value( $f, $v ) {
 			return esc_url_raw( trim( (string) $v ) );
 		case 'model':
 		case 'svgmodel':
+		case 'video':
+		case 'poster':
 			return esc_url_raw( trim( (string) $v ), array( 'http', 'https' ) );
 		case 'textarea':
 			return sanitize_textarea_field( (string) $v );
@@ -297,6 +314,7 @@ function dh_register_assets() {
 		'modelRuntime' => add_query_arg( 'ver', filemtime( $assets . 'dh-model-runtime.min.js' ), DH_URL . 'assets/dh-model-runtime.min.js' ),
 		'modelDraco' => DH_URL . 'assets/model-draco/',
 		'modelSample' => DH_URL . 'assets/models/crystal.glb',
+		'videoRuntime' => add_query_arg( 'ver', filemtime( $assets . 'dh-video-runtime.min.js' ), DH_URL . 'assets/dh-video-runtime.min.js' ),
 		'svgSample' => DH_URL . 'assets/models/badge.svg',
 	) ) . ';', 'before' );
 	wp_script_add_data( 'dh-scenes', 'strategy', 'defer' );
@@ -428,6 +446,7 @@ function dh_render( $slides, $interval = 20, $content = null, $preview = false )
 	ob_start();
 	?>
 <div class="dh-hero<?php echo $preview ? ' dh-hero--preview' : ''; ?><?php echo $background ? ' dh-hero--background' : ''; ?>"<?php echo $background ? ' aria-hidden="true"' : ''; ?><?php echo $preview ? ' data-dh-preview-label="' . esc_attr__( 'Your section content appears here', 'kaleidoscope-hero' ) . '"' : ''; ?> style="<?php echo esc_attr( $style ); ?>" data-dh="<?php echo esc_attr( wp_json_encode( $data ) ); ?>">
+	<img class="dh-video-poster" src="<?php echo esc_url( 'Video wall' === $s['style'] ? $s['videoPoster'] : '' ); ?>" alt="" aria-hidden="true"<?php echo 'Video wall' === $s['style'] && $s['videoPoster'] ? '' : ' hidden'; ?>>
 	<canvas class="dh-canvas" aria-hidden="true"></canvas>
 	<div class="dh-vignette" aria-hidden="true"></div>
 	<?php if ( $custom && ! $background ) : ?>
@@ -500,6 +519,8 @@ function dh_admin_assets( $hook ) {
 	wp_localize_script( 'dh-admin', 'DH_EDITOR', array( 'on' => __( 'On', 'kaleidoscope-hero' ), 'off' => __( 'Off', 'kaleidoscope-hero' ), 'mirrors' => __( '%s mirrors', 'kaleidoscope-hero' ), 'dirty' => __( 'Unsaved changes', 'kaleidoscope-hero' ), 'clean' => __( 'No unsaved changes', 'kaleidoscope-hero' ), 'still' => __( 'Still background', 'kaleidoscope-hero' ) ) );
 	wp_localize_script( 'dh-admin', 'DH_MODELS', array( 'ajaxUrl' => admin_url( 'admin-ajax.php' ), 'nonce' => wp_create_nonce( 'dh_models' ), 'upload' => __( 'Upload GLB', 'kaleidoscope-hero' ), 'choose' => __( 'Choose a 3D model', 'kaleidoscope-hero' ), 'use' => __( 'Use this model', 'kaleidoscope-hero' ), 'loading' => __( 'Uploading model…', 'kaleidoscope-hero' ), 'uploaded' => __( 'Model uploaded. Preview it, then save your preset.', 'kaleidoscope-hero' ), 'error' => __( 'The model could not be uploaded. Refresh and try again.', 'kaleidoscope-hero' ), 'svgSize' => __( 'Choose a .svg file smaller than 512 KB.', 'kaleidoscope-hero' ), 'size' => __( 'Choose a .glb file smaller than 10 MB.', 'kaleidoscope-hero' ) ) );
 	wp_enqueue_script( 'dh-model-admin', DH_URL . 'assets/dh-model-admin.js', array( 'jquery', 'dh-admin', 'media-editor' ), DH_VERSION, true );
+	wp_enqueue_script( 'dh-video-admin', DH_URL . 'assets/dh-video-admin.js', array( 'jquery', 'dh-admin', 'media-editor' ), DH_VERSION, true );
+	wp_localize_script( 'dh-video-admin', 'DH_VIDEO_ADMIN', array( 'ajaxUrl' => admin_url( 'admin-ajax.php' ), 'nonce' => wp_create_nonce( 'media-form' ) ) );
 	wp_enqueue_script( 'dh-templates', DH_URL . 'assets/dh-templates.js', array( 'jquery', 'dh-admin' ), DH_VERSION, true );
 	wp_localize_script( 'dh-templates', 'DH_TEMPLATES', array( 'ajaxUrl' => admin_url( 'admin-ajax.php' ), 'nonce' => wp_create_nonce( 'dh_templates' ), 'templates' => array_values( dh_get_templates() ), 'messages' => array( 'choose' => __( 'Choose a template first.', 'kaleidoscope-hero' ), 'name' => __( 'Give the template a name.', 'kaleidoscope-hero' ), 'error' => __( 'The template could not be saved. Refresh and try again.', 'kaleidoscope-hero' ), 'applied' => __( 'Template applied to the preview. Review, then Save preset to keep it.', 'kaleidoscope-hero' ), 'undone' => __( 'Previous settings restored. Preset changes are still unsaved.', 'kaleidoscope-hero' ), 'delete' => __( 'Delete this template from the library? Presets that used it will stay unchanged.', 'kaleidoscope-hero' ), 'look' => __( 'Look only', 'kaleidoscope-hero' ), 'full' => __( 'Full settings', 'kaleidoscope-hero' ) ) ) );
 }
@@ -558,6 +579,15 @@ function dh_field( $k, $f, $v ) {
 		case 'svgmodel':
 			echo '<input type="url" id="' . esc_attr( $id ) . '" name="' . esc_attr( $name ) . '" value="' . esc_attr( $v ) . '" placeholder="' . esc_attr__( 'Included badge, or paste an SVG source URL', 'kaleidoscope-hero' ) . '">';
 			echo '<div class="dh-model-actions"><button type="button" class="button" id="dh-svg-upload">' . esc_html__( 'Upload SVG', 'kaleidoscope-hero' ) . '</button> <button type="button" class="button" id="dh-svg-library">' . esc_html__( 'Media library', 'kaleidoscope-hero' ) . '</button> <button type="button" class="button" id="dh-svg-clear">' . esc_html__( 'Use sample badge', 'kaleidoscope-hero' ) . '</button><input type="file" id="dh-svg-file" accept=".svg,image/svg+xml" hidden></div><p id="dh-svg-upload-status" role="status" aria-live="polite"></p>';
+			break;
+		case 'video':
+		case 'poster':
+			$is_video = 'video' === $f['type'];
+			echo '<input type="url" id="' . esc_attr( $id ) . '" name="' . esc_attr( $name ) . '" value="' . esc_attr( $v ) . '" placeholder="https://">';
+			echo '<div class="dh-model-actions"><button type="button" class="button dh-video-library" data-field="' . esc_attr( $k ) . '">' . esc_html__( 'Media library', 'kaleidoscope-hero' ) . '</button> <button type="button" class="button dh-video-clear" data-field="' . esc_attr( $k ) . '">' . esc_html__( 'Clear', 'kaleidoscope-hero' ) . '</button></div>';
+			if ( $is_video ) {
+				echo '<p><a href="https://mixkit.co/free-stock-video/tour-high-above-a-city-at-dusk-41375/" target="_blank" rel="noopener noreferrer">' . esc_html__( 'Free city flyover by Mixkit', 'kaleidoscope-hero' ) . '</a> · ' . esc_html__( 'Download it, then use Media library to upload it.', 'kaleidoscope-hero' ) . '</p>';
+			}
 			break;
 		default:
 			echo '<input type="text" id="' . esc_attr( $id ) . '" name="' . esc_attr( $name ) . '" value="' . esc_attr( $v ) . '">';

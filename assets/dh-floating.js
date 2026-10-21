@@ -134,11 +134,20 @@ function makeRibbons(gl){
   var VERT = "#version 300 es\nin vec2 a;void main(){gl_Position=vec4(a,0.,1.);}";
   var PALETTES = {"Electric blue":[[0.12,0.42,1],[0.35,0.8,1]],"Cyan":[[0.08,0.8,1],[0.55,1,0.92]],"Violet":[[0.45,0.3,1],[0.9,0.45,1]],"Amber":[[1,0.5,0.12],[1,0.82,0.45]],"Fiber":[[1,0.14,0.08],[0.15,0.35,1]],"Neon":[[1,0.12,0.7],[0.25,0.35,1]],"Aurora":[[0.1,1,0.55],[0.55,0.25,1]],"Ember":[[1,0.25,0.05],[1,0.75,0.2]],"Ice":[[0.55,0.85,1],[0.9,0.97,1]],"Matrix":[[0.1,1,0.3],[0.6,1,0.5]],"Rose gold":[[1,0.5,0.55],[1,0.82,0.6]],"Ocean":[[0,0.55,1],[0,1,0.85]],"Vapor":[[1,0.4,0.85],[0.3,0.95,1]],"Mono":[[0.85,0.88,0.95],[1,1,1]],"Sunset":[[1,0.58,0.22],[1,0.8,0.5]],"Gold and blue":[[1,0.65,0.2],[0.2,0.6,1]]};
   var WORDS = [];
-  var STYLES = ["Digital grid","Fiber optics","Particle waves","Wireframe tunnel","Data rings","Voronoi crystal","Constellation","Fractal flythrough","Word rain","Digital fabric","Blueprint city","Dot matrix structures","LED globe","Digital disco ball","Floating shape","Morphing sculptures","Iridescent ribbons","Wireframe landscape","Custom 3D Object"];
+  var STYLES = ["Digital grid","Fiber optics","Particle waves","Wireframe tunnel","Data rings","Voronoi crystal","Constellation","Fractal flythrough","Word rain","Digital fabric","Blueprint city","Dot matrix structures","LED globe","Digital disco ball","Floating shape","Morphing sculptures","Iridescent ribbons","Wireframe landscape","Custom 3D Object","Video wall"];
   var TESSELLATIONS = ['Off','Squares','Mirrored squares','Triangles','Hexagons'];
   var BLEND_MODES = ['Off','Multiply','Screen','Overlay','Darken','Lighten','Color dodge','Color burn','Hard light','Soft light','Difference','Exclusion','Hue','Saturation','Color','Luminosity'];
-  var NUM = ["modelOffsetX","svgDepth","svgBevel","modelSize","modelFloat","modelRotationSpeed","modelRotateX","modelRotateY","modelRotateZ","trailSpeed", "trailLength", "trailAmount", "terrainHeight", "terrainScale", "terrainGrid", "cityWindows", "ribbonCount", "ribbonWidth", "ribbonFold", "ribbonTwist", "ribbonTransparency", "ribbonIridescence", "ribbonEdge", "ribbonBend", "ribbonRadius", "ribbonScrollStrength", "ribbonScrollDistance", 'tessellationDensity', 'tessellationZoom', 'tessellationRotation', 'blendAmount', 'opacity', 'density', 'flow', 'glow', 'brightness', 'multicolor', 'warp', 'bloom', 'vortex', 'vortexRamp', 'lookRange', 'gradientAngle', 'autoVortexStrength', 'autoVortexSpeed', 'autoVortexRamp', 'shapeSize', 'shapeFloat', 'shapeLobes', 'shapeTwist', 'shapeExplode', 'shapeSensitivity', 'shapeRecovery', 'shapeScrollDistance', 'morphDuration', 'morphHold', 'morphProgress', 'morphStagger', 'morphScrollDistance', 'shapeMouseRadius', 'shapeMouseStrength', 'shapeMouseGlobal'];
+  // DH_VIDEO_SETTINGS_BEGIN
+  var VIDEO_NUM=['videoPlaybackSpeed','videoParticleSpacing','videoParticleSize','videoDepth','videoThreshold','videoContrast'];
+  var VIDEO_DEF={videoUrl:'',videoPoster:'',videoDisplay:'Particle wall',videoFit:'Cover',videoPlaybackSpeed:1,videoLoop:true,videoParticleSpacing:6,videoParticleSize:3,videoParticleShape:'Round',videoColor:'Original video',videoDepth:0,videoThreshold:0,videoContrast:1};
+  // DH_VIDEO_SETTINGS_END
+  // DH_VIDEO_SETTINGS_BEGIN
+  var VIDEO_NUM=['videoPlaybackSpeed','videoParticleSpacing','videoParticleSize','videoDepth','videoThreshold','videoContrast'];
+  var VIDEO_DEF={videoUrl:'',videoPoster:'',videoDisplay:'Particle wall',videoFit:'Cover',videoPlaybackSpeed:1,videoLoop:true,videoParticleSpacing:6,videoParticleSize:3,videoParticleShape:'Round',videoColor:'Original video',videoDepth:0,videoThreshold:0,videoContrast:1};
+  // DH_VIDEO_SETTINGS_END
+  var NUM = VIDEO_NUM.concat(["modelOffsetX","svgDepth","svgBevel","modelSize","modelFloat","modelRotationSpeed","modelRotateX","modelRotateY","modelRotateZ","trailSpeed", "trailLength", "trailAmount", "terrainHeight", "terrainScale", "terrainGrid", "cityWindows", "ribbonCount", "ribbonWidth", "ribbonFold", "ribbonTwist", "ribbonTransparency", "ribbonIridescence", "ribbonEdge", "ribbonBend", "ribbonRadius", "ribbonScrollStrength", "ribbonScrollDistance", 'tessellationDensity', 'tessellationZoom', 'tessellationRotation', 'blendAmount', 'opacity', 'density', 'flow', 'glow', 'brightness', 'multicolor', 'warp', 'bloom', 'vortex', 'vortexRamp', 'lookRange', 'gradientAngle', 'autoVortexStrength', 'autoVortexSpeed', 'autoVortexRamp', 'shapeSize', 'shapeFloat', 'shapeLobes', 'shapeTwist', 'shapeExplode', 'shapeSensitivity', 'shapeRecovery', 'shapeScrollDistance', 'morphDuration', 'morphHold', 'morphProgress', 'morphStagger', 'morphScrollDistance', 'shapeMouseRadius', 'shapeMouseStrength', 'shapeMouseGlobal']);
   var DEF = { modelOffsetX: 0, modelSource: "3D model (GLB)", svgUrl: "", svgDepth: .12, svgBevel: .005, modelUrl: "", modelDisplay: "Solid", modelColor: "Original materials", modelSize: 1, modelFloat: 1, modelRotation: "Automatic", modelAxis: "Y", modelRotationSpeed: .5, modelRotateX: 10, modelRotateY: 0, modelRotateZ: 0, trailSpeed: 1, trailLength: 1, trailAmount: .8, terrainType: "Mixed landscape", terrainHeight: 1, terrainScale: 1, terrainGrid: 1, terrainSun: true, cityAppearance: "Blueprint", cityWindows: .35, ribbonScroll: 'Twist', ribbonCount: 3, ribbonWidth: 1.1, ribbonFold: 1, ribbonTwist: 1.4, ribbonTransparency: 0.6, ribbonIridescence: 1, ribbonEdge: 1.4, ribbonBend: 1, ribbonRadius: 0.45, ribbonScrollStrength: 1, ribbonScrollDistance: 1.5, tessellation: 'Off', tessellationDensity: 3, tessellationZoom: 1, tessellationRotation: 0, blendMode: 'Off', blendSource: 'Blend color', blendColor: '#8866ff', blendAmount: 1, style: 'Digital grid', palette: 'Electric blue', ledPattern: 'Cycle', opacity: 1, density: 0.55, flow: 2.5, glow: 1, brightness: 1, multicolor: 0.35, kaleidoscope: 0, kaleidoscopeMode: 'Forward elements', kaleidoscopeFraming: 'Full screen', randomStyle: true, randomPalette: true, randomKaleidoscope: true, randomSpeeds: true, randomFinish: true, randomBackground: false, randomBackgroundTone: 'Dark', randomize: false, randomInterval: 15, bgColor1: '#140a2e', bgColor2: '#000000', gradient: 'Radial', gradientAngle: 90, warp: 1, bloom: 1, vortex: 1, vortexRamp: 2, lookRange: 1, discoMouseControl: true, shape: 'Torus knot', shapeSeed: 17, shapeSize: 1, shapeFloat: 1, shapeLobes: 5, shapeTwist: 1.5, shapeTrigger: 'Mouse and scroll', shapeMouseEffect: 'Whole sculpture explosion', shapeMouseRadius: .18, shapeMouseStrength: 1, shapeMouseGlobal: 0, shapeExplode: 1, shapeSensitivity: 1, shapeRecovery: 1.2, shapeScrollDistance: .75, morphMode: 'Cycle shapes', morphFrom: 'Orb', morphTo: 'Torus knot', morphDuration: 4, morphHold: 1, morphProgress: 0, morphStagger: .15, morphScrollDistance: 1, morphExplode: false, autoVortex: false, autoVortexStrength: 0.5, autoVortexSpeed: 0.5, autoVortexDirection: 'Clockwise', autoVortexRamp: 2 };
+  Object.assign(DEF,VIDEO_DEF);
   var motion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)');
   var connection = navigator.connection;
   function staticMode() { return !!((motion && motion.matches) || (connection && connection.saveData)); }
@@ -168,6 +177,11 @@ function makeRibbons(gl){
     c = c || {};
     for (k in DEF) o[k] = (c[k] !== undefined && c[k] !== null && c[k] !== '') ? c[k] : DEF[k];
     NUM.forEach(function (n) { o[n] = parseFloat(o[n]); if (isNaN(o[n])) o[n] = DEF[n]; });
+    var videoBounds={videoPlaybackSpeed:[0,2],videoParticleSpacing:[3,24],videoParticleSize:[.5,10],videoDepth:[0,2],videoThreshold:[0,1],videoContrast:[.5,2]};
+    Object.keys(videoBounds).forEach(function(key){o[key]=Math.max(videoBounds[key][0],Math.min(videoBounds[key][1],o[key]));});
+    o.videoLoop=truthy(o.videoLoop);
+    ['videoDisplay','videoFit','videoParticleShape','videoColor'].forEach(function(key){var allowed={videoDisplay:['Video','Particle wall'],videoFit:['Cover','Contain'],videoParticleShape:['Round','Square'],videoColor:['Original video','Palette','Monochrome']};if(allowed[key].indexOf(o[key])<0)o[key]=DEF[key];});
+    ['videoUrl','videoPoster'].forEach(function(key){if(!/^https?:\/\//i.test(o[key]))o[key]='';});
     if (['Mixed landscape','Hills','Mountains','Desert'].indexOf(o.terrainType) < 0) o.terrainType = DEF.terrainType;
     if (['Blueprint','Night skyline'].indexOf(o.cityAppearance) < 0) o.cityAppearance = DEF.cityAppearance;
     o.terrainSun = truthy(o.terrainSun);
@@ -313,7 +327,7 @@ function makeRibbons(gl){
     // Start from the saved look every time: unchecked groups never inherit
     // values from an earlier random cycle or an admin-preview update.
     var b=this.base,c=Object.assign({},b);
-    if(b.randomStyle)c.style=p(STYLES.filter(function(style){return style!=='Custom 3D Object';}));
+    if(b.randomStyle)c.style=p(STYLES.filter(function(style){return style!=='Custom 3D Object'&&style!=='Video wall';}));
     if(b.randomPalette){c.palette=p(Object.keys(PALETTES));c.multicolor=Math.random()<.4?0:rr(.15,1);}
     if(b.randomKaleidoscope){
       c.kaleidoscope=Math.random()<.5?0:2+Math.floor(Math.random()*11);
@@ -708,7 +722,16 @@ function makeRibbons(gl){
       gl.uniform1f(U.uVort, vort * spinDir); gl.uniform1f(U.uSpin, spin);
       gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
       gl.viewport(0, 0, c.width, c.height);
-      if (d.style === 'Custom 3D Object') {
+      if(d.style!=='Video wall'&&self.videoWall){self.videoWall.dispose();self.videoWall=null;el.classList.remove('dh-video-ready');}
+      if (d.style === 'Video wall') {
+        if(!self.videoWall&&!self.videoLoading&&!self.videoLoadError){
+          self.videoLoading=true;
+          if(!window.DHVideoRenderLoading)window.DHVideoRenderLoading=new Promise(function(resolve,reject){var script=document.createElement('script');script.src=window.DH_SCENES.videoRuntime;script.onload=function(){resolve(window.DHVideoRuntime);};script.onerror=function(){script.remove();window.DHVideoRenderLoading=null;reject(Error('Video renderer unavailable'));};document.head.appendChild(script);});
+          window.DHVideoRenderLoading.then(function(runtime){if(!self.disposed&&self.disc.style==='Video wall')self.videoWall=runtime.create(gl,el);self.videoLoading=false;}).catch(function(e){self.videoLoadError=String(e);self.videoLoading=false;});
+        }
+        if(self.videoWall)self.videoWall.draw(cur,self.tgt,c.width,c.height,tint,self.quality);
+        else{gl.clearColor(0,0,0,1);gl.clear(gl.COLOR_BUFFER_BIT);}
+      } else if (d.style === 'Custom 3D Object') {
         if (!self.model && !self.modelLoading && !self.modelLoadError) {
           self.modelLoading=true;
           if(!window.DHModelRenderLoading)window.DHModelRenderLoading=new Promise(function(resolve,reject){var script=document.createElement('script');script.src=window.DH_SCENES.modelRuntime;script.onload=function(){resolve(window.DHModelRuntime);};script.onerror=function(){script.remove();window.DHModelRenderLoading=null;reject(Error('3D renderer unavailable'));};document.head.appendChild(script);});
@@ -739,7 +762,7 @@ function makeRibbons(gl){
       gl.bindVertexArray(postVAO);
       gl.uniform1i(PU.uScene, 3); gl.uniform2f(PU.uRes, c.width, c.height); gl.uniform1f(PU.uWarp, zoom.v);
       gl.uniform1f(PU.uBloom, cur.bloom); gl.uniform3fv(PU.uTint2, tint[1]); gl.uniform1f(PU.uNight, 1); gl.uniform1f(PU.uTime, t);
-      gl.uniform1f(PU.uFullKal, d.kaleidoscopeMode === 'Forward elements' ? 0 : d.kaleidoscope);
+      gl.uniform1f(PU.uFullKal, d.style === 'Video wall' || d.kaleidoscopeMode !== 'Forward elements' ? d.kaleidoscope : 0);
       gl.uniform1f(PU.uKalCentered, d.kaleidoscopeFraming === 'Centered' ? 1 : 0);
       gl.uniform1f(PU.uAutoVort, autoAmount * autoDirection + ((d.style === 'Iridescent ribbons' || d.style === 'Custom 3D Object') ? vort * spinDir : 0)); gl.uniform1f(PU.uAutoSpin, autoSpin + ((d.style === 'Iridescent ribbons' || d.style === 'Custom 3D Object') ? spin : 0));
       gl.uniform1i(PU.uTessMode, TESSELLATIONS.indexOf(self.tgt.tessellation));
@@ -755,15 +778,17 @@ function makeRibbons(gl){
       gl.bindVertexArray(null);
       schedule();
     };
-    this.pause = function () { active = false; cancelAnimationFrame(self.raf); clearTimeout(self.frameTimer); self.raf = self.frameTimer = 0; zoom.t = 0; };
+    this.pause = function () { active = false; cancelAnimationFrame(self.raf); clearTimeout(self.frameTimer); self.raf = self.frameTimer = 0; zoom.t = 0; if(self.videoWall)self.videoWall.pause(); };
     this.resume = function () {
       if (active || el.classList.contains('dh-nogl')) return;
+      if(self.videoWall)self.videoWall.resume();
       active = true; needsResize = true;
       last = performance.now() - frameMs; nextAt = last + frameMs;
       sampleTime = 0; frameSamples = 0; slowFrames = 0;
       self.raf = requestAnimationFrame(loop);
     };
     this.releaseGPU = function () {
+      if (self.videoWall) { self.videoWall.dispose(); self.videoWall=null; }
       if (self.model) { self.model.dispose(); self.model=null; }
       if (self.floating) self.floating.dispose();
       if (self.ribbons) { self.ribbons.dispose(); self.ribbons=null; }

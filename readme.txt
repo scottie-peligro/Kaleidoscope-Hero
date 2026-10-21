@@ -3,7 +3,7 @@ Contributors: nextlevelexchange
 Requires at least: 5.8
 Tested up to: 6.6
 Requires PHP: 7.4
-Stable tag: 1.22.0
+Stable tag: 1.23.0
 License: GPLv2 or later
 
 Animated WebGL hero backgrounds with admin presets, per-page shortcodes, slideshows and seamless black-wipe page transitions.
@@ -36,6 +36,10 @@ WebGL 2 (all current desktop and mobile browsers). Older browsers show a static 
 1.18.1 fixes broken/flickering landscape ridges with a continuous depth-tested terrain mesh, rounded landforms, stable shared noise cells and softly filtered grid lines. Saved landscape controls remain supported.
 
 Wireframe tunnel now has independently timed racing particles and light tails, with speed, tail length and active-lane controls. New Wireframe landscape travels across mixed terrain, hills, mountains or desert, with height/scale/grid controls and an optional striped horizon sun. Blueprint city's optional Night skyline appearance uses dark opaque buildings and scattered white windows; Blueprint remains the default. All support presets, templates and shortcode overrides. See LANDSCAPES-AND-LIGHT-TRAILS.md.
+
+== Video wall ==
+
+1.23.0 adds Video wall with a real video or GPU video-sampled particle wall, poster fallback, playback and particle controls, and a browser-native compressed-copy tool in the admin. See VIDEO-WALL.md.
 
 == Custom 3D objects and SVG extrusion ==
 

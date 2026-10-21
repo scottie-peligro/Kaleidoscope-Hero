@@ -1,8 +1,8 @@
 # Kaleidoscope Hero
 
-WordPress plugin for animated WebGL heroes and section backgrounds. Current version: **1.22.0**.
+WordPress plugin for animated WebGL heroes and section backgrounds. Current version: **1.23.0**.
 
-Includes 19 animated styles, saved presets, shortcodes, a native section block, slideshows, kaleidoscope/vortex controls, page transitions and floating particle sculptures. Long sections render a viewport-sized background within a bounded pixel budget. Version 1.14.0 adds reusable look/full-setting templates, preview/undo, and portable JSON import/export. Local particle explosions and cursor forces remain available. Morphing sculptures retain automatic, scroll and manual control. Stable long-page scrolling and filtered Particle Waves remain included.
+Includes 20 animated styles, saved presets, shortcodes, a native section block, slideshows, kaleidoscope/vortex controls, page transitions and floating particle sculptures. Long sections render a viewport-sized background within a bounded pixel budget. Version 1.14.0 adds reusable look/full-setting templates, preview/undo, and portable JSON import/export. Local particle explosions and cursor forces remain available. Morphing sculptures retain automatic, scroll and manual control. Stable long-page scrolling and filtered Particle Waves remain included.
 
 ## Install
 
@@ -58,6 +58,10 @@ Version 1.19.0 organizes the admin into Element, Appearance, Interaction, Text &
 Version 1.19.1 restores substantial mountain relief with layered ranges and a world-anchored flight valley. The continuous terrain mesh, stable grid filtering and existing settings remain supported, with no new runtime assets or geometry.
 
 Version 1.19.2 keeps Whole screen and Both kaleidoscope modes filled to the viewport corners. The capture wedge fits the viewport diagonal on wide, square and portrait screens, with matching particle and ribbon cursor coordinates. Automatic vortex alone still fades outside the frame without reflected duplicates. No new passes, assets or settings.
+
+## Video wall
+
+Version 1.23.0 adds **Element → Video wall**. Show a real video or turn changing frames into a GPU particle wall. Choose a Media Library source and optional still image, then tune playback, particle spacing and size, color, brightness depth, cutoff and contrast. The admin can record a short, silent, compressed copy in the browser and upload it to Media Library. The renderer loads only when Video wall is visible; stock footage is not bundled. See [VIDEO-WALL.md](VIDEO-WALL.md) for a free city clip and usage notes.
 
 ## Custom 3D objects and SVG extrusion
 

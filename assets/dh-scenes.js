@@ -6,7 +6,7 @@
   function still() { return reduced.matches || !!(connection && connection.saveData); }
   function randomizes(cfg) { var on=[true,1,'1','true','yes','on'];return on.indexOf(cfg.randomize)!==-1&&(cfg.randomStyle===undefined||on.indexOf(cfg.randomStyle)!==-1); }
   function engineType(cfg, slides) {
-    var meshStyles = ['Floating shape','Morphing sculptures','Iridescent ribbons','Wireframe landscape','Custom 3D Object'];
+    var meshStyles = ['Floating shape','Morphing sculptures','Iridescent ribbons','Wireframe landscape','Custom 3D Object','Video wall'];
     var floatingSlides = (slides || [cfg]).every(function (slide) {return meshStyles.indexOf(slide.style) !== -1 && !randomizes(slide);});
     if (meshStyles.indexOf(cfg.style) !== -1 && floatingSlides && urls.floating) return 'floating';
     // Only element-type randomization needs every style; other random groups
@@ -72,6 +72,8 @@
     clearTimeout(this.timer); this.timer = 0;
     el.style.setProperty('--dh-bg1',cfg.bgColor1 || '#140a2e');
     el.style.setProperty('--dh-bg2',cfg.bgColor2 || '#000000');
+    var poster=el.querySelector('.dh-video-poster');
+    if(poster){var posterUrl=cfg.style==='Video wall'?cfg.videoPoster||'':'';poster.hidden=!posterUrl;if(posterUrl&&poster.getAttribute('src')!==posterUrl)poster.setAttribute('src',posterUrl);}
     el.style.background = cfg.gradient === 'Linear' ? 'linear-gradient(' + (Number(cfg.gradientAngle) || 0) + 'deg,var(--dh-bg1),var(--dh-bg2))' : '';
     if (scene === 'Off') {
       this.token++; this.stopEngine(); el.classList.add('dh-off'); el.classList.remove('dh-nogl');

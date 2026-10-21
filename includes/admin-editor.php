@@ -54,6 +54,7 @@ function dh_editor_controls( $keys, $settings, &$seen ) {
 				__( 'Surfaces & spaces', 'kaleidoscope-hero' ) => array( 'Particle waves', 'Digital fabric', 'Iridescent ribbons', 'Wireframe tunnel', 'Data rings', 'Voronoi crystal', 'Fractal flythrough', 'Wireframe landscape' ),
 				__( 'Cities & structures', 'kaleidoscope-hero' ) => array( 'Blueprint city', 'Dot matrix structures' ),
 				__( 'Sculptures & objects', 'kaleidoscope-hero' ) => array( 'Digital disco ball', 'Floating shape', 'Morphing sculptures', 'Custom 3D Object' ),
+				__( 'Video & particles', 'kaleidoscope-hero' ) => array( 'Video wall' ),
 			);
 			$unlisted = array_diff( $field['options'], array_merge( ...array_values( $field['option_groups'] ) ) );
 			if ( $unlisted ) {
@@ -67,7 +68,7 @@ function dh_editor_controls( $keys, $settings, &$seen ) {
 
 function dh_editor_card( $title, $keys, $settings, &$seen, $styles = '', $animated = true ) {
 	?>
-	<section class="dh-panel dh-editor-card"<?php echo $animated ? ' data-dh-animation' : ''; ?><?php echo $styles ? ' data-dh-for="' . esc_attr( $styles ) . '"' : ''; ?>>
+	<section class="dh-panel dh-editor-card"<?php echo $animated ? ' data-dh-animation' : ''; ?><?php echo $styles ? ' data-dh-for="' . esc_attr( $styles ) . '"' : ''; ?><?php echo in_array( 'flow', $keys, true ) ? ' data-dh-speed-card' : ''; ?>>
 		<h3><?php echo esc_html( $title ); ?></h3>
 		<?php dh_editor_controls( $keys, $settings, $seen ); ?>
 	</section>
@@ -106,6 +107,19 @@ function dh_admin_editor( $presets, $edit, $is_new, $current ) {
 			<p class="dh-editor-notice" data-dh-still hidden><?php esc_html_e( 'Animation is off. You can still edit the background colors, text and placement.', 'kaleidoscope-hero' ); ?></p>
 			<?php
 			dh_editor_card( __( 'Speed & detail', 'kaleidoscope-hero' ), array( 'flow', 'density' ), $settings, $seen );
+			dh_editor_card( __( 'Video wall', 'kaleidoscope-hero' ), array_keys( dh_schema()['Video wall'] ), $settings, $seen, 'Video wall' );
+			?>
+			<section class="dh-panel dh-editor-card" data-dh-animation data-dh-for="Video wall">
+				<h3><?php esc_html_e( 'Make a smaller video', 'kaleidoscope-hero' ); ?></h3>
+				<p><?php esc_html_e( 'Records a short, silent, lower-resolution copy in this browser. Your original is kept. The copy is added to Media Library after recording.', 'kaleidoscope-hero' ); ?></p>
+				<div class="dh-field"><label for="dh-video-input"><?php esc_html_e( 'Source file (optional)', 'kaleidoscope-hero' ); ?></label><div class="dh-control"><input type="file" id="dh-video-input" accept="video/*"><p class="description"><?php esc_html_e( 'Choose a file here, or use the Video source above.', 'kaleidoscope-hero' ); ?></p></div></div>
+				<div class="dh-field"><label for="dh-video-encode-quality"><?php esc_html_e( 'Copy size', 'kaleidoscope-hero' ); ?></label><div class="dh-control"><select id="dh-video-encode-quality"><option value="small"><?php esc_html_e( 'Small — 640 px, 18 fps', 'kaleidoscope-hero' ); ?></option><option value="balanced" selected><?php esc_html_e( 'Balanced — 960 px, 24 fps', 'kaleidoscope-hero' ); ?></option><option value="sharp"><?php esc_html_e( 'Sharper — 1280 px, 24 fps', 'kaleidoscope-hero' ); ?></option></select></div></div>
+				<div class="dh-field"><label for="dh-video-encode-seconds"><?php esc_html_e( 'Clip length (seconds)', 'kaleidoscope-hero' ); ?></label><div class="dh-control"><input type="number" id="dh-video-encode-seconds" min="2" max="30" step="1" value="10"></div></div>
+				<div class="dh-field"><label for="dh-video-encode-start"><?php esc_html_e( 'Start at (seconds)', 'kaleidoscope-hero' ); ?></label><div class="dh-control"><input type="number" id="dh-video-encode-start" min="0" max="300" step="1" value="0"></div></div>
+				<p><button type="button" class="button" id="dh-video-encode-start-button"><?php esc_html_e( 'Create compressed copy', 'kaleidoscope-hero' ); ?></button> <button type="button" class="button" id="dh-video-encode-cancel-button" hidden><?php esc_html_e( 'Cancel', 'kaleidoscope-hero' ); ?></button></p>
+				<p id="dh-video-encode-status" role="status" aria-live="polite"></p>
+			</section>
+			<?php
 			dh_editor_card( __( 'Custom 3D Object', 'kaleidoscope-hero' ), array_diff( array_keys( dh_schema()['Custom 3D Object'] ), array( 'modelRotateX', 'modelRotateY', 'modelRotateZ' ) ), $settings, $seen, 'Custom 3D Object' );
 			dh_editor_card( __( 'Tunnel particles', 'kaleidoscope-hero' ), array_keys( dh_schema()['Wireframe tunnel'] ), $settings, $seen, 'Wireframe tunnel' );
 			dh_editor_card( __( 'Landscape', 'kaleidoscope-hero' ), array_keys( dh_schema()['Wireframe landscape'] ), $settings, $seen, 'Wireframe landscape' );

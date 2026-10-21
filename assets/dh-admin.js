@@ -85,6 +85,7 @@ jQuery(function ($) {
     var value=function(key){return form.find('#dh-'+key).val();},checked=function(key){return !!form.find('#dh-'+key).prop('checked');};
     var enabled=value('scene')!=='Off',style=value('style'),background=value('mode')==='Section background';
     form.find('[data-dh-animation]').each(function(){var only=this.getAttribute('data-dh-for');$(this).toggle(enabled&&(!only||only.split('|').indexOf(style)!==-1));});
+    form.find('[data-dh-speed-card]').toggle(enabled&&style!=='Video wall');
     form.find('[data-dh-still]').prop('hidden',enabled);
     form.find('#dh-random-note').prop('hidden',!enabled||!checked('randomize'));
     form.find('[data-dh-hero-content]').toggle(!background);
@@ -97,10 +98,13 @@ jQuery(function ($) {
     row('kaleidoscopeMode',Number(value('kaleidoscope'))>=2);
     row('kaleidoscopeFraming',Number(value('kaleidoscope'))>=2&&value('kaleidoscopeMode')!=='Forward elements');
     row('cityWindows',value('cityAppearance')==='Night skyline');row('discoMouseControl',style==='Digital disco ball');
+    row('multicolor',style!=='Video wall');row('glow',style!=='Video wall');row('lookRange',style!=='Video wall');row('palette',style!=='Video wall'||value('videoColor')==='Palette');
     var custom=style==='Custom 3D Object',modelParticles=custom&&value('modelDisplay')==='Particles';
     var svg=value('modelSource')==='SVG extrusion';row('modelUrl',!svg);['svgUrl','svgDepth','svgBevel'].forEach(function(key){row(key,svg);});
     row('svgBevel',svg&&Number(value('svgDepth'))>0);
-    row('density',!custom||modelParticles);row('modelAxis',value('modelRotation')==='Automatic');row('modelRotationSpeed',value('modelRotation')==='Automatic');
+    row('flow',style!=='Video wall');row('density',style!=='Video wall'&&(!custom||modelParticles));row('modelAxis',value('modelRotation')==='Automatic');row('modelRotationSpeed',value('modelRotation')==='Automatic');
+    var videoParticles=style==='Video wall'&&value('videoDisplay')==='Particle wall';
+    ['videoParticleSpacing','videoParticleSize','videoParticleShape','videoColor','videoDepth','videoThreshold','videoContrast'].forEach(function(key){row(key,videoParticles);});
     form.find('[data-dh-for="Floating shape|Morphing sculptures|Custom 3D Object"]').toggle(enabled&&(style==='Floating shape'||style==='Morphing sculptures'||modelParticles));
     var blending=value('blendMode')!=='Off';['blendSource','blendAmount'].forEach(function(key){row(key,blending);});row('blendColor',blending&&value('blendSource')!=='Background gradient');
     ['tessellationDensity','tessellationZoom','tessellationRotation'].forEach(function(key){row(key,value('tessellation')!=='Off');});
